@@ -1,0 +1,7 @@
+{
+  "name": "huffman-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
