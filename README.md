@@ -1,10 +1,12 @@
-# High level intro to frontend in general kinda
+# High level intro to frontend in general kinda ironyard refresh
 
-This is an [`ionic`](https://ionicframework.com/docs) app with `react`. The `ionic` part is just the build harness, which means the code that bundles and builds the code you write into the code the browser runs (plain HTML, CSS, and JS).
+This is an [`ionic`](https://ionicframework.com/docs) app with `react`. The `ionic` part is just the build harness, which means the code that bundles and builds the code you write into the code the browser runs.
 
-That's what stuff like `webpack` (most common _bundler_) does, and it uses things like `babel` (standard in all modern frontend apps) to _transpile_ our JS into stuff that runs on a bunch of diff browsers.
+> That's what stuff like `webpack` (most common _bundler_) does, and it uses things like `babel` (standard in all modern frontend apps) to _transpile_ our JS into stuff that runs on a bunch of diff browsers.
 
-All of the `ionic` code is located inside the `node_modules` folder, which is where stuff goes when you do `npm install react` and such. All of the code inside `src` is literally `create-react-app`.
+All of the `ionic` code is located inside the `node_modules` folder, which is where stuff goes when you do `npm install react` and such.
+
+> All of the code inside `src` is literally out-of-the-box `create-react-app`.
 
 Bundlers are what know how to automatically go in `node_modules` and smoothie up the code that your code needs (_dependencies_) along with your code by looking at your code. Fancy ones like `webpack` also come with dev servers that hot reload via watching your code for changes.
 
@@ -12,7 +14,7 @@ That's what `create-react-app` uses to serve your code at localhost:3000 when yo
 
 `package.json` also has scripts defined in it, which is what runs when you do `npm start` and is run by the `node.js` (javascript runtime) installation on your comp (`node` was conceived to run js on servers).
 
-> Browsers also have their own js runtimes in them. Chrome's v8 is famous. This is how js got to be what it is -- bc it got privileged by the standards committee to be the scripting language for the web.
+> Browsers also have their own js runtimes in them. This is how js got to be what it is -- bc it got privileged by the standards committee to be the scripting language for the web.
 
 All the `ionic` is in `node_modules`, and if we just use the `react` components it provides us, then the _build_ step takes cares of the rest.
 
