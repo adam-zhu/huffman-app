@@ -26,7 +26,7 @@ We have `redux` in here as a _global state store_ and/or _state management_ tool
 - `dispatch` (this is the official function exported by the lib so if misspell code barfs, other two are just official names for concepts)
 - action
 
-## reducer
+### reducer
 
 Think of this as a folder or a bucket. It's just a container for state data that you decide belongs together, like `user` or `posts` or `cart`.
 
@@ -69,7 +69,7 @@ This is bc in javascript, data that is `typeof data === "object"` is _passed by 
 
 Since the reducer needs to know the `action.type`, this is also traditionally where `ACTION_TYPES` are defined (caps lock is a general naming convention for important constants). We pass those around instead of plain strings bc the code won't run at all if we misspell the variable name so it's safer.
 
-## actions
+### actions
 
 Literally just
 
