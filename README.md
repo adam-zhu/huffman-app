@@ -1,4 +1,4 @@
-# High level intro to frontend in general kinda ironyard refresh
+# High level intro to frontend in general kinda ironyard refresh / ionic
 
 This is an [`ionic`](https://ionicframework.com/docs) app with `react`. The `ionic` part is just the build harness, which means the code that bundles and builds the code you write into the code the browser runs.
 
@@ -8,13 +8,13 @@ All of the `ionic` code is located inside the `node_modules` folder, which is wh
 
 > All of the code inside `src` is literally out-of-the-box `create-react-app`.
 
-Bundlers are what know how to automatically go in `node_modules` and smoothie up the code that your code needs (_dependencies_) along with your code by looking at your code. Fancy ones like `webpack` also come with dev servers that hot reload via watching your code for changes.
+Bundlers are what know how to automatically go in `node_modules` and smoothie up the code that your code needs (_dependencies_) along with your code by looking at your code. Fancy ones like `webpack` also come with dev servers that hot reload via watching your code for changes. That's what `create-react-app` uses to serve your code at `http://localhost:3000` when you do `yarn start` or whatever.
 
-That's what `create-react-app` uses to serve your code at localhost:3000 when you do `yarn start` or whatever (`yarn` and `npm` are both _package managers_ that do the `node_modules` and `package.json` stuff, `npm` is a little more popular but idk why bc the dev ux is the exact same).
+> `yarn` and `npm` are both _package managers_ that do the `node_modules` and `package.json` stuff, `npm` is a little more popular but idk why bc the dev ux is the exact same.
 
-`package.json` also has scripts defined in it, which is what runs when you do `npm start` and is run by the `node.js` (javascript runtime) installation on your comp (`node` was conceived to run js on servers).
+`package.json` also has scripts defined in it, which is what runs when you do `npm start` and is run by the `node.js` (javascript runtime) installation on your comp (`node` was conceived to run JS on servers).
 
-> Browsers also have their own js runtimes in them. This is how js got to be what it is -- bc it got privileged by the standards committee to be the scripting language for the web.
+> Browsers also have their own JS runtimes in them. This is how JS got to be what it is -- bc it got privileged by the standards committee to be the scripting language for the web.
 
 All the `ionic` is in `node_modules`, and if we just use the `react` components it provides us, then the _build_ step takes cares of the rest.
 
@@ -26,7 +26,7 @@ We have `redux` in here as a _global state store_ and/or _state management_ tool
 - `dispatch` (this is the official function exported by the lib so if misspell code barfs, other two are just official names for concepts)
 - action
 
-###### reducer
+#### reducer
 
 Think of this as a folder or a bucket. It's just a container for state data that you decide belongs together, like `user` or `posts` or `cart`.
 
@@ -36,7 +36,7 @@ What it actually does in code is it exports a function that
 (state, action) => { return updated_version_of_state_according_to_what_type_of_action }
 ```
 
-Because of that, it is also tradition to define your initial state in that file too
+Because of that, it is also tradition to define your initial state in that file too.
 
 ```
 const initial_state = {
@@ -69,7 +69,7 @@ This is bc in javascript, data that is `typeof data === "object"` is _passed by 
 
 Since the reducer needs to know the `action.type`, this is also traditionally where `ACTION_TYPES` are defined (caps lock is a general naming convention for important constants). We pass those around instead of plain strings bc the code won't run at all if we misspell the variable name so it's safer.
 
-###### actions
+#### actions
 
 Literally just
 
@@ -106,4 +106,4 @@ const SearchInput = () => { // wrapped w `redux` <Provider> when called so can d
 };
 ```
 
-What about when we need to make a network request? `redux-thunk`. Check comments in `src/Store/user/thinks.js` for much long explanation.
+What about when we need to make a network request? `redux-thunk`. Check comments in `src/Store/user/thinks.js` for explanation.
