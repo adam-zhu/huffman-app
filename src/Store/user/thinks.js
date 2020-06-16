@@ -77,7 +77,7 @@ export const register_user = () => async (dispatch, getState, Parse) => {
     user.set("email", email_input_value);
     user.set("password", password_input_value);
 
-    await user.signup();
+    await user.signUp();
 
     dispatch({
       type: USER_REGISTRATION_REQUEST_END,

@@ -2,6 +2,13 @@
 
 This is an [`ionic`](https://ionicframework.com/docs) app with `react`. The `ionic` part is just the build harness, which means the code that bundles and builds the code you write into the code the browser runs.
 
+Run it with:
+
+```
+cd huffman-app
+ionic serve
+```
+
 > That's what stuff like `webpack` (most common _bundler_) does, and it uses things like `babel` (standard in all modern frontend apps) to _transpile_ our JS into stuff that runs on a bunch of diff browsers.
 
 All of the `ionic` code is located inside the `node_modules` folder, which is where stuff goes when you do `npm install react` and such.
