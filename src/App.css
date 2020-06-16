@@ -1,0 +1,13 @@
+/* global css vars
+
+  usage:
+  ```
+    .class-name {
+      property-name: var(${var_name});
+    }
+  ```
+*/
+
+:root {
+  --card-radius: 40px;
+}

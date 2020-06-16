@@ -2,10 +2,9 @@ import {
   EMAIL_INPUT_VALUE_CHANGE,
   PASSWORD_INPUT_VALUE_CHANGE,
   USER_REGISTRATION_REQUEST_START,
-  USER_REGISTRATION_REQUEST_SUCCESS,
-  USER_REGISTRATION_REQUEST_ERROR,
-  USER_REGISTRATION_REQUEST_ERROR_DISMISSED,
+  USER_REGISTRATION_REQUEST_END,
 } from "./reducer";
+import { add_app_error } from "Store/errors/thinks";
 
 /*
   You can only talk to Redux using its special walkie-talkie `dispatch`.
@@ -52,42 +51,42 @@ import {
   Oh whattup Sam Tay, we can get functional too.
 */
 
-export const setEmailInputValue = (value) => ({
+export const set_email_input_value = (value) => ({
   type: EMAIL_INPUT_VALUE_CHANGE,
   payload: value,
 });
 
-export const setPasswordInputValue = (value) => ({
+export const set_password_input_value = (value) => ({
   type: PASSWORD_INPUT_VALUE_CHANGE,
   payload: value,
 });
 
 // this is a thunk
-export const registerUser = () => async (dispatch, getState, ParseAPI) => {
-  const { emailInputValue, passwordInputValue } = getState().user;
+export const register_user = () => async (dispatch, getState, Parse) => {
+  const { email_input_value, password_input_value } = getState().user;
 
   dispatch({
     type: USER_REGISTRATION_REQUEST_START,
   });
 
   try {
-    const user = await ParseAPI.register({
-      username: emailInputValue,
-      password: passwordInputValue,
-    });
+    // https://dashboard.back4app.com/apidocs/W4f2B4g4iM635LZKAdf4adf65ZWEZ2f9bMXR5x59?javascript#signing-up
+    const user = new Parse.User();
+
+    user.set("username", email_input_value);
+    user.set("email", email_input_value);
+    user.set("password", password_input_value);
+
+    await user.signup();
 
     dispatch({
-      type: USER_REGISTRATION_REQUEST_SUCCESS,
+      type: USER_REGISTRATION_REQUEST_END,
       payload: user,
     });
   } catch (e) {
     dispatch({
-      type: USER_REGISTRATION_REQUEST_ERROR,
-      payload: e,
+      type: USER_REGISTRATION_REQUEST_END,
     });
+    dispatch(add_app_error(e.message));
   }
 };
-
-export const dismissUserRegistrationError = () => ({
-  type: USER_REGISTRATION_REQUEST_ERROR_DISMISSED,
-});

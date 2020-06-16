@@ -1,10 +1,8 @@
 import React from "react";
 import { Provider } from "react-redux";
-import { Redirect, Route } from "react-router-dom";
-import { IonApp, IonRouterOutlet } from "@ionic/react";
-import { IonReactRouter } from "@ionic/react-router";
+import { IonApp } from "@ionic/react";
 import Store from "Store";
-import Home from "Pages/Home";
+import Routes from "Components/Global/Routes"; // a "route" is just a url
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -25,17 +23,15 @@ import "@ionic/react/css/display.css";
 /* Theme variables */
 import "Theme/variables.css";
 
+/* Global styles */
+import "./App.css";
+
 const App = () => (
-  <Provider store={Store}>
-    <IonApp>
-      <IonReactRouter>
-        <IonRouterOutlet>
-          <Route path="/home" component={Home} exact={true} />
-          <Route exact path="/" render={() => <Redirect to="/home" />} />
-        </IonRouterOutlet>
-      </IonReactRouter>
-    </IonApp>
-  </Provider>
+  <IonApp>
+    <Provider store={Store}>
+      <Routes />
+    </Provider>
+  </IonApp>
 );
 
 export default App;

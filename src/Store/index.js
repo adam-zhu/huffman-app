@@ -2,7 +2,7 @@ import { createStore, applyMiddleware } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension/developmentOnly";
 import Parse from "parse";
 import thunkMiddleware from "redux-thunk";
-import rootReducer from "./rootReducer";
+import root_reducer from "./root_reducer";
 
 Parse.serverURL = "https://parseapi.back4app.com"; // This is your Server URL
 Parse.initialize(
@@ -11,9 +11,9 @@ Parse.initialize(
 );
 
 const store = createStore(
-  rootReducer,
+  root_reducer,
   {},
-  composeWithDevTools(applyMiddleware(thunkMiddleware.withExtraArgument(Parse)))
+  composeWithDevTools(applyMiddleware(thunkMiddleware.withExtraArgument(Parse))) // this is where we pass in the back4app SDK (standard development kit) [built on top of https://parseplatform.org/]
 );
 
 export default store;

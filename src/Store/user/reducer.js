@@ -1,60 +1,42 @@
 const initialState = {
-  emailInputValue: "",
-  passwordInputValue: "",
-  isUserRegistrationRequestBusy: false,
+  email_input_value: "",
+  password_input_value: "",
+  is_user_registration_request_busy: false,
   user: undefined,
-  userRegistrationError: undefined,
+  user_registration_error: undefined,
 };
 
 export const EMAIL_INPUT_VALUE_CHANGE = "EMAIL_INPUT_VALUE_CHANGE";
 export const PASSWORD_INPUT_VALUE_CHANGE = "PASSWORD_INPUT_VALUE_CHANGE";
 export const USER_REGISTRATION_REQUEST_START =
   "USER_REGISTRATION_REQUEST_START";
-export const USER_REGISTRATION_REQUEST_SUCCESS =
-  "USER_REGISTRATION_REQUEST_SUCCESS";
-export const USER_REGISTRATION_REQUEST_ERROR =
-  "USER_REGISTRATION_REQUEST_ERROR";
-export const USER_REGISTRATION_REQUEST_ERROR_DISMISSED =
-  "USER_REGISTRATION_REQUEST_ERROR_DISMISSED";
+export const USER_REGISTRATION_REQUEST_END = "USER_REGISTRATION_REQUEST_END";
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case EMAIL_INPUT_VALUE_CHANGE:
       return {
         ...state,
-        emailInputValue: action.payload,
+        email_input_value: action.payload,
       };
 
     case PASSWORD_INPUT_VALUE_CHANGE:
       return {
         ...state,
-        passwordInputValue: action.payload,
+        password_input_value: action.payload,
       };
 
     case USER_REGISTRATION_REQUEST_START:
       return {
         ...state,
-        isUserRegistrationRequestBusy: true,
+        is_user_registration_request_busy: true,
       };
 
-    case USER_REGISTRATION_REQUEST_SUCCESS:
+    case USER_REGISTRATION_REQUEST_END:
       return {
         ...state,
         user: action.payload,
-        isUserRegistrationRequestBusy: false,
-      };
-
-    case USER_REGISTRATION_REQUEST_ERROR:
-      return {
-        ...state,
-        isUserRegistrationRequestBusy: false,
-        userRegistrationError: action.payload,
-      };
-
-    case USER_REGISTRATION_REQUEST_ERROR_DISMISSED:
-      return {
-        ...state,
-        userRegistrationError: undefined,
+        is_user_registration_request_busy: false,
       };
 
     default:

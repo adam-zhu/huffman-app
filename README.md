@@ -10,11 +10,13 @@ All of the `ionic` code is located inside the `node_modules` folder, which is wh
 
 Bundlers are what know how to automatically go in `node_modules` and smoothie up the code that your code needs (_dependencies_) along with your code by looking at your code. Fancy ones like `webpack` also come with dev servers that hot reload via watching your code for changes. That's what `create-react-app` uses to serve your code at `http://localhost:3000` when you do `yarn start` or whatever.
 
+> Some fancy bundlers (webpack) also can automatically drop the code inside `node_modules` your code doesn't actually use -- this is called "_tree shaking_".
+
 > `yarn` and `npm` are both _package managers_ that do the `node_modules` and `package.json` stuff, `npm` is a little more popular but idk why bc the dev ux is the exact same.
 
 `package.json` also has scripts defined in it, which is what runs when you do `npm start` and is run by the `node.js` (javascript runtime) installation on your comp (`node` was conceived to run JS on servers).
 
-> Browsers also have their own JS runtimes in them. This is how JS got to be what it is -- bc it got privileged by the standards committee to be the scripting language for the web.
+> Browsers also have their own JS runtimes in them. This is how JS got to be what it is -- bc it got privileged by the standards committee to be the scripting language for the web. V8 (built by the chromium team [open source, not google]) is a famous engine that powers both the Node.js and Chrome runtimes.
 
 All the `ionic` is in `node_modules`, and if we just use the `react` components it provides us, then the _build_ step takes cares of the rest.
 
