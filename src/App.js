@@ -24,7 +24,7 @@ import "@ionic/react/css/display.css";
 import "Theme/variables.css";
 
 /* Global styles */
-import "./App.css";
+import "./App.scss";
 
 const App = () => (
   <IonApp>
