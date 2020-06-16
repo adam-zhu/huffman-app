@@ -14,8 +14,8 @@ export const USER_REGISTRATION_REQUEST_SUCCESS =
   "USER_REGISTRATION_REQUEST_SUCCESS";
 export const USER_REGISTRATION_REQUEST_ERROR =
   "USER_REGISTRATION_REQUEST_ERROR";
-export const USER_REGISTRATION_ERROR_DISMISSED =
-  "USER_REGISTRATION_ERROR_DISMISSED";
+export const USER_REGISTRATION_REQUEST_ERROR_DISMISSED =
+  "USER_REGISTRATION_REQUEST_ERROR_DISMISSED";
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -28,7 +28,7 @@ export default (state = initialState, action) => {
     case PASSWORD_INPUT_VALUE_CHANGE:
       return {
         ...state,
-        helloMessage: action.payload,
+        passwordInputValue: action.payload,
       };
 
     case USER_REGISTRATION_REQUEST_START:
@@ -51,7 +51,7 @@ export default (state = initialState, action) => {
         userRegistrationError: action.payload,
       };
 
-    case USER_REGISTRATION_ERROR_DISMISSED:
+    case USER_REGISTRATION_REQUEST_ERROR_DISMISSED:
       return {
         ...state,
         userRegistrationError: undefined,
