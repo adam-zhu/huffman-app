@@ -30,6 +30,8 @@ We have `redux` in here as a _global state store_ and/or _state management_ tool
 
 Think of this as a folder or a bucket. It's just a container for state data that you decide belongs together, like `user` or `posts` or `cart`.
 
+> `redux` is just the frontend's db.
+
 What it actually does in code is it exports a function that
 
 ```
@@ -45,6 +47,8 @@ const initial_state = {
   logged_in: true // because we trust u <3
 };
 ```
+
+> The reducer just defines a portion of a model (MVC). The data shape and how to change it.
 
 The reducer NEVER _mutates_ the state object (directly modify like `state.property = "new value"`) and always makes a new copy of it:
 
@@ -84,7 +88,8 @@ const action = {
 This is the ONLY shit that `dispatch` will take (w vanilla `redux`). So ppl do a pattern of "action creators", or just
 
 ```
-export const create_action = (data_from_the_DOM) => ({ // shorthand syntax, function just returns this object
+// action_creators.js
+export const create_action = (data_from_the_DOM) => ({
   type: ACTION_TYPE_THAT_NEEDS_DATA,
   payload: data_from_the_DOM
 });
@@ -93,7 +98,8 @@ export const create_action = (data_from_the_DOM) => ({ // shorthand syntax, func
 import { create_action } from 'actions_file';
 import { useDispatch, useSelector } from 'react-redux';
 
-const SearchInput = () => { // wrapped w `redux` <Provider> when called so can do the useSelector and useDispatch hooks (can explain how hooks work just ask)
+// wrapped w `redux` <Provider> so can do the useSelector and useDispatch hooks (can explain how hooks work just ask)
+const SearchInput = () => {
   const { search_input_value } = useSelector(root_state => root_state.chunk.maybe_subchunk_even);
   const dispatch = useDispatch();
   const search_input_change_handler = e => {
@@ -105,5 +111,7 @@ const SearchInput = () => { // wrapped w `redux` <Provider> when called so can d
   return <input type="text" value={search_input_value} onChange={search_input_change_handler} />
 };
 ```
+
+> If `dispatch` is the walkie-talkie, then actions are the preprogrammed message buttons on it.
 
 What about when we need to make a network request? `redux-thunk`. Check comments in `src/Store/user/thinks.js` for explanation.
