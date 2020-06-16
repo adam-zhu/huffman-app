@@ -63,7 +63,7 @@ export const set_password_input_value = (value) => ({
 
 // this is a thunk
 export const register_user = () => async (dispatch, getState, Parse) => {
-  const { email_input_value, password_input_value } = getState().user;
+  const { email_input_value, password_input_value, user } = getState().user;
 
   dispatch({
     type: USER_REGISTRATION_REQUEST_START,
@@ -71,21 +71,22 @@ export const register_user = () => async (dispatch, getState, Parse) => {
 
   try {
     // https://dashboard.back4app.com/apidocs/W4f2B4g4iM635LZKAdf4adf65ZWEZ2f9bMXR5x59?javascript#signing-up
-    const user = new Parse.User();
+    const new_user = new Parse.User();
 
-    user.set("username", email_input_value);
-    user.set("email", email_input_value);
-    user.set("password", password_input_value);
+    new_user.set("username", email_input_value);
+    new_user.set("email", email_input_value);
+    new_user.set("password", password_input_value);
 
-    await user.signUp();
+    await new_user.signUp();
 
     dispatch({
       type: USER_REGISTRATION_REQUEST_END,
-      payload: user,
+      payload: new_user,
     });
   } catch (e) {
     dispatch({
       type: USER_REGISTRATION_REQUEST_END,
+      payload: user,
     });
     dispatch(add_app_error(e.message));
   }
