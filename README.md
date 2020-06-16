@@ -97,7 +97,7 @@ const SearchInput = () => { // wrapped w `redux` <Provider> when called so can d
   const { search_input_value } = useSelector(root_state => root_state.chunk.maybe_subchunk_even);
   const dispatch = useDispatch();
   const search_input_change_handler = e => {
-    const { value } = e.target; // object destructuring
+    const { value } = e.target;
 
     dispatch(create_action(value)); // executing `create_action` constructs & returns the action object
   };
