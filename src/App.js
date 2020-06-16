@@ -6,9 +6,6 @@ import { IonReactRouter } from "@ionic/react-router";
 import Store from "Store";
 import Home from "Pages/Home";
 
-/* Theme variables */
-import "Theme/variables.css";
-
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
 
@@ -24,6 +21,9 @@ import "@ionic/react/css/text-alignment.css";
 import "@ionic/react/css/text-transformation.css";
 import "@ionic/react/css/flex-utils.css";
 import "@ionic/react/css/display.css";
+
+/* Theme variables */
+import "Theme/variables.css";
 
 const App = () => (
   <Provider store={Store}>
