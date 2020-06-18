@@ -10,6 +10,8 @@ Parse.initialize(
   "qsQ7Bmfey7mwsxdLURceDSg5gxrsXYFjaA6ibjGz" // This is your Javascript key
 );
 
+export const parse = Parse;
+
 const store = createStore(
   root_reducer,
   {},
