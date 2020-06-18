@@ -21,27 +21,12 @@ import "@ionic/react/css/flex-utils.css";
 import "@ionic/react/css/display.css";
 
 /* Theme variables */
-import "Theme/variables.css";
+import "./Theme/variables.css";
 
 /* Global styles */
 import "./App.scss";
 
-import { parse } from "Store";
-let install = new parse.Installation();
-
 const App = () => {
-  install.save(null, {
-    success: (install) => {
-      // Execute any logic that should take place after the object is saved.
-      console.log("New object created with objectId: " + install.id);
-    },
-    error: (install, error) => {
-      // Execute any logic that should take place if the save fails.
-      // error is a Parse.Error with an error code and message.
-      console.error(error);
-    },
-  });
-
   return (
     <IonApp>
       <Provider store={Store}>
