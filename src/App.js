@@ -21,7 +21,7 @@ import "@ionic/react/css/flex-utils.css";
 import "@ionic/react/css/display.css";
 
 /* Theme variables */
-import "./Theme/variables.css";
+// import "Theme/variables.css"; // this causes build to break for some reason
 
 /* Global styles */
 import "./App.scss";
