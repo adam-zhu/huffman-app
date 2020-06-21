@@ -1,0 +1,28 @@
+#project-messages {
+  .message-row {
+    padding: 0.125rem;
+
+    &.sent {
+      text-align: right;
+
+      .message-bubble {
+        background: var(--ion-color-primary, #3880ff);
+      }
+    }
+
+    &.received {
+      .message-bubble {
+        background: dimgray;
+      }
+    }
+
+    .message-bubble {
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      color: white;
+      display: inline-block;
+      max-width: 50%;
+      font-size: 0.75rem;
+    }
+  }
+}

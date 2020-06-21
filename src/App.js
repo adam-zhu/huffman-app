@@ -28,7 +28,7 @@ import "./App.scss";
 
 const App = () => {
   return (
-    <IonApp>
+    <IonApp cssClass="app">
       <Provider store={Store}>
         <Routes />
       </Provider>

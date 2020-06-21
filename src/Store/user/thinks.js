@@ -3,6 +3,12 @@ import {
   PASSWORD_INPUT_VALUE_CHANGE,
   USER_REGISTRATION_REQUEST_START,
   USER_REGISTRATION_REQUEST_END,
+  USER_EMAIL_VERIFIED,
+  SIGNIN_REQUEST_START,
+  SIGNIN_REQUEST_END,
+  SIGNOUT_REQUEST_START,
+  SIGNOUT_REQUEST_END,
+  RESTORE_USER_SESSION,
 } from "./reducer";
 import { add_app_error } from "Store/errors/thinks";
 
@@ -61,6 +67,21 @@ export const set_password_input_value = (value) => ({
   payload: value,
 });
 
+export const check_for_current_session = () => async (
+  dispatch,
+  getState,
+  Parse
+) => {
+  Parse.User.enableUnsafeCurrentUser();
+
+  if (Parse.User.current()) {
+    dispatch({
+      type: RESTORE_USER_SESSION,
+      payload: Parse.User.current().toJSON(),
+    });
+  }
+};
+
 // this is a thunk
 export const register_user = () => async (dispatch, getState, Parse) => {
   const { email_input_value, password_input_value, user } = getState().user;
@@ -77,15 +98,92 @@ export const register_user = () => async (dispatch, getState, Parse) => {
     new_user.set("email", email_input_value);
     new_user.set("password", password_input_value);
 
-    await new_user.signUp();
+    const created_user = await new_user.signUp();
 
     dispatch({
       type: USER_REGISTRATION_REQUEST_END,
-      payload: new_user,
+      payload: created_user.toJSON(),
     });
   } catch (e) {
     dispatch({
       type: USER_REGISTRATION_REQUEST_END,
+      payload: user,
+    });
+    dispatch(add_app_error(e.message));
+  }
+};
+
+export const check_email_verification = () => async (
+  dispatch,
+  getState,
+  Parse
+) => {
+  const { objectId } = getState().user.data;
+  const User = new Parse.User();
+  const query = new Parse.Query(User);
+
+  try {
+    const user_data = await query.get(objectId);
+
+    if (user_data.get("emailVerified") === true) {
+      dispatch({
+        type: USER_EMAIL_VERIFIED,
+      });
+
+      dispatch(log_user_in());
+    } else {
+      dispatch(add_app_error("Email not yet verified."));
+    }
+  } catch (e) {
+    dispatch(add_app_error(e.message));
+  }
+};
+
+export const log_user_in = () => async (dispatch, getState, Parse) => {
+  const { email_input_value, password_input_value, data } = getState().user;
+
+  dispatch({
+    type: SIGNIN_REQUEST_START,
+  });
+
+  try {
+    const logged_in_user = await Parse.User.logIn(
+      email_input_value,
+      password_input_value
+    );
+
+    dispatch({
+      type: SIGNIN_REQUEST_END,
+      payload: logged_in_user.toJSON(),
+    });
+  } catch (e) {
+    dispatch({
+      type: SIGNIN_REQUEST_END,
+      payload: data,
+    });
+
+    dispatch(add_app_error(e.message));
+  }
+};
+
+export const log_user_out = () => async (dispatch, getState, Parse) => {
+  const { user } = getState().user;
+
+  dispatch({
+    type: SIGNOUT_REQUEST_START,
+  });
+
+  try {
+    // https://dashboard.back4app.com/apidocs/W4f2B4g4iM635LZKAdf4adf65ZWEZ2f9bMXR5x59?javascript#signing-up
+    await Parse.User().loutOut();
+
+    dispatch({
+      type: SIGNOUT_REQUEST_END,
+      payload: Parse.User().currne,
+    });
+  } catch (e) {
+    dispatch({
+      type: SIGNOUT_REQUEST_END,
       payload: user,
     });
     dispatch(add_app_error(e.message));

@@ -33,6 +33,42 @@
       rel="stylesheet"
     />
     <style>
+      @font-face {
+        font-family: "eina";
+        font-weight: 300;
+        src: url("./assets/fonts/eina-01-light.ttf") format("ttf"),
+          url("./assets/fonts/eina-01-light.eot") format("eot"),
+          url("./assets/fonts/eina-01-light.woff") format("woff"),
+          url("./assets/fonts/eina-01-light.woff2") format("woff2");
+      }
+
+      @font-face {
+        font-family: "eina";
+        font-weight: "normal";
+        src: url("./assets/fonts/eina-01-regular.ttf") format("ttf"),
+          url("./assets/fonts/eina-01-regular.eot") format("eot"),
+          url("./assets/fonts/eina-01-regular.woff") format("woff"),
+          url("./assets/fonts/eina-01-regular.woff2") format("woff2");
+      }
+
+      @font-face {
+        font-family: "eina";
+        font-weight: 500;
+        src: url("./assets/fonts/eina-01-semibold.ttf") format("ttf"),
+          url("./assets/fonts/eina-01-semibold.eot") format("eot"),
+          url("./assets/fonts/eina-01-semibold.woff") format("woff"),
+          url("./assets/fonts/eina-01-semibold.woff2") format("woff2");
+      }
+
+      @font-face {
+        font-family: "eina";
+        font-weight: "bold";
+        src: url("./assets/fonts/eina-01-bold.ttf") format("ttf"),
+          url("./assets/fonts/eina-01-bold.eot") format("eot"),
+          url("./assets/fonts/eina-01-light.woff") format("woff"),
+          url("./assets/fonts/eina-01-bold.woff2") format("woff2");
+      }
+
       /* Ionic Variables and Theming. For more info, please see:
       http://ionicframework.com/docs/theming/ */
 
@@ -109,11 +145,35 @@
         --ion-color-light-contrast-rgb: 0, 0, 0;
         --ion-color-light-shade: #d7d8da;
         --ion-color-light-tint: #f5f6f9;
+
+        /** custom Huffman app overrides **/
+        --ion--default--font: "eina";
       }
 
       /** custom Huffman app overrides **/
       ion-button {
         --border-radius: 10px;
+      }
+
+      * {
+        font-family: "eina" !important;
+      }
+
+      i.material-icons {
+        font-family: "Material Icons" !important;
+      }
+
+      i.material-icons.md-18 {
+        font-size: 18px;
+      }
+      i.material-icons.md-24 {
+        font-size: 24px;
+      }
+      i.material-icons.md-36 {
+        font-size: 36px;
+      }
+      i.material-icons.md-48 {
+        font-size: 48px;
       }
     </style>
   </head>

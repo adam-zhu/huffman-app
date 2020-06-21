@@ -1,13 +1,13 @@
 import React from "react";
-import PageWrapper from "Components/Global/PageWrapper";
+import PageContainer from "Components/Global/PageContainer";
 import RegistrationLogin from "Components/Home/RegistrationLogin";
-import "./Home.css";
+import "Styles/Home.scss";
 
 const Home = () => {
   return (
-    <PageWrapper>
+    <PageContainer>
       <RegistrationLogin />
-    </PageWrapper>
+    </PageContainer>
   );
 };
 

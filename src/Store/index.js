@@ -4,7 +4,7 @@ import Parse from "parse";
 import thunkMiddleware from "redux-thunk";
 import root_reducer from "./root_reducer";
 
-Parse.serverURL = "https://parseapi.back4app.com"; // This is your Server URL
+Parse.serverURL = "https://letsdecorate.back4app.io"; // This is your Server URL
 Parse.initialize(
   "W4f2B4g4iM635LZKAdf4adf65ZWEZ2f9bMXR5x59", // This is your Application ID
   "qsQ7Bmfey7mwsxdLURceDSg5gxrsXYFjaA6ibjGz" // This is your Javascript key
