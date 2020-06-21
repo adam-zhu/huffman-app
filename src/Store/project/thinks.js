@@ -76,8 +76,6 @@ export const listen_for_messages = (objectId) => async (
       payload: new_message.toJSON(),
     });
 
-    console.log(document.getElementsByClassName("inner-scroll scroll-y"));
-
     window.requestAnimationFrame(() => {
       const content = document.querySelector("ion-content");
 
