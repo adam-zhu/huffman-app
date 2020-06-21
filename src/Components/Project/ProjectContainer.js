@@ -16,7 +16,7 @@ const Project = ({ match }) => {
 
   return (
     <PageContainer>
-      <IonButton routerLink="/projects" color="secondary">
+      <IonButton routerLink="/projects" color="secondary" slot="fixed">
         <i className="material-icons">chevron_left</i> Back to projects
       </IonButton>
       {data && <Messages project={data} />}
