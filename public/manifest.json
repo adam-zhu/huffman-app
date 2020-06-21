@@ -1,6 +1,6 @@
 {
-  "short_name": "Ionic App",
-  "name": "My Ionic App",
+  "short_name": "Let's Decorate",
+  "name": "Let's Decorate - Your Decorator On Demand",
   "icons": [
     {
       "src": "assets/icon/favicon.png",
@@ -14,7 +14,7 @@
       "purpose": "maskable"
     }
   ],
-  "start_url": ".",
+  "start_url": "https://letsdecorate-718fe.web.app",
   "display": "standalone",
   "theme_color": "#ffffff",
   "background_color": "#ffffff"

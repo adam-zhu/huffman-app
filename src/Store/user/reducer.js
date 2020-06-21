@@ -3,8 +3,8 @@ const initialState = {
   password_input_value: "",
   data: undefined,
   is_registration_request_busy: false,
-  is_signin_request_busy: undefined,
-  is_signout_request_busy: undefined,
+  is_signin_request_busy: false,
+  is_signout_request_busy: false,
 };
 
 export const EMAIL_INPUT_VALUE_CHANGE = "EMAIL_INPUT_VALUE_CHANGE";

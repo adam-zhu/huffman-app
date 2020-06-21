@@ -32,7 +32,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "push-prod": "ionic-build --prod && firebase deploy"
   },
   "eslintConfig": {
     "extends": "react-app"
