@@ -40,7 +40,7 @@ const MessageRow = ({ message }) => {
     <div
       className={`message-row ${is_author_current_user ? "sent" : "received"}`}
     >
-      <IonCard className="message-bubble">
+      <div className="message-bubble">
         {message.string_content
           .split("\n")
           .map((text_content, index) =>
@@ -50,7 +50,7 @@ const MessageRow = ({ message }) => {
               <br key={index} />
             )
           )}
-      </IonCard>
+      </div>
     </div>
   );
 };
