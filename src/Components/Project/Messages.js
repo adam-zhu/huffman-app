@@ -21,9 +21,11 @@ const Messages = ({ project }) => {
 
   return (
     <div id="project-messages">
-      {data.messages.map((m) => (
-        <MessageRow key={m.objectId} message={m} />
-      ))}
+      <div>
+        {data.messages.map((m) => (
+          <MessageRow key={m.objectId} message={m} />
+        ))}
+      </div>
       <MessageInputForm />
     </div>
   );
