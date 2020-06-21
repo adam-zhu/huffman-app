@@ -12,7 +12,7 @@ import "Styles/Projects.scss";
 import { get_projects } from "Store/projects/thinks";
 
 const Projects = () => {
-  const { data } = useSelector((root_state) => root_state.projects);
+  const { data } = useSelector((state) => state.projects);
   const dispatch = useDispatch();
 
   useEffect(() => {

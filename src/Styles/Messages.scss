@@ -1,9 +1,10 @@
 #project-messages {
   .message-row {
     padding: 0.125rem;
+    display: flex;
 
     &.sent {
-      text-align: right;
+      flex-direction: row-reverse;
 
       .message-bubble {
         background: var(--ion-color-primary, #3880ff);
@@ -23,6 +24,10 @@
       display: inline-block;
       max-width: 50%;
       font-size: 0.75rem;
+
+      p {
+        margin: 0;
+      }
     }
   }
 }

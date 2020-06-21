@@ -4,15 +4,21 @@ import {
   MESSAGE_ENTERED,
   SEND_MESSAGE_REQUEST_START,
   SEND_MESSAGE_REQUEST_END,
-  RECEIVE_MESSAGES,
+  SUBSCRIBED,
+  UNSUBSCRIBED,
+  RECEIVE_MESSAGE,
 } from "./reducer";
 import { add_app_error } from "Store/errors/thinks";
 
 export const get_project = (objectId) => async (dispatch, getState, Parse) => {
+  const { user } = getState();
   const project_query = new Parse.Query("project");
   const message_query = new Parse.Query("message");
 
-  project_query.equalTo("created_by", Parse.User.current());
+  if (!user.data.is_admin) {
+    project_query.equalTo("created_by", Parse.User.current());
+  }
+
   project_query.equalTo("objectId", objectId);
   project_query.include("package");
   message_query.equalTo(
@@ -45,8 +51,11 @@ export const get_project = (objectId) => async (dispatch, getState, Parse) => {
   }
 };
 
-export const listen_for_messages = () => async (dispatch, getState, Parse) => {
-  const { objectId } = getState().project.data;
+export const listen_for_messages = (objectId) => async (
+  dispatch,
+  getState,
+  Parse
+) => {
   const message_query = new Parse.Query("message");
 
   message_query.equalTo(
@@ -56,11 +65,26 @@ export const listen_for_messages = () => async (dispatch, getState, Parse) => {
 
   const message_subscription = await message_query.subscribe();
 
+  dispatch({
+    type: SUBSCRIBED,
+    payload: message_subscription,
+  });
+
   message_subscription.on("create", (new_message) => {
     dispatch({
-      type: RECEIVE_MESSAGES,
+      type: RECEIVE_MESSAGE,
       payload: new_message.toJSON(),
     });
+  });
+};
+
+export const stop_listening = () => (dispatch, getState) => {
+  const { subscription } = getState().project;
+
+  subscription.unsubscribe();
+
+  dispatch({
+    type: UNSUBSCRIBED,
   });
 };
 
@@ -75,8 +99,10 @@ export const send_message = () => async (dispatch, getState, Parse) => {
   const amount_of_messages_sent = project.data.messages.filter(
     (m) => m.author.objectId === user.data.objectId
   ).length;
+  const has_messages_remaining =
+    amount_of_messages_sent < Number(amount_of_included_consultations);
 
-  if (amount_of_messages_sent < Number(amount_of_included_consultations)) {
+  if (user.data.is_admin === true || has_messages_remaining) {
     const Message = Parse.Object.extend("message");
     const new_message = new Message();
 

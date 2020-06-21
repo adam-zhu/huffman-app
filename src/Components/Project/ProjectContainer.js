@@ -7,7 +7,7 @@ import { get_project } from "Store/project/thinks";
 import Messages from "./Messages";
 
 const Project = ({ match }) => {
-  const { data } = useSelector((root_state) => root_state.project);
+  const { data } = useSelector((state) => state.project);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const Project = ({ match }) => {
       <IonButton routerLink="/projects" color="secondary">
         <i className="material-icons">chevron_left</i> Back to projects
       </IonButton>
-      {data && <Messages />}
+      {data && <Messages project={data} />}
     </PageContainer>
   );
 };

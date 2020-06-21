@@ -13,7 +13,6 @@ import {
 
 const RegistrationLogin = () => {
   const { data } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
 
   if (data === undefined) {
     return <Form />;
@@ -111,7 +110,6 @@ const Form = () => {
         expand="block"
         disabled={
           email_input_value.trim().length === 0 ||
-          password_input_value.trim().length === 0 ||
           new RegExp(password_regex).test(password_input_value) === false ||
           is_form_busy
         }

@@ -75,14 +75,26 @@ export const check_for_current_session = () => async (
   Parse.User.enableUnsafeCurrentUser();
 
   if (Parse.User.current()) {
-    dispatch({
-      type: RESTORE_USER_SESSION,
-      payload: Parse.User.current().toJSON(),
-    });
+    const cached_user_data = Parse.User.current().toJSON();
+    const query = new Parse.Query(Parse.User);
+
+    try {
+      const user_data = await query.get(cached_user_data.objectId);
+
+      return Promise.resolve(
+        dispatch({
+          type: RESTORE_USER_SESSION,
+          payload: user_data.toJSON(),
+        })
+      );
+    } catch (e) {
+      return Promise.resolve(dispatch(add_app_error(e.message)));
+    }
   }
+
+  return Promise.resolve();
 };
 
-// this is a thunk
 export const register_user = () => async (dispatch, getState, Parse) => {
   const { email_input_value, password_input_value, user } = getState().user;
 
@@ -91,7 +103,6 @@ export const register_user = () => async (dispatch, getState, Parse) => {
   });
 
   try {
-    // https://dashboard.back4app.com/apidocs/W4f2B4g4iM635LZKAdf4adf65ZWEZ2f9bMXR5x59?javascript#signing-up
     const new_user = new Parse.User();
 
     new_user.set("username", email_input_value);
@@ -174,12 +185,10 @@ export const log_user_out = () => async (dispatch, getState, Parse) => {
   });
 
   try {
-    // https://dashboard.back4app.com/apidocs/W4f2B4g4iM635LZKAdf4adf65ZWEZ2f9bMXR5x59?javascript#signing-up
-    await Parse.User().loutOut();
+    await Parse.User.logOut();
 
     dispatch({
       type: SIGNOUT_REQUEST_END,
-      payload: Parse.User().currne,
     });
   } catch (e) {
     dispatch({

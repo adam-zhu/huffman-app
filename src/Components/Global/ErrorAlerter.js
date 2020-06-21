@@ -5,7 +5,7 @@ import "Styles/ErrorAlerter.scss";
 import { clear_app_errors } from "Store/errors/thinks";
 
 const ErrorAlerter = () => {
-  const { errors } = useSelector((root_state) => root_state);
+  const { errors } = useSelector((state) => state);
   const dispatch = useDispatch();
   const dismiss_handler = (e) => {
     e.preventDefault();

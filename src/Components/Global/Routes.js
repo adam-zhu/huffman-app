@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Route } from "react-router-dom";
-import { IonRouterOutlet } from "@ionic/react";
+import { IonRouterOutlet, IonProgressBar } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import HomeContainer from "Components/Home/HomeContainer";
 import ProjectsContainer from "Components/Projects/ProjectsContainer";
@@ -15,13 +15,18 @@ import { check_for_current_session } from "Store/user/thinks";
 // ones that are global to the app (nav, error alerter, "app shell" or "app container" level stuff) go into Components/Global
 
 const Routes = () => {
+  const [is_session_restored, set_is_session_restored] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(check_for_current_session());
+    (async () => {
+      await dispatch(check_for_current_session());
+
+      set_is_session_restored(true);
+    })();
   }, []);
 
-  return (
+  return is_session_restored ? (
     <IonReactRouter cssClass="Routes">
       <IonRouterOutlet>
         <Route exact path="/" component={HomeContainer} />
@@ -29,6 +34,8 @@ const Routes = () => {
         <Route exact path="/projects/:objectId" component={ProjectContainer} />
       </IonRouterOutlet>
     </IonReactRouter>
+  ) : (
+    <IonProgressBar type="indeterminate"></IonProgressBar>
   );
 };
 

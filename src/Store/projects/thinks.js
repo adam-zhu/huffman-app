@@ -5,9 +5,13 @@ import {
 import { add_app_error } from "Store/errors/thinks";
 
 export const get_projects = () => async (dispatch, getState, Parse) => {
+  const { user } = getState();
   const query = new Parse.Query("project");
 
-  query.equalTo("created_by", Parse.User.current());
+  if (!user.data.is_admin) {
+    query.equalTo("created_by", Parse.User.current());
+  }
+
   query.include("package");
 
   dispatch({

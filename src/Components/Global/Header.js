@@ -1,38 +1,24 @@
 import React from "react";
-import { useDispatch } from "react-redux";
-import {
-  IonMenuButton,
-  IonMenu,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonList,
-  IonItem,
-  IonButton,
-} from "@ionic/react";
+import { useSelector, useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { IonHeader, IonButton } from "@ionic/react";
 import { log_user_out } from "Store/user/thinks";
 
 const Header = () => {
+  const { user } = useSelector((state) => state);
   const dispatch = useDispatch();
+  const history = useHistory();
+  const redirect_to_home = () => history.push("/");
+  const log_out_handler = async () => {
+    await dispatch(log_user_out());
+
+    return redirect_to_home();
+  };
 
   return (
-    <>
-      <IonHeader>
-        <IonMenuButton />
-      </IonHeader>
-      <IonMenu side="start" contentId="content">
-        <IonToolbar color="primary">
-          <IonTitle>Menu</IonTitle>
-        </IonToolbar>
-        <IonList>
-          <IonItem>
-            <IonButton onClick={() => dispatch(log_user_out())}>
-              Log out
-            </IonButton>
-          </IonItem>
-        </IonList>
-      </IonMenu>
-    </>
+    <IonHeader>
+      {user.data && <IonButton onClick={log_out_handler}>Log out</IonButton>}
+    </IonHeader>
   );
 };
 
