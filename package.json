@@ -33,7 +33,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint .",
-    "push-prod": "ionic-build --prod && firebase deploy"
+    "push-prod": "ionic build --prod && firebase deploy && git add . && git commit -m \"push prod\""
   },
   "eslintConfig": {
     "extends": "react-app"
