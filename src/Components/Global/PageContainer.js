@@ -5,6 +5,19 @@ import { IonContent, IonPage } from "@ionic/react";
 import ErrorAlerter from "Components/Global/ErrorAlerter";
 import Header from "Components/Global/Header";
 
+export const scroll_ion_content_to_bottom = async () => {
+  const ion_content = document.querySelector("ion-content");
+  const scroll_element = await ion_content.getScrollElement();
+
+  // window.requestAnimationFrame(ion_content.scrollToBottom);
+  window.requestAnimationFrame(() => {
+    setTimeout(
+      () => (scroll_element.scrollTop = scroll_element.scrollHeight),
+      0
+    );
+  });
+};
+
 // this is how we include global stuff -- we wrap every PageContainerComponent in this
 const PageContainer = ({ children }) => {
   const { data } = useSelector((state) => state.user);
@@ -22,7 +35,9 @@ const PageContainer = ({ children }) => {
   return (
     <IonPage>
       <Header />
-      <IonContent id="content">{children}</IonContent>
+      <IonContent id="content" fullscreen>
+        {children}
+      </IonContent>
       <ErrorAlerter />
     </IonPage>
   );

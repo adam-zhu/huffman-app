@@ -1,7 +1,13 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { IonHeader, IonButton } from "@ionic/react";
+import {
+  IonHeader,
+  IonToolbar,
+  IonButtons,
+  IonButton,
+  IonBackButton,
+} from "@ionic/react";
 import { log_user_out } from "Store/user/thinks";
 
 const Header = () => {
@@ -17,7 +23,16 @@ const Header = () => {
 
   return (
     <IonHeader>
-      {user.data && <IonButton onClick={log_out_handler}>Log out</IonButton>}
+      <IonToolbar>
+        <IonButtons slot="start">
+          <IonBackButton defaultHref="/" />
+        </IonButtons>
+        <IonButtons slot="end">
+          {user.data && (
+            <IonButton onClick={log_out_handler}>Log out</IonButton>
+          )}
+        </IonButtons>
+      </IonToolbar>
     </IonHeader>
   );
 };

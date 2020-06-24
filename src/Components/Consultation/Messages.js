@@ -6,23 +6,30 @@ import {
   stop_listening,
   enter_message,
   send_message,
-} from "Store/project/thinks";
-import { IonButton, IonTextarea, IonCard } from "@ionic/react";
+} from "Store/consultation/thinks";
+import { IonButton, IonTextarea } from "@ionic/react";
+import { scroll_ion_content_to_bottom } from "Components/Global/PageContainer";
 
-const Messages = ({ project }) => {
-  const { data } = useSelector((state) => state.project);
+const Messages = ({ consultation }) => {
+  const { data } = useSelector((state) => state.consultation);
   const dispatch = useDispatch();
+  const messages = data.messages || [];
 
   useEffect(() => {
-    dispatch(listen_for_messages(project.objectId));
+    dispatch(listen_for_messages(consultation.objectId));
+    scroll_ion_content_to_bottom();
 
     return () => dispatch(stop_listening());
-  }, [project.objectId]);
+  }, [consultation.objectId]);
+
+  useEffect(() => {
+    window.requestAnimationFrame(scroll_ion_content_to_bottom);
+  }, [messages.length]);
 
   return (
-    <div id="project-messages">
+    <div id="consultation-messages">
       <div>
-        {data.messages.map((m) => (
+        {messages.map((m) => (
           <MessageRow key={m.objectId} message={m} />
         ))}
       </div>
@@ -56,15 +63,8 @@ const MessageRow = ({ message }) => {
 };
 
 const MessageInputForm = () => {
-  const { project, user } = useSelector((state) => state);
-  const { data, message_input_value, is_message_sending } = project;
-  const { amount_of_included_consultations } = data.package;
-  const amount_of_messages_sent = data.messages.filter(
-    (m) => m.author.objectId === user.data?.objectId
-  ).length;
-  const message_limit_reached =
-    !user.data?.is_admin &&
-    amount_of_messages_sent >= Number(amount_of_included_consultations);
+  const { consultation, user } = useSelector((state) => state);
+  const { data, message_input_value, is_message_sending } = consultation;
   const dispatch = useDispatch();
   const message_input_handler = (e) => {
     dispatch(enter_message(e.target.value));
@@ -77,22 +77,15 @@ const MessageInputForm = () => {
 
   return (
     <form onSubmit={message_submit_handler}>
-      {!user.data?.is_admin && (
-        <strong>
-          {amount_of_messages_sent} / {amount_of_included_consultations}
-        </strong>
-      )}
       <IonTextarea
-        placeholder={
-          message_limit_reached ? "limited reached" : "type a message..."
-        }
+        placeholder="type a message..."
         type="textarea"
         value={message_input_value}
         onIonChange={message_input_handler}
-        disabled={is_message_sending || message_limit_reached}
+        disabled={is_message_sending}
         required
       />
-      <IonButton expand="block" type="submit" disabled={message_limit_reached}>
+      <IonButton expand="block" type="submit" disabled={is_message_sending}>
         Send
       </IonButton>
     </form>

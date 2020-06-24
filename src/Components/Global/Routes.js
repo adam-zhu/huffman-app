@@ -5,7 +5,9 @@ import { IonRouterOutlet, IonProgressBar } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import HomeContainer from "Components/Home/HomeContainer";
 import ProjectsContainer from "Components/Projects/ProjectsContainer";
+import NewProjectContainer from "Components/NewProject/NewProjectContainer";
 import ProjectContainer from "Components/Project/ProjectContainer";
+import ConsultationContainer from "Components/Consultation/ConsultationContainer";
 import { check_for_current_session } from "Store/user/thinks";
 
 // pretty easy. make a PageContainerComponent per route.
@@ -31,7 +33,17 @@ const Routes = () => {
       <IonRouterOutlet>
         <Route exact path="/" component={HomeContainer} />
         <Route exact path="/projects" component={ProjectsContainer} />
-        <Route exact path="/projects/:objectId" component={ProjectContainer} />
+        <Route exact path="/projects/new" component={NewProjectContainer} />
+        <Route
+          exact
+          path="/projects/:project_objectId"
+          component={ProjectContainer}
+        />
+        <Route
+          exact
+          path="/consultation/:consultation_objectId"
+          component={ConsultationContainer}
+        />
       </IonRouterOutlet>
     </IonReactRouter>
   ) : (

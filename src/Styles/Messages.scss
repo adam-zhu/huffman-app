@@ -1,4 +1,6 @@
 #project-messages {
+  padding-bottom: 40vh;
+
   .message-row {
     padding: 0.125rem;
     display: flex;
@@ -30,5 +32,10 @@
         margin: 0;
       }
     }
+  }
+
+  form {
+    border-top: 1px solid gainsboro;
+    margin-top: 1rem;
   }
 }
