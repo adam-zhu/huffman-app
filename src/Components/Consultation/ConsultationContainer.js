@@ -15,7 +15,10 @@ const Consultation = ({ match, location }) => {
   }, [match.params.consultation_objectId]);
 
   return (
-    <PageContainer>{data && <Messages consultation={data} />}</PageContainer>
+    <PageContainer>
+      <h1>{data?.project?.name}</h1>
+      {data && <Messages consultation={data} />}
+    </PageContainer>
   );
 };
 

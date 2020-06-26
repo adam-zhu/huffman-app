@@ -9,8 +9,8 @@ import {
   IonChip,
   IonLabel,
 } from "@ionic/react";
+import { formatRelative } from "date-fns";
 import PageContainer from "Components/Global/PageContainer";
-import { format, formatDistance, formatRelative, subDays } from "date-fns";
 import "Styles/Project.scss";
 import { get_project, begin_new_consultation } from "Store/project/thinks";
 
@@ -49,7 +49,7 @@ const ProjectDetails = () => {
   return (
     <IonGrid className="project-details">
       <IonRow>
-        <strong className="name">{data?.name}</strong>
+        <h2 className="name">{data?.name}</h2>
       </IonRow>
       <IonRow>
         <p className="description">{data?.description}</p>
@@ -70,10 +70,15 @@ const ProjectDetails = () => {
 };
 
 const ProjectConsultations = () => {
-  const { data, consutlation_creation_busy } = useSelector(
-    (state) => state.project
-  );
+  const { project, user } = useSelector((state) => state);
+  const { data, consutlation_creation_busy } = project;
   const consultations = data?.consultations || [];
+  const [open_consultations, closed_consultations] = consultations.reduce(
+    (acc, c) =>
+      c.is_open ? [acc[0].concat([c]), acc[1]] : [acc[0], acc[1].concat([c])],
+    [[], []]
+  );
+  const byUpdatedAt = (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt);
   const dispatch = useDispatch();
   const new_consultation_handler = () => dispatch(begin_new_consultation());
 
@@ -86,22 +91,42 @@ const ProjectConsultations = () => {
             {data?.package?.amount_of_included_consultations} consultations used
           </span>
         </IonCol>
-        <IonCol className="ion-align-self-end new-consultation">
-          <IonButton
-            className="new-consultation"
-            onClick={new_consultation_handler}
-            disabled={consutlation_creation_busy}
-          >
-            Begin new consultation
-          </IonButton>
-        </IonCol>
       </IonRow>
-      <IonRow>Previous Consultations:</IonRow>
-      {consultations.length > 0
-        ? consultations
-            .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+      <IonRow>
+        <IonButton
+          className="new-consultation"
+          expand="block"
+          onClick={new_consultation_handler}
+          disabled={consutlation_creation_busy}
+        >
+          Begin new consultation
+        </IonButton>
+      </IonRow>
+      <IonRow>
+        <hr />
+      </IonRow>
+      <IonRow>
+        <h5>Open Consultations:</h5>
+      </IonRow>
+      {open_consultations.length > 0
+        ? open_consultations
+            .sort(byUpdatedAt)
             .map((c) => <ConsultationRow key={c.objectId} consultation={c} />)
         : "none"}
+      {closed_consultations.length > 0 && (
+        <>
+          <IonRow>
+            <h5>Closed Consultations:</h5>
+          </IonRow>
+          {closed_consultations.sort(byUpdatedAt).map((c) => (
+            <ConsultationRow
+              key={c.objectId}
+              consultation={c}
+              disabled={user.data.is_admin === false}
+            />
+          ))}
+        </>
+      )}
     </IonGrid>
   );
 };
@@ -113,7 +138,6 @@ const ConsultationRow = ({ consultation }) => {
     <IonRow>
       <IonButton
         expand="block"
-        fill="outline"
         color="dark"
         routerLink={{
           pathname: `/consultation/${consultation.objectId}`,

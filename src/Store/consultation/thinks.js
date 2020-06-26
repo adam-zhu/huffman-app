@@ -7,6 +7,8 @@ import {
   SUBSCRIBED,
   UNSUBSCRIBED,
   RECEIVE_MESSAGE,
+  CONSULTATION_CLOSE_REQUEST_START,
+  CONSULTATION_CLOSE_REQUEST_END,
 } from "./reducer";
 import { add_app_error } from "Store/errors/thinks";
 
@@ -42,6 +44,41 @@ export const get_consultation = (consultation_data) => async (
   } catch (e) {
     dispatch({
       type: CONSULTATION_GET_REQUEST_END,
+    });
+
+    dispatch(add_app_error(e.message));
+  }
+};
+
+export const close_consultation = (consultation_data) => async (
+  dispatch,
+  getState,
+  Parse
+) => {
+  const { data } = getState().consultation;
+  const consultation_query = new Parse.Query("consultation");
+
+  dispatch({
+    type: CONSULTATION_CLOSE_REQUEST_START,
+  });
+
+  try {
+    const consultation_object = await consultation_query.get(data.objectId);
+
+    consultation_object.set("is_open", false);
+
+    const updated_consultation_object = await consultation_object.save();
+
+    dispatch({
+      type: CONSULTATION_CLOSE_REQUEST_END,
+      payload: {
+        ...consultation_data,
+        ...updated_consultation_object.toJSON(),
+      },
+    });
+  } catch (e) {
+    dispatch({
+      type: CONSULTATION_CLOSE_REQUEST_END,
     });
 
     dispatch(add_app_error(e.message));

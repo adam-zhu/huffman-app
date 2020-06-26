@@ -14,6 +14,9 @@ export const SEND_MESSAGE_REQUEST_END = "SEND_MESSAGE_REQUEST_END";
 export const SUBSCRIBED = "SUBSCRIBED";
 export const UNSUBSCRIBED = "UNSUBSCRIBED";
 export const RECEIVE_MESSAGE = "RECEIVE_MESSAGE";
+export const CONSULTATION_CLOSE_REQUEST_START =
+  "CONSULTATION_CLOSE_REQUEST_START";
+export const CONSULTATION_CLOSE_REQUEST_END = "CONSULTATION_CLOSE_REQUEST_END";
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -68,6 +71,19 @@ export default (state = initialState, action) => {
           ...state.data,
           messages: state.data.messages.concat([action.payload]),
         },
+      };
+
+    case CONSULTATION_CLOSE_REQUEST_START:
+      return {
+        ...state,
+        loading: true,
+      };
+
+    case CONSULTATION_CLOSE_REQUEST_END:
+      return {
+        ...state,
+        loading: false,
+        data: action.payload,
       };
 
     default:

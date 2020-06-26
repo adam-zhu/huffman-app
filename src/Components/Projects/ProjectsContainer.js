@@ -21,7 +21,8 @@ const Projects = () => {
 
   return (
     <PageContainer>
-      Projects
+      <h1>Projects</h1>
+      <br />
       {(data || []).map((p) => (
         <ProjectCard project={p} key={p.objectId} />
       ))}

@@ -4,6 +4,7 @@ import { useHistory, useRouteMatch } from "react-router-dom";
 import { IonContent, IonPage } from "@ionic/react";
 import ErrorAlerter from "Components/Global/ErrorAlerter";
 import Header from "Components/Global/Header";
+import "Styles/PageContainer.scss";
 
 export const scroll_ion_content_to_bottom = async () => {
   const ion_content = document.querySelector("ion-content");
@@ -19,7 +20,7 @@ export const scroll_ion_content_to_bottom = async () => {
 };
 
 // this is how we include global stuff -- we wrap every PageContainerComponent in this
-const PageContainer = ({ children }) => {
+const PageContainer = ({ className, children }) => {
   const { data } = useSelector((state) => state.user);
   const match = useRouteMatch();
   const history = useHistory();
@@ -36,7 +37,9 @@ const PageContainer = ({ children }) => {
     <IonPage>
       <Header />
       <IonContent id="content" fullscreen>
-        {children}
+        <div id="page-container" className={className}>
+          {children}
+        </div>
       </IonContent>
       <ErrorAlerter />
     </IonPage>

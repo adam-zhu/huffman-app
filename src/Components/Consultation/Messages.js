@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import "Styles/Messages.scss";
 import {
@@ -6,8 +6,9 @@ import {
   stop_listening,
   enter_message,
   send_message,
+  close_consultation,
 } from "Store/consultation/thinks";
-import { IonButton, IonTextarea } from "@ionic/react";
+import { IonButton, IonTextarea, IonAlert } from "@ionic/react";
 import { scroll_ion_content_to_bottom } from "Components/Global/PageContainer";
 
 const Messages = ({ consultation }) => {
@@ -28,6 +29,7 @@ const Messages = ({ consultation }) => {
 
   return (
     <div id="consultation-messages">
+      <br />
       <div>
         {messages.map((m) => (
           <MessageRow key={m.objectId} message={m} />
@@ -63,8 +65,12 @@ const MessageRow = ({ message }) => {
 };
 
 const MessageInputForm = () => {
+  const [
+    is_confrim_close_consultation_modal_open,
+    set_confirm_close_consultation_modal_open,
+  ] = useState(false);
   const { consultation, user } = useSelector((state) => state);
-  const { data, message_input_value, is_message_sending } = consultation;
+  const { message_input_value, is_message_sending } = consultation;
   const dispatch = useDispatch();
   const message_input_handler = (e) => {
     dispatch(enter_message(e.target.value));
@@ -73,6 +79,11 @@ const MessageInputForm = () => {
     e.preventDefault();
 
     dispatch(send_message());
+  };
+  const close_consultation_handler = (e) => {
+    e.preventDefault();
+
+    dispatch(close_consultation());
   };
 
   return (
@@ -88,6 +99,35 @@ const MessageInputForm = () => {
       <IonButton expand="block" type="submit" disabled={is_message_sending}>
         Send
       </IonButton>
+      {user.data.is_admin === true && (
+        <IonButton
+          expand="block"
+          type="button"
+          color="danger"
+          onClick={(e) => set_confirm_close_consultation_modal_open(true)}
+        >
+          Close Consultation
+        </IonButton>
+      )}
+      <IonAlert
+        isOpen={is_confrim_close_consultation_modal_open}
+        message="Are you sure you want to close this consultation?"
+        cssClass="confirm-consultation-close-modal"
+        header="Close Consultation"
+        buttons={[
+          {
+            text: "Cancel",
+            role: "cancel",
+            cssClass: "secondary",
+            handler: (e) => set_confirm_close_consultation_modal_open(false),
+          },
+          {
+            text: "Close Consultation",
+            cssClass: "primary",
+            handler: close_consultation_handler,
+          },
+        ]}
+      />
     </form>
   );
 };
