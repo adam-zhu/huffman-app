@@ -71,7 +71,7 @@ const ProjectDetails = () => {
 
 const ProjectConsultations = () => {
   const { project, user } = useSelector((state) => state);
-  const { data, consutlation_creation_busy } = project;
+  const { data, consultation_creation_busy } = project;
   const consultations = data?.consultations || [];
   const [open_consultations, closed_consultations] = consultations.reduce(
     (acc, c) =>
@@ -97,7 +97,7 @@ const ProjectConsultations = () => {
           className="new-consultation"
           expand="block"
           onClick={new_consultation_handler}
-          disabled={consutlation_creation_busy}
+          disabled={consultation_creation_busy}
         >
           Begin new consultation
         </IonButton>

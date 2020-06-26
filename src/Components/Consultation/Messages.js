@@ -80,9 +80,7 @@ const MessageInputForm = () => {
 
     dispatch(send_message());
   };
-  const close_consultation_handler = (e) => {
-    e.preventDefault();
-
+  const close_consultation_handler = () => {
     dispatch(close_consultation());
   };
 
