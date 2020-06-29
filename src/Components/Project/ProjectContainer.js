@@ -8,11 +8,14 @@ import {
   IonButton,
   IonChip,
   IonLabel,
+  IonSkeletonText,
+  IonText,
 } from "@ionic/react";
 import { formatRelative } from "date-fns";
 import PageContainer from "Components/Global/PageContainer";
 import "Styles/Project.scss";
 import { get_project, begin_new_consultation } from "Store/project/thinks";
+import { inches_to_feet } from "Utils";
 
 const Project = ({ match }) => {
   const { data, new_consultation } = useSelector(
@@ -25,44 +28,44 @@ const Project = ({ match }) => {
   }, [match.params.project_objectId]);
 
   if (new_consultation !== undefined) {
-    return (
-      <Redirect
-        to={{
-          pathname: `/consultation/${new_consultation.objectId}`,
-          state: new_consultation,
-        }}
-      />
-    );
+    return <Redirect to={`/consultation/${new_consultation.objectId}`} />;
   }
 
   return (
     <PageContainer className="project-page-container">
-      <ProjectDetails />
-      <ProjectConsultations />
+      {data === undefined ? (
+        <IonSkeletonText animated />
+      ) : (
+        <>
+          <ProjectDetails />
+          <ProjectConsultations />
+        </>
+      )}
     </PageContainer>
   );
 };
 
 const ProjectDetails = () => {
   const { data } = useSelector((state) => state.project);
+  const { name, description, room_width, room_length, room_height } = data;
 
   return (
     <IonGrid className="project-details">
       <IonRow>
-        <h2 className="name">{data?.name}</h2>
+        <h2 className="name">{name}</h2>
       </IonRow>
       <IonRow>
-        <p className="description">{data?.description}</p>
+        <p className="description">{description}</p>
       </IonRow>
       <IonRow className="room-dimensions">
         <IonChip>
-          <IonLabel>Width {data?.room_width} in</IonLabel>
+          <IonLabel>Width {inches_to_feet(room_width)}'</IonLabel>
         </IonChip>
         <IonChip>
-          <IonLabel>Length {data?.room_length} in</IonLabel>
+          <IonLabel>Length {inches_to_feet(room_length)}'</IonLabel>
         </IonChip>
         <IonChip>
-          <IonLabel>Height {data?.room_height} in</IonLabel>
+          <IonLabel>Height {inches_to_feet(room_height)}'</IonLabel>
         </IonChip>
       </IonRow>
     </IonGrid>
@@ -86,27 +89,32 @@ const ProjectConsultations = () => {
     <IonGrid>
       <IonRow>
         <IonCol className="consultation-count">
-          <strong>{data?.consultations.length}</strong> /{" "}
-          <span>
-            {data?.package?.amount_of_included_consultations} consultations used
-          </span>
+          <IonText>
+            <span className="count">
+              <strong>{data?.consultations.length}</strong> /{" "}
+              {data?.package?.amount_of_included_consultations}
+            </span>
+          </IonText>
+          <br />
+          <IonText color="medium">consultations used</IonText>
         </IonCol>
-      </IonRow>
-      <IonRow>
-        <IonButton
-          className="new-consultation"
-          expand="block"
-          onClick={new_consultation_handler}
-          disabled={consultation_creation_busy}
-        >
-          Begin new consultation
-        </IonButton>
+        <IonCol>
+          <IonButton
+            className="new-consultation"
+            size="small"
+            fill="outline"
+            onClick={new_consultation_handler}
+            disabled={consultation_creation_busy}
+          >
+            Begin new consultation &rarr;
+          </IonButton>
+        </IonCol>
       </IonRow>
       <IonRow>
         <hr />
       </IonRow>
       <IonRow>
-        <h5>Open Consultations:</h5>
+        <h6>Open Consultations:</h6>
       </IonRow>
       {open_consultations.length > 0
         ? open_consultations
@@ -116,7 +124,7 @@ const ProjectConsultations = () => {
       {closed_consultations.length > 0 && (
         <>
           <IonRow>
-            <h5>Closed Consultations:</h5>
+            <h6>Closed Consultations:</h6>
           </IonRow>
           {closed_consultations.sort(byUpdatedAt).map((c) => (
             <ConsultationRow
@@ -138,11 +146,12 @@ const ConsultationRow = ({ consultation }) => {
     <IonRow>
       <IonButton
         expand="block"
-        color="dark"
+        color={consultation.is_open ? "dark" : "medium"}
         routerLink={{
           pathname: `/consultation/${consultation.objectId}`,
           state: consultation,
         }}
+        disabled={consultation.is_open === false}
       >
         last active:{" "}
         {formatRelative(new Date(consultation.updatedAt), new Date())}

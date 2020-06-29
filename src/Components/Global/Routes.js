@@ -8,6 +8,7 @@ import ProjectsContainer from "Components/Projects/ProjectsContainer";
 import NewProjectContainer from "Components/NewProject/NewProjectContainer";
 import ProjectContainer from "Components/Project/ProjectContainer";
 import ConsultationContainer from "Components/Consultation/ConsultationContainer";
+import PackagesContainer from "Components/Packages/PackagesContainer";
 import { check_for_current_session } from "Store/user/thinks";
 
 // pretty easy. make a PageContainerComponent per route.
@@ -32,8 +33,8 @@ const Routes = () => {
     <IonReactRouter cssClass="Routes">
       <IonRouterOutlet>
         <Route exact path="/" component={HomeContainer} />
+        <Route exact path="/new_project" component={NewProjectContainer} />
         <Route exact path="/projects" component={ProjectsContainer} />
-        <Route exact path="/projects/new" component={NewProjectContainer} />
         <Route
           exact
           path="/projects/:project_objectId"
@@ -44,6 +45,7 @@ const Routes = () => {
           path="/consultation/:consultation_objectId"
           component={ConsultationContainer}
         />
+        <Route exact path="/packages" component={PackagesContainer} />
       </IonRouterOutlet>
     </IonReactRouter>
   ) : (

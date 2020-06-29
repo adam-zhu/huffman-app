@@ -4,6 +4,7 @@ import {
   CONSULTATION_CREATE_REQUEST_START,
   CONSULTATION_CREATE_REQUEST_END,
 } from "./reducer";
+import { NEW_CONSULTATION_START_SUCCESS } from "Store/consultation/reducer";
 import { add_app_error } from "Store/errors/thinks";
 
 export const get_project = (objectId) => async (dispatch, getState, Parse) => {
@@ -14,7 +15,6 @@ export const get_project = (objectId) => async (dispatch, getState, Parse) => {
     project_query.equalTo("created_by", Parse.User.current());
   }
 
-  project_query.equalTo("objectId", objectId);
   project_query.include("package");
 
   dispatch({
@@ -22,8 +22,8 @@ export const get_project = (objectId) => async (dispatch, getState, Parse) => {
   });
 
   try {
-    const project_results = await project_query.find();
-    const project_data = project_results[0].toJSON();
+    const project_result = await project_query.get(objectId);
+    const project_data = project_result.toJSON();
 
     dispatch(get_consultations(project_data));
   } catch (e) {
@@ -40,12 +40,7 @@ const get_consultations = (project_data) => async (
   getState,
   Parse
 ) => {
-  const { user } = getState();
   const consultation_query = new Parse.Query("consultation");
-
-  if (!user.data.is_admin) {
-    consultation_query.equalTo("created_by", Parse.User.current());
-  }
 
   consultation_query.equalTo(
     "project",
@@ -94,11 +89,19 @@ export const begin_new_consultation = () => async (
 
   try {
     const result = await NewConsultation.save();
+    const data = result.toJSON();
 
     dispatch({
       type: CONSULTATION_CREATE_REQUEST_END,
-      payload: result.toJSON(),
+      payload: data,
     });
+
+    dispatch({
+      type: NEW_CONSULTATION_START_SUCCESS,
+      payload: data,
+    });
+
+    dispatch(get_project(project.data.objectId)); // reload fresh data
   } catch (e) {
     dispatch({
       type: CONSULTATION_CREATE_REQUEST_END,

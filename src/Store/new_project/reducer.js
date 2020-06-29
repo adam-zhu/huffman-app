@@ -5,7 +5,7 @@ const initialState = {
   room_width: 0,
   room_length: 0,
   room_height: 0,
-  image: undefined,
+  package_objectId: "",
   created_project_objectId: undefined,
 };
 

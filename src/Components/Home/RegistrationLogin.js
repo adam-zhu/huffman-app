@@ -34,19 +34,20 @@ const Form = () => {
     password_input_value,
     is_registration_request_busy,
     is_signin_request_busy,
+    is_signout_request_busy,
   } = useSelector((state) => state.user);
   const is_form_busy =
     mode === "registration"
       ? is_registration_request_busy
-      : is_signin_request_busy;
+      : is_signin_request_busy || is_signout_request_busy;
   const dispatch = useDispatch();
   const email_input_change_handler = (e) => {
-    const trimmed = e.target.value.trim();
+    const trimmed = e.detail.value.trim();
 
     dispatch(set_email_input_value(trimmed));
   };
   const password_input_change_handler = (e) => {
-    const trimmed = e.target.value.trim();
+    const trimmed = e.detail.value.trim();
 
     dispatch(set_password_input_value(trimmed));
   };
@@ -58,7 +59,7 @@ const Form = () => {
   const password_regex = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$";
 
   return (
-    <form className="registration-login" onSubmit={submit_handler}>
+    <>
       {mode === "registration" ? (
         <>
           <strong>Create an account or </strong>
@@ -95,6 +96,7 @@ const Form = () => {
         onIonChange={email_input_change_handler}
         disabled={is_form_busy}
         required
+        autofocus
       />
       <IonInput
         cssClass="field"
@@ -113,11 +115,12 @@ const Form = () => {
           new RegExp(password_regex).test(password_input_value) === false ||
           is_form_busy
         }
-        type="submit"
+        type="button"
+        onClick={submit_handler}
       >
         {mode === "registration" ? "Register" : "Log In"}
       </IonButton>
-    </form>
+    </>
   );
 };
 

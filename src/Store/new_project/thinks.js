@@ -4,6 +4,7 @@ import {
   NEW_PROJECT_CREATE_REQUEST_END,
 } from "./reducer";
 import { add_app_error } from "Store/errors/thinks";
+import { get_projects } from "Store/projects/thinks";
 
 export const set_form_field_value = (payload) => ({
   type: FORM_STATE_CHANGED,
@@ -11,7 +12,7 @@ export const set_form_field_value = (payload) => ({
 });
 
 export const create_new_project = () => async (dispatch, getState, Parse) => {
-  const { user, new_project } = getState();
+  const { new_project } = getState();
 
   const Project = Parse.Object.extend("project");
   const NewProject = new Project();
@@ -23,7 +24,9 @@ export const create_new_project = () => async (dispatch, getState, Parse) => {
   NewProject.set("room_height", new_project.room_height);
   NewProject.set(
     "package",
-    Parse.Object.extend("project").createWithoutData("DqVGjUphQq") // only package id
+    Parse.Object.extend("package").createWithoutData(
+      new_project.package_objectId
+    )
   );
   NewProject.set("created_by", Parse.User.current());
 
@@ -38,6 +41,8 @@ export const create_new_project = () => async (dispatch, getState, Parse) => {
       type: NEW_PROJECT_CREATE_REQUEST_END,
       payload: result.toJSON().objectId,
     });
+
+    dispatch(get_projects()); // load the new project into the projects store
   } catch (e) {
     dispatch({
       type: NEW_PROJECT_CREATE_REQUEST_END,

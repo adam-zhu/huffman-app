@@ -3,25 +3,25 @@ import { useSelector, useDispatch } from "react-redux";
 import "Styles/Messages.scss";
 import {
   listen_for_messages,
-  stop_listening,
+  stop_listening_for_messages,
   enter_message,
   send_message,
   close_consultation,
 } from "Store/consultation/thinks";
-import { IonButton, IonTextarea, IonAlert } from "@ionic/react";
+import { IonButton, IonTextarea, IonAlert, IonToast } from "@ionic/react";
 import { scroll_ion_content_to_bottom } from "Components/Global/PageContainer";
 
-const Messages = ({ consultation }) => {
+const Messages = ({ consultation_objectId }) => {
   const { data } = useSelector((state) => state.consultation);
   const dispatch = useDispatch();
   const messages = data.messages || [];
 
   useEffect(() => {
-    dispatch(listen_for_messages(consultation.objectId));
+    dispatch(listen_for_messages(consultation_objectId));
     scroll_ion_content_to_bottom();
 
-    return () => dispatch(stop_listening());
-  }, [consultation.objectId]);
+    return () => dispatch(stop_listening_for_messages());
+  }, [consultation_objectId]);
 
   useEffect(() => {
     window.requestAnimationFrame(scroll_ion_content_to_bottom);
@@ -30,11 +30,18 @@ const Messages = ({ consultation }) => {
   return (
     <div id="consultation-messages">
       <br />
-      <div>
-        {messages.map((m) => (
-          <MessageRow key={m.objectId} message={m} />
-        ))}
-      </div>
+      {messages.length > 0 ? (
+        messages.map((m) => <MessageRow key={m.objectId} message={m} />)
+      ) : (
+        <IonToast
+          isOpen={true}
+          message="This consultation doesn't have any messages yet. Type a message below
+        and press send to begin."
+          duration={4200}
+          position="top"
+          translucent
+        />
+      )}
       <MessageInputForm />
     </div>
   );
@@ -73,7 +80,7 @@ const MessageInputForm = () => {
   const { message_input_value, is_message_sending } = consultation;
   const dispatch = useDispatch();
   const message_input_handler = (e) => {
-    dispatch(enter_message(e.target.value));
+    dispatch(enter_message(e.detail.value));
   };
   const message_submit_handler = (e) => {
     e.preventDefault();
@@ -93,6 +100,7 @@ const MessageInputForm = () => {
         onIonChange={message_input_handler}
         disabled={is_message_sending}
         required
+        autofocus
       />
       <IonButton expand="block" type="submit" disabled={is_message_sending}>
         Send

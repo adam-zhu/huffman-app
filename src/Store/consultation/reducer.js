@@ -1,25 +1,36 @@
 const initialState = {
   loading: false,
   data: undefined,
-  subscription: undefined, // this stores the Parse LiveQuery object
+  consultation_subscription: undefined, // this stores the Parse LiveQuery object
+  message_subscription: undefined, // this stores the Parse LiveQuery object
   message_input_value: "",
   is_message_sending: false,
 };
 
+export const NEW_CONSULTATION_START_SUCCESS = "NEW_CONSULTATION_START_SUCCESS";
 export const CONSULTATION_GET_REQUEST_START = "CONSULTATION_GET_REQUEST_START";
 export const CONSULTATION_GET_REQUEST_END = "CONSULTATION_GET_REQUEST_END";
 export const MESSAGE_ENTERED = "MESSAGE_ENTERED";
 export const SEND_MESSAGE_REQUEST_START = "SEND_MESSAGE_REQUEST_START";
 export const SEND_MESSAGE_REQUEST_END = "SEND_MESSAGE_REQUEST_END";
-export const SUBSCRIBED = "SUBSCRIBED";
-export const UNSUBSCRIBED = "UNSUBSCRIBED";
+export const MESSAGES_SUBSCRIBED = "MESSAGES_SUBSCRIBED";
+export const MESSAGES_UNSUBSCRIBED = "MESSAGES_UNSUBSCRIBED";
 export const RECEIVE_MESSAGE = "RECEIVE_MESSAGE";
 export const CONSULTATION_CLOSE_REQUEST_START =
   "CONSULTATION_CLOSE_REQUEST_START";
 export const CONSULTATION_CLOSE_REQUEST_END = "CONSULTATION_CLOSE_REQUEST_END";
+export const CONSULTATION_SUBSCRIBED = "CONSULTATION_SUBSCRIBED";
+export const CONSULTATION_UNSUBSCRIBED = "CONSULTATION_UNSUBSCRIBED";
+export const CONSULATION_CLOSED = "CONSULATION_CLOSED";
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case NEW_CONSULTATION_START_SUCCESS:
+      return {
+        ...state,
+        data: action.payload,
+      };
+
     case CONSULTATION_GET_REQUEST_START:
       return {
         ...state,
@@ -52,16 +63,16 @@ export default (state = initialState, action) => {
         message_input_value: "",
       };
 
-    case SUBSCRIBED:
+    case MESSAGES_SUBSCRIBED:
       return {
         ...state,
-        subscription: action.payload,
+        message_subscription: action.payload,
       };
 
-    case UNSUBSCRIBED:
+    case MESSAGES_UNSUBSCRIBED:
       return {
         ...state,
-        subscription: undefined,
+        message_subscription: undefined,
       };
 
     case RECEIVE_MESSAGE:
@@ -83,6 +94,24 @@ export default (state = initialState, action) => {
       return {
         ...state,
         loading: false,
+        data: action.payload,
+      };
+
+    case CONSULTATION_SUBSCRIBED:
+      return {
+        ...state,
+        consultation_subscription: action.payload,
+      };
+
+    case CONSULTATION_UNSUBSCRIBED:
+      return {
+        ...state,
+        consultation_subscription: undefined,
+      };
+
+    case CONSULATION_CLOSED:
+      return {
+        ...state,
         data: action.payload,
       };
 

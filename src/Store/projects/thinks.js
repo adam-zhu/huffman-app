@@ -13,6 +13,8 @@ export const get_projects = () => async (dispatch, getState, Parse) => {
   }
 
   query.include("package");
+  query.include("created_by");
+  query.descending("createdAt");
 
   dispatch({
     type: PROJECTS_GET_REQUEST_START,

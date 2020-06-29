@@ -24,9 +24,7 @@ const Projects = () => {
     <PageContainer className="projects-page-container">
       <div className="page-top">
         <h1>Projects</h1>
-        <IonButton fill="outline" routerLink="/new_project">
-          New Project &rarr;
-        </IonButton>
+        <IonButton routerLink="/new_project">New Project</IonButton>
       </div>
       {(data || []).map((p) => (
         <ProjectCard project={p} key={p.objectId} />

@@ -1,14 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import PageContainer from "Components/Global/PageContainer";
-import RegistrationLogin from "Components/Home/RegistrationLogin";
+import NewProjectForm from "Components/NewProject/NewProjectForm";
 import "Styles/NewProject.scss";
+import { load_packages } from "Store/packages/thinks";
 
-const Home = () => {
+const NewProject = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(load_packages());
+  }, []);
+
   return (
-    <PageContainer>
-      <RegistrationLogin />
+    <PageContainer className="new-project-page-container">
+      <NewProjectForm />
     </PageContainer>
   );
 };
 
-export default Home;
+export default NewProject;

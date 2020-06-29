@@ -34,7 +34,7 @@ const PageContainer = ({ className, children }) => {
   }, [!is_user_logged_in && !is_home_page]);
 
   return (
-    <IonPage>
+    <IonPage id={className} className="ion-page">
       <Header />
       <IonContent id="content" fullscreen>
         <div id="page-container" className={className}>

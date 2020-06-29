@@ -5,6 +5,7 @@ import projects from "./projects/reducer";
 import new_project from "./new_project/reducer";
 import project from "./project/reducer";
 import consultation from "./consultation/reducer";
+import packages from "./packages/reducer";
 
 export default combineReducers({
   errors,
@@ -13,4 +14,5 @@ export default combineReducers({
   new_project,
   project,
   consultation,
+  packages,
 });
