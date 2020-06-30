@@ -44,7 +44,7 @@ const NewProjectForm = () => {
   };
 
   if (created_project_objectId !== undefined) {
-    return <Redirect to={`/projects/${created_project_objectId}`} />;
+    return <Redirect to={`/project/${created_project_objectId}`} />;
   }
 
   if (packages.data === undefined) {

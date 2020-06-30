@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useRouteMatch } from "react-router-dom";
 import PageContainer from "Components/Global/PageContainer";
 import "Styles/Consultation.scss";
 import {
@@ -9,9 +10,10 @@ import {
 } from "Store/consultation/thinks";
 import Messages from "./Messages";
 
-const Consultation = ({ match }) => {
+const Consultation = () => {
   const { data } = useSelector((state) => state.consultation);
   const dispatch = useDispatch();
+  const match = useRouteMatch();
 
   useEffect(() => {
     dispatch(get_consultation(match.params.consultation_objectId));

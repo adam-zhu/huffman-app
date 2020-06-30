@@ -8,12 +8,13 @@ import {
   IonCardTitle,
   IonCardSubtitle,
   IonButton,
+  IonSkeletonText,
 } from "@ionic/react";
 import "Styles/Projects.scss";
 import { get_projects } from "Store/projects/thinks";
 
 const Projects = () => {
-  const { data } = useSelector((state) => state.projects);
+  const { data, loading } = useSelector((root_state) => root_state.projects);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -28,16 +29,21 @@ const Projects = () => {
           New Project &rarr;
         </IonButton>
       </div>
-      {(data || []).map((p) => (
-        <ProjectCard project={p} key={p.objectId} />
-      ))}
+      {loading || data === undefined ? (
+        <>
+          <br />
+          <IonSkeletonText animated />
+        </>
+      ) : (
+        data.map((p) => <ProjectCard project={p} key={p.objectId} />)
+      )}
     </PageContainer>
   );
 };
 
 const ProjectCard = ({ project }) => {
   return (
-    <IonCard type="button" routerLink={`/projects/${project.objectId}`}>
+    <IonCard type="button" routerLink={`/project/${project.objectId}`}>
       <IonCardHeader>
         <IonCardSubtitle>{project.created_by.username}</IonCardSubtitle>
         <IonCardTitle>{project.name}</IonCardTitle>

@@ -9,7 +9,7 @@ import {
   close_consultation,
 } from "Store/consultation/thinks";
 import { IonButton, IonTextarea, IonAlert, IonToast } from "@ionic/react";
-import { scroll_ion_content_to_bottom } from "Components/Global/PageContainer";
+import { scroll_ion_content_to_bottom } from "Utils";
 
 const Messages = ({ consultation_objectId }) => {
   const { data } = useSelector((state) => state.consultation);
@@ -35,11 +35,18 @@ const Messages = ({ consultation_objectId }) => {
       ) : (
         <IonToast
           isOpen={true}
+          header="New Consultation"
           message="This consultation doesn't have any messages yet. Type a message below
         and press send to begin."
           duration={4200}
           position="top"
           translucent
+          buttons={[
+            {
+              text: "Dismiss",
+              role: "cancel",
+            },
+          ]}
         />
       )}
       <MessageInputForm />

@@ -87,8 +87,13 @@ export const stop_listening_for_consultation_close = () => (
   getState
 ) => {
   const { consultation_subscription } = getState().consultation;
+  const unsubscribe = () =>
+    consultation_subscription &&
+    typeof consultation_subscription.unsubscribe === "function"
+      ? consultation_subscription.unsubscribe()
+      : () => {};
 
-  consultation_subscription.unsubscribe();
+  unsubscribe();
 
   dispatch({
     type: CONSULTATION_UNSUBSCRIBED,
@@ -124,8 +129,13 @@ export const listen_for_messages = (objectId) => async (
 
 export const stop_listening_for_messages = () => (dispatch, getState) => {
   const { message_subscription } = getState().consultation;
+  const unsubscribe = () =>
+    message_subscription &&
+    typeof message_subscription.unsubscribe === "function"
+      ? message_subscription.unsubscribe()
+      : () => {};
 
-  message_subscription.unsubscribe();
+  unsubscribe();
 
   dispatch({
     type: MESSAGES_UNSUBSCRIBED,

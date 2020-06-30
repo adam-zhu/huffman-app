@@ -22,10 +22,11 @@ export const get_projects = () => async (dispatch, getState, Parse) => {
 
   try {
     const results = await query.find();
+    const formatted = results.map((r) => r.toJSON());
 
     dispatch({
       type: PROJECTS_GET_REQUEST_END,
-      payload: results.map((r) => r.toJSON()),
+      payload: formatted,
     });
   } catch (e) {
     dispatch({

@@ -38,7 +38,7 @@ const Header = () => {
 const BackButton = ({ pathname }) => {
   const root_state = useSelector((root_state) => root_state);
   const [text, href, routerDirection] = (() => {
-    if (pathname.indexOf("/projects/") !== -1) {
+    if (pathname.indexOf("/project/") !== -1) {
       return ["Projects", "/projects", "back"];
     }
 
@@ -47,7 +47,7 @@ const BackButton = ({ pathname }) => {
         root_state.consultation.data
           ? `${root_state.consultation?.data?.project?.name}`
           : "loading...",
-        `/projects/${root_state.consultation?.data?.project?.objectId}`,
+        `/project/${root_state.consultation?.data?.project?.objectId}`,
         "back",
       ];
     }

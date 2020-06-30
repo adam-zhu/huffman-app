@@ -32,24 +32,28 @@ const Routes = () => {
   return is_session_restored ? (
     <IonReactRouter cssClass="Routes">
       <IonRouterOutlet>
-        <Route exact path="/" component={HomeContainer} />
-        <Route exact path="/new_project" component={NewProjectContainer} />
-        <Route exact path="/projects" component={ProjectsContainer} />
+        <Route exact={true} path="/" component={HomeContainer} />
+        <Route exact={true} path="/projects" component={ProjectsContainer} />
         <Route
-          exact
-          path="/projects/:project_objectId"
+          exact={true}
+          path="/new_project"
+          component={NewProjectContainer}
+        />
+        <Route exact={true} path="/packages" component={PackagesContainer} />
+        <Route
+          exact={true}
+          path="/project/:project_objectId"
           component={ProjectContainer}
         />
         <Route
-          exact
+          exact={true}
           path="/consultation/:consultation_objectId"
           component={ConsultationContainer}
         />
-        <Route exact path="/packages" component={PackagesContainer} />
       </IonRouterOutlet>
     </IonReactRouter>
   ) : (
-    <IonProgressBar type="indeterminate"></IonProgressBar>
+    <IonProgressBar type="indeterminate" />
   );
 };
 

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Redirect } from "react-router-dom";
+import { Redirect, useRouteMatch } from "react-router-dom";
 import {
   IonGrid,
   IonRow,
@@ -17,10 +17,11 @@ import "Styles/Project.scss";
 import { get_project, begin_new_consultation } from "Store/project/thinks";
 import { inches_to_feet } from "Utils";
 
-const Project = ({ match }) => {
+const Project = () => {
   const { data, new_consultation } = useSelector(
     (root_state) => root_state.project
   );
+  const match = useRouteMatch();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -91,8 +92,19 @@ const ProjectConsultations = () => {
         <IonCol className="consultation-count">
           <IonText>
             <span className="count">
-              <strong>{data?.consultations.length}</strong> /{" "}
-              {data?.package?.amount_of_included_consultations}
+              <strong>
+                <IonText
+                  color={
+                    data.consultations.length >=
+                    data.package.amount_of_included_consultations
+                      ? "danger"
+                      : "dark"
+                  }
+                >
+                  {data.consultations.length}
+                </IonText>
+              </strong>{" "}
+              / {data.package.amount_of_included_consultations}
             </span>
           </IonText>
           <br />
@@ -104,7 +116,11 @@ const ProjectConsultations = () => {
             size="small"
             fill="outline"
             onClick={new_consultation_handler}
-            disabled={consultation_creation_busy}
+            disabled={
+              consultation_creation_busy ||
+              data.consultations.length >=
+                data.package.amount_of_included_consultations
+            }
           >
             Begin new consultation &rarr;
           </IonButton>

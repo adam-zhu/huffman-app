@@ -33,3 +33,28 @@ export const cents_to_dollars = (cents) => {
 
   return round_to_decimal_precision(dollars, 100);
 };
+
+export const scroll_ion_content_to_bottom = async () => {
+  const ion_content = document.querySelector("ion-content");
+
+  if (ion_content) {
+    const scroll_element = await ion_content.getScrollElement();
+
+    window.requestAnimationFrame(ion_content.scrollToBottom);
+    window.requestAnimationFrame(() => {
+      scroll_element.scrollTop = scroll_element.scrollHeight;
+    });
+  }
+
+  return Promise.resolve();
+};
+
+export const dismiss_ion_toast = async () => {
+  const ion_toast = document.querySelector("ion-toast");
+
+  if (ion_toast) {
+    ion_toast.dismiss();
+  }
+
+  return Promise.resolve();
+};
