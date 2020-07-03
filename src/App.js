@@ -65,7 +65,7 @@ const Pages = () => {
     return () => dispatch(stop_listening_for_changes());
   }, [user.data, data_loading, data_loaded]);
 
-  if (!data_loaded) {
+  if (!projects) {
     return <IonProgressBar type="indeterminate" />;
   }
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { Route } from "react-router-dom";
-import { IonRouterOutlet, IonProgressBar } from "@ionic/react";
+import { IonRouterOutlet } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import HomeContainer from "Components/Home/HomeContainer";
 import ProjectsContainer from "Components/Projects/ProjectsContainer";
