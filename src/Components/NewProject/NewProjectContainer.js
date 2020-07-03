@@ -5,7 +5,7 @@ import NewProjectForm from "Components/NewProject/NewProjectForm";
 import "Styles/NewProject.scss";
 import { load_packages } from "Store/packages/thinks";
 
-const NewProject = () => {
+const NewProjectContainer = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -19,4 +19,4 @@ const NewProject = () => {
   );
 };
 
-export default NewProject;
+export default NewProjectContainer;

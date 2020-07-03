@@ -19,8 +19,8 @@ const ErrorAlerter = () => {
           <i className="material-icons">error</i> Error
         </h1>
         <ul>
-          {errors.map((message) => (
-            <li>{message}</li>
+          {errors.map((message, i) => (
+            <li key={`${message}${i}`}>{message}</li>
           ))}
         </ul>
         <IonButton type="submit">OK</IonButton>

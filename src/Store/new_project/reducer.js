@@ -6,7 +6,6 @@ const initialState = {
   room_length: 0,
   room_height: 0,
   package_objectId: "",
-  created_project_objectId: undefined,
 };
 
 export const FORM_STATE_CHANGED = "FORM_STATE_CHANGED";
@@ -31,7 +30,6 @@ export default (state = initialState, action) => {
     case NEW_PROJECT_CREATE_REQUEST_END:
       return {
         ...state,
-        created_project_objectId: action.payload,
         busy: false,
       };
 

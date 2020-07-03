@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Redirect, useRouteMatch } from "react-router-dom";
+import { useRouteMatch, useHistory } from "react-router-dom";
 import {
   IonGrid,
   IonRow,
@@ -14,27 +14,17 @@ import {
 import { formatRelative } from "date-fns";
 import PageContainer from "Components/Global/PageContainer";
 import "Styles/Project.scss";
-import { get_project, begin_new_consultation } from "Store/project/thinks";
+import { begin_new_consultation } from "Store/project/thinks";
 import { inches_to_feet } from "Utils";
+import { select_project_data } from "Store/projects/selectors";
+import { get_open_closed } from "Store/projects/utils";
 
-const Project = () => {
-  const { data, new_consultation } = useSelector(
-    (root_state) => root_state.project
-  );
-  const match = useRouteMatch();
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(get_project(match.params.project_objectId));
-  }, [match.params.project_objectId]);
-
-  if (new_consultation !== undefined) {
-    return <Redirect to={`/consultation/${new_consultation.objectId}`} />;
-  }
+const ProjectContainer = () => {
+  const { projects } = useSelector((state) => state);
 
   return (
     <PageContainer className="project-page-container">
-      {data === undefined ? (
+      {projects.data_loaded === false ? (
         <IonSkeletonText animated />
       ) : (
         <>
@@ -47,8 +37,15 @@ const Project = () => {
 };
 
 const ProjectDetails = () => {
-  const { data } = useSelector((state) => state.project);
-  const { name, description, room_width, room_length, room_height } = data;
+  const state = useSelector((state) => state);
+  const match = useRouteMatch();
+  const project_data = select_project_data({ state, match });
+  const { name, description, room_width, room_length, room_height } =
+    project_data || {};
+
+  if (project_data === undefined) {
+    return <IonSkeletonText animated />;
+  }
 
   return (
     <IonGrid className="project-details">
@@ -74,17 +71,22 @@ const ProjectDetails = () => {
 };
 
 const ProjectConsultations = () => {
-  const { project, user } = useSelector((state) => state);
-  const { data, consultation_creation_busy } = project;
-  const consultations = data?.consultations || [];
-  const [open_consultations, closed_consultations] = consultations.reduce(
-    (acc, c) =>
-      c.is_open ? [acc[0].concat([c]), acc[1]] : [acc[0], acc[1].concat([c])],
-    [[], []]
+  const state = useSelector((state) => state);
+  const { consultation_creation_busy } = state.project;
+  const match = useRouteMatch();
+  const project_data = select_project_data({ state, match });
+  const [open_consultations, closed_consultations] = get_open_closed(
+    project_data?.consultations
   );
-  const byUpdatedAt = (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt);
   const dispatch = useDispatch();
-  const new_consultation_handler = () => dispatch(begin_new_consultation());
+  const history = useHistory();
+  const { project_objectId } = match.params;
+  const new_consultation_handler = () =>
+    dispatch(begin_new_consultation({ history, project_objectId }));
+
+  if (project_data === undefined) {
+    return <IonSkeletonText animated />;
+  }
 
   return (
     <IonGrid>
@@ -95,16 +97,16 @@ const ProjectConsultations = () => {
               <strong>
                 <IonText
                   color={
-                    data.consultations.length >=
-                    data.package.amount_of_included_consultations
+                    project_data.consultations.length >=
+                    project_data.package.amount_of_included_consultations
                       ? "danger"
                       : "dark"
                   }
                 >
-                  {data.consultations.length}
+                  {project_data.consultations.length}
                 </IonText>
               </strong>{" "}
-              / {data.package.amount_of_included_consultations}
+              / {project_data.package.amount_of_included_consultations}
             </span>
           </IonText>
           <br />
@@ -118,8 +120,8 @@ const ProjectConsultations = () => {
             onClick={new_consultation_handler}
             disabled={
               consultation_creation_busy ||
-              data.consultations.length >=
-                data.package.amount_of_included_consultations
+              project_data.consultations.length >=
+                project_data.package.amount_of_included_consultations
             }
           >
             Begin new consultation &rarr;
@@ -133,20 +135,20 @@ const ProjectConsultations = () => {
         <h6>Open Consultations:</h6>
       </IonRow>
       {open_consultations.length > 0
-        ? open_consultations
-            .sort(byUpdatedAt)
-            .map((c) => <ConsultationRow key={c.objectId} consultation={c} />)
+        ? open_consultations.map((c) => (
+            <ConsultationRow key={c.objectId} consultation={c} />
+          ))
         : "none"}
       {closed_consultations.length > 0 && (
         <>
           <IonRow>
             <h6>Closed Consultations:</h6>
           </IonRow>
-          {closed_consultations.sort(byUpdatedAt).map((c) => (
+          {closed_consultations.map((c) => (
             <ConsultationRow
               key={c.objectId}
               consultation={c}
-              disabled={user.data.is_admin === false}
+              disabled={state.user.data.is_admin === false}
             />
           ))}
         </>
@@ -156,24 +158,22 @@ const ProjectConsultations = () => {
 };
 
 const ConsultationRow = ({ consultation }) => {
-  const { data } = useSelector((root_state) => root_state.project);
-
   return (
     <IonRow>
       <IonButton
         expand="block"
         color={consultation.is_open ? "dark" : "medium"}
         routerLink={{
-          pathname: `/consultation/${consultation.objectId}`,
+          pathname: `/projects/${consultation.project.objectId}/${consultation.objectId}`,
           state: consultation,
         }}
         disabled={consultation.is_open === false}
       >
         last active:{" "}
-        {formatRelative(new Date(consultation.updatedAt), new Date())}
+        {formatRelative(new Date(consultation.last_active_date), new Date())}
       </IonButton>
     </IonRow>
   );
 };
 
-export default Project;
+export default ProjectContainer;

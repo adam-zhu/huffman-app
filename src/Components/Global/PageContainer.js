@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useLayoutEffect } from "react";
 import { useSelector } from "react-redux";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { IonContent, IonPage } from "@ionic/react";
@@ -14,7 +14,7 @@ const PageContainer = ({ className, children }) => {
   const is_user_logged_in = data !== undefined;
   const is_home_page = match.url === "/";
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!is_user_logged_in && !is_home_page) {
       history.replace("/");
     }

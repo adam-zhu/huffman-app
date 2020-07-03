@@ -177,7 +177,7 @@ export const log_user_in = () => async (dispatch, getState, Parse) => {
   }
 };
 
-export const log_user_out = () => async (dispatch, getState, Parse) => {
+export const log_user_out = (history) => async (dispatch, getState, Parse) => {
   const { user } = getState().user;
 
   dispatch({
@@ -190,6 +190,8 @@ export const log_user_out = () => async (dispatch, getState, Parse) => {
     dispatch({
       type: SIGNOUT_REQUEST_END,
     });
+
+    history.push("/");
   } catch (e) {
     dispatch({
       type: SIGNOUT_REQUEST_END,

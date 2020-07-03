@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import {
   IonButton,
   IonInput,
@@ -12,6 +12,7 @@ import {
   IonItemGroup,
   IonSelect,
   IonSelectOption,
+  IonSkeletonText,
 } from "@ionic/react";
 import {
   set_form_field_value,
@@ -20,7 +21,7 @@ import {
 import { resolve_input_element_value, cents_to_dollars } from "Utils";
 
 const NewProjectForm = () => {
-  const { packages, new_project } = useSelector((root_state) => root_state);
+  const { packages, new_project } = useSelector((state) => state);
   const {
     busy,
     name,
@@ -29,9 +30,9 @@ const NewProjectForm = () => {
     room_length,
     room_height,
     package_objectId,
-    created_project_objectId,
   } = new_project;
   const dispatch = useDispatch();
+  const history = useHistory();
   const form_field_change_handler = (key) => (e) => {
     const value = resolve_input_element_value(e.target);
 
@@ -40,15 +41,11 @@ const NewProjectForm = () => {
   const submit_handler = (e) => {
     e.preventDefault();
 
-    dispatch(create_new_project());
+    dispatch(create_new_project(history));
   };
 
-  if (created_project_objectId !== undefined) {
-    return <Redirect to={`/project/${created_project_objectId}`} />;
-  }
-
   if (packages.data === undefined) {
-    return null;
+    return <IonSkeletonText animated />;
   }
 
   return (

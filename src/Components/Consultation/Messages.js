@@ -1,54 +1,40 @@
-import React, { useEffect, useState } from "react";
+import React, { useLayoutEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useRouteMatch } from "react-router-dom";
 import "Styles/Messages.scss";
-import {
-  listen_for_messages,
-  stop_listening_for_messages,
-  enter_message,
-  send_message,
-  close_consultation,
-} from "Store/consultation/thinks";
-import { IonButton, IonTextarea, IonAlert, IonToast } from "@ionic/react";
+import { enter_message, send_message } from "Store/consultation/thinks";
+import { IonButton, IonTextarea, IonToast } from "@ionic/react";
 import { scroll_ion_content_to_bottom } from "Utils";
 
-const Messages = ({ consultation_objectId }) => {
-  const { data } = useSelector((state) => state.consultation);
-  const dispatch = useDispatch();
-  const messages = data.messages || [];
-
-  useEffect(() => {
-    dispatch(listen_for_messages(consultation_objectId));
-    scroll_ion_content_to_bottom();
-
-    return () => dispatch(stop_listening_for_messages());
-  }, [consultation_objectId]);
-
-  useEffect(() => {
+const Messages = ({ messages }) => {
+  useLayoutEffect(() => {
     window.requestAnimationFrame(scroll_ion_content_to_bottom);
-  }, [messages.length]);
+  }, [(messages || []).length]);
 
   return (
     <div id="consultation-messages">
       <br />
-      {messages.length > 0 ? (
-        messages.map((m) => <MessageRow key={m.objectId} message={m} />)
-      ) : (
-        <IonToast
-          isOpen={true}
-          header="New Consultation"
-          message="This consultation doesn't have any messages yet. Type a message below
+      {Array.isArray(messages) ? (
+        messages.length > 0 ? (
+          messages.map((m) => <MessageRow key={m.objectId} message={m} />)
+        ) : (
+          <IonToast
+            isOpen={true}
+            header="New Consultation"
+            message="This consultation doesn't have any messages yet. Type a message below
         and press send to begin."
-          duration={4200}
-          position="top"
-          translucent
-          buttons={[
-            {
-              text: "Dismiss",
-              role: "cancel",
-            },
-          ]}
-        />
-      )}
+            duration={4200}
+            position="top"
+            translucent
+            buttons={[
+              {
+                text: "Dismiss",
+                role: "cancel",
+              },
+            ]}
+          />
+        )
+      ) : null}
       <MessageInputForm />
     </div>
   );
@@ -79,23 +65,18 @@ const MessageRow = ({ message }) => {
 };
 
 const MessageInputForm = () => {
-  const [
-    is_confrim_close_consultation_modal_open,
-    set_confirm_close_consultation_modal_open,
-  ] = useState(false);
-  const { consultation, user } = useSelector((state) => state);
-  const { message_input_value, is_message_sending } = consultation;
+  const state = useSelector((state) => state);
+  const match = useRouteMatch();
   const dispatch = useDispatch();
+  const { message_input_value, is_message_sending } = state.consultation;
+  const { project_objectId, consultation_objectId } = match.params;
   const message_input_handler = (e) => {
     dispatch(enter_message(e.detail.value));
   };
   const message_submit_handler = (e) => {
     e.preventDefault();
 
-    dispatch(send_message());
-  };
-  const close_consultation_handler = () => {
-    dispatch(close_consultation());
+    dispatch(send_message({ project_objectId, consultation_objectId }));
   };
 
   return (
@@ -112,35 +93,6 @@ const MessageInputForm = () => {
       <IonButton expand="block" type="submit" disabled={is_message_sending}>
         Send
       </IonButton>
-      {user.data.is_admin === true && (
-        <IonButton
-          expand="block"
-          type="button"
-          color="danger"
-          onClick={(e) => set_confirm_close_consultation_modal_open(true)}
-        >
-          Close Consultation
-        </IonButton>
-      )}
-      <IonAlert
-        isOpen={is_confrim_close_consultation_modal_open}
-        message="Are you sure you want to close this consultation?"
-        cssClass="confirm-consultation-close-modal"
-        header="Close Consultation"
-        buttons={[
-          {
-            text: "Cancel",
-            role: "cancel",
-            cssClass: "secondary",
-            handler: (e) => set_confirm_close_consultation_modal_open(false),
-          },
-          {
-            text: "Close Consultation",
-            cssClass: "primary",
-            handler: close_consultation_handler,
-          },
-        ]}
-      />
     </form>
   );
 };

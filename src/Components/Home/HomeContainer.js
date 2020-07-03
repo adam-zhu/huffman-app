@@ -5,8 +5,8 @@ import PageContainer from "Components/Global/PageContainer";
 import RegistrationLogin from "Components/Home/RegistrationLogin";
 import "Styles/Home.scss";
 
-const Home = () => {
-  const { data } = useSelector((root_state) => root_state.user);
+const HomeContainer = () => {
+  const { data } = useSelector((state) => state.user);
   const is_user_logged_in = data !== undefined;
 
   if (is_user_logged_in) {
@@ -20,4 +20,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomeContainer;

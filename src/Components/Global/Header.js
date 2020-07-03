@@ -1,29 +1,25 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory, useRouteMatch, useLocation } from "react-router-dom";
 import { IonHeader, IonToolbar, IonButtons, IonButton } from "@ionic/react";
 import { log_user_out } from "Store/user/thinks";
+import {
+  select_project_data,
+  select_consultation_data,
+} from "Store/projects/selectors";
 
 const Header = () => {
   const { user } = useSelector((state) => state);
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
-  const { pathname } = location;
-  const redirect_to_home = () => history.push("/");
-  const log_out_handler = async () => {
-    await dispatch(log_user_out());
-
-    return redirect_to_home();
-  };
+  const log_out_handler = () => dispatch(log_user_out(history));
 
   return (
     <IonHeader>
       <IonToolbar>
         <IonButtons slot="start">
-          {pathname !== "/" && pathname !== "/projects" && (
-            <BackButton pathname={pathname} />
-          )}
+          <BackButton />
         </IonButtons>
         <IonButtons slot="end">
           {user.data && (
@@ -35,27 +31,34 @@ const Header = () => {
   );
 };
 
-const BackButton = ({ pathname }) => {
-  const root_state = useSelector((root_state) => root_state);
+const BackButton = () => {
+  const match = useRouteMatch();
+  const location = useLocation();
+  const state = useSelector((state) => state);
   const [text, href, routerDirection] = (() => {
-    if (pathname.indexOf("/project/") !== -1) {
-      return ["Projects", "/projects", "back"];
-    }
+    if (match.params.consultation_objectId !== undefined) {
+      const project_data = select_project_data({ state, match });
 
-    if (pathname.indexOf("/consultation/") !== -1) {
       return [
-        root_state.consultation.data
-          ? `${root_state.consultation?.data?.project?.name}`
-          : "loading...",
-        `/project/${root_state.consultation?.data?.project?.objectId}`,
+        project_data.name || "loading...",
+        `/projects/${match.params.project_objectId}`,
         "back",
       ];
     }
 
-    if (pathname.indexOf("/new_project") !== -1) {
-      return ["Projects", "/projects", "back"];
+    if (
+      match.params.project_objectId !== undefined ||
+      location.pathname === "/projects/new"
+    ) {
+      return ["Projects", `/projects`, "back"];
     }
+
+    return [];
   })();
+
+  if (location.pathname === "/" || location.pathname === "/projects") {
+    return null;
+  }
 
   return (
     <IonButton routerLink={href} routerDirection={routerDirection}>

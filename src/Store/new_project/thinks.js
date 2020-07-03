@@ -3,15 +3,19 @@ import {
   NEW_PROJECT_CREATE_REQUEST_START,
   NEW_PROJECT_CREATE_REQUEST_END,
 } from "./reducer";
+import { LIVE_QUERIES_DATA_UPDATED } from "Store/projects/reducer";
 import { add_app_error } from "Store/errors/thinks";
-import { get_projects } from "Store/projects/thinks";
 
 export const set_form_field_value = (payload) => ({
   type: FORM_STATE_CHANGED,
   payload,
 });
 
-export const create_new_project = () => async (dispatch, getState, Parse) => {
+export const create_new_project = (history) => async (
+  dispatch,
+  getState,
+  Parse
+) => {
   const { new_project } = getState();
 
   const Project = Parse.Object.extend("project");
@@ -36,13 +40,14 @@ export const create_new_project = () => async (dispatch, getState, Parse) => {
 
   try {
     const result = await NewProject.save();
+    const data = result.toJSON();
 
     dispatch({
       type: NEW_PROJECT_CREATE_REQUEST_END,
-      payload: result.toJSON().objectId,
+      payload: data,
     });
 
-    dispatch(get_projects()); // load the new project into the projects store
+    history.push(`/projects/${data.objectId}`);
   } catch (e) {
     dispatch({
       type: NEW_PROJECT_CREATE_REQUEST_END,

@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React from "react";
+import { useSelector } from "react-redux";
 import PageContainer from "Components/Global/PageContainer";
 import {
   IonCard,
@@ -11,21 +11,15 @@ import {
   IonSkeletonText,
 } from "@ionic/react";
 import "Styles/Projects.scss";
-import { get_projects } from "Store/projects/thinks";
 
-const Projects = () => {
-  const { data, loading } = useSelector((root_state) => root_state.projects);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(get_projects());
-  }, []);
+const ProjectsContainer = () => {
+  const { data, loading } = useSelector((state) => state.projects);
 
   return (
     <PageContainer className="projects-page-container">
       <div className="page-top">
         <h1>Projects</h1>
-        <IonButton fill="outline" routerLink="/new_project">
+        <IonButton fill="outline" routerLink="/projects/new">
           New Project &rarr;
         </IonButton>
       </div>
@@ -43,7 +37,7 @@ const Projects = () => {
 
 const ProjectCard = ({ project }) => {
   return (
-    <IonCard type="button" routerLink={`/project/${project.objectId}`}>
+    <IonCard type="button" routerLink={`/projects/${project.objectId}`}>
       <IonCardHeader>
         <IonCardSubtitle>{project.created_by.username}</IonCardSubtitle>
         <IonCardTitle>{project.name}</IonCardTitle>
@@ -53,4 +47,4 @@ const ProjectCard = ({ project }) => {
   );
 };
 
-export default Projects;
+export default ProjectsContainer;
