@@ -1,7 +1,7 @@
 import React, { useLayoutEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouteMatch } from "react-router-dom";
-import "Styles/Messages.scss";
+import "Styles/Consultation/Messages.scss";
 import { enter_message, send_message } from "Store/consultation/thinks";
 import { IonButton, IonTextarea, IonToast } from "@ionic/react";
 import { scroll_ion_content_to_bottom } from "Utils";
@@ -13,7 +13,6 @@ const Messages = ({ messages }) => {
 
   return (
     <div id="consultation-messages">
-      <br />
       {Array.isArray(messages) ? (
         messages.length > 0 ? (
           messages.map((m) => <MessageRow key={m.objectId} message={m} />)

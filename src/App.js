@@ -26,7 +26,7 @@ import "@ionic/react/css/flex-utils.css";
 import "@ionic/react/css/display.css";
 
 /* Theme variables */
-// import "Theme/variables.css"; // this causes build to break for some reason
+// import "Styles/Theme/variables.css"; // this causes build to break for some reason
 
 /* Global styles */
 import "./App.scss";
@@ -44,28 +44,26 @@ const App = () => {
 const Pages = () => {
   const [is_session_restored, set_is_session_restored] = useState(false);
   const { user, projects } = useSelector((state) => state);
+  const is_user_logged_in = user.data !== undefined;
   const { data_loading, data_loaded } = projects;
+  const data_fetch_called = data_loading || data_loaded;
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (is_session_restored === false) {
-      (async () => {
-        await dispatch(check_for_current_session());
-
-        set_is_session_restored(true);
-      })();
+    if (!is_session_restored) {
+      dispatch(check_for_current_session()).then(() =>
+        set_is_session_restored(true)
+      );
     }
-  }, []);
 
-  useEffect(() => {
-    if (user.data && !data_loading && !data_loaded) {
+    if (is_session_restored && is_user_logged_in && !data_fetch_called) {
       dispatch(get_data_and_listen_for_changes());
     }
 
     return () => dispatch(stop_listening_for_changes());
-  }, [user.data, data_loading, data_loaded]);
+  }, [is_session_restored, is_user_logged_in, data_fetch_called]);
 
-  if (!projects) {
+  if (!is_session_restored || (is_user_logged_in && !projects.data)) {
     return <IonProgressBar type="indeterminate" />;
   }
 

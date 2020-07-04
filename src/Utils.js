@@ -58,3 +58,19 @@ export const dismiss_ion_toast = async () => {
 
   return Promise.resolve();
 };
+
+export const unique_by_objectId = (arr) =>
+  arr.reduce(
+    ({ unique_objectIds, unique_objects }, obj) => {
+      if (!unique_objectIds.has(obj.objectId)) {
+        unique_objectIds.add(obj.objectId);
+        unique_objects.push(obj);
+      }
+
+      return { unique_objectIds, unique_objects };
+    },
+    {
+      unique_objectIds: new Set(),
+      unique_objects: [],
+    }
+  ).unique_objects;

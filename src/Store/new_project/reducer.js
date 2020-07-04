@@ -6,6 +6,7 @@ const initialState = {
   room_length: 0,
   room_height: 0,
   package_objectId: "",
+  project_images: [],
 };
 
 export const FORM_STATE_CHANGED = "FORM_STATE_CHANGED";

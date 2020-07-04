@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { IonButton, IonInput } from "@ionic/react";
 import { Redirect } from "react-router-dom";
-import "Styles/RegistrationLogin.scss";
+import "Styles/Home/RegistrationLogin.scss";
 import {
   set_email_input_value,
   set_password_input_value,

@@ -63,7 +63,7 @@ const get_and_attach_project_images = (projects_data) => async (
   getState,
   Parse
 ) => {
-  const project_images_query = new Parse.Query("project_images");
+  const project_images_query = new Parse.Query("project_image");
 
   project_images_query.include("created_by");
   project_images_query.include("project");
@@ -230,6 +230,7 @@ const listen_for_changes = (projects_data) => async (
   getState,
   Parse
 ) => {
+  const { user } = getState();
   const projects_query = new Parse.Query("project");
   const project_images_query = new Parse.Query("project_image");
   const consultations_query = new Parse.Query("consultation");
@@ -241,10 +242,12 @@ const listen_for_changes = (projects_data) => async (
     p.consultations.map((c) => c.objectId)
   );
 
-  projects_query.containedIn(
-    "objectId",
-    projects_data.map((p) => p.objectId)
-  );
+  if (!user.data.is_admin) {
+    projects_query.containedIn(
+      "objectId",
+      projects_data.map((p) => p.objectId)
+    );
+  }
 
   project_images_query.include("project");
   project_images_query.containedIn("project", project_pointers);
@@ -272,15 +275,24 @@ const listen_for_changes = (projects_data) => async (
   });
 
   const event_types = ["create", "update", "delete"];
-  const handler = (event_type) => (data_type) => (data) =>
-    dispatch({
-      type: LIVE_QUERIES_DATA_UPDATED,
-      payload: {
-        event_type,
-        data_type,
-        data: data.toJSON(),
-      },
-    });
+  const handler = (event_type) => (data_type) => async (data) => {
+    if (
+      event_type === "create" &&
+      (data_type === "project" || data_type === "consultation")
+    ) {
+      await dispatch(stop_listening_for_changes());
+      await dispatch(get_data_and_listen_for_changes());
+    } else {
+      dispatch({
+        type: LIVE_QUERIES_DATA_UPDATED,
+        payload: {
+          event_type,
+          data_type,
+          data: data.toJSON(),
+        },
+      });
+    }
+  };
 
   Object.entries(subscriptions).forEach(([data_type, subscription]) =>
     event_types.forEach((event_type) =>

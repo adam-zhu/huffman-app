@@ -1,0 +1,37 @@
+.project-page-container {
+  .images {
+    margin-bottom: 1rem;
+
+    .thumb {
+      display: inline-block;
+      margin-right: 0.5rem;
+    }
+  }
+
+  .description {
+    margin-top: 0;
+  }
+
+  .consultation-count {
+    font-size: 0.75rem;
+
+    .count {
+      font-size: 1rem;
+    }
+  }
+}
+
+.enlarge-image {
+  --ion-toolbar-background: transparent;
+  --ion-color-dark: white;
+
+  .modal-wrapper {
+    background: rgba(0, 0, 0, 0.75);
+  }
+
+  .image {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}

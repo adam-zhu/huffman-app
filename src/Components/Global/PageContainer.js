@@ -4,7 +4,7 @@ import { useHistory, useRouteMatch } from "react-router-dom";
 import { IonContent, IonPage } from "@ionic/react";
 import ErrorAlerter from "Components/Global/ErrorAlerter";
 import Header from "Components/Global/Header";
-import "Styles/PageContainer.scss";
+import "Styles/Global/PageContainer.scss";
 
 // this is how we include global stuff -- we wrap every PageContainerComponent in this
 const PageContainer = ({ className, children }) => {

@@ -1,3 +1,5 @@
+import { unique_by_objectId } from "Utils";
+
 const initialState = {
   data: undefined,
   data_loaded: false,
@@ -209,15 +211,19 @@ const update_projects_data = ({
 const update_data = ({ data, event_type, updated_piece }) => {
   switch (event_type) {
     case "create":
-      return data.concat([updated_piece]);
+      return unique_by_objectId(data.concat([updated_piece]));
 
     case "update":
-      return data.map((d) =>
-        d.objectId === updated_piece.objectId ? { ...d, ...updated_piece } : d
+      return unique_by_objectId(
+        data.map((d) =>
+          d.objectId === updated_piece.objectId ? { ...d, ...updated_piece } : d
+        )
       );
 
     case "delete":
-      return data.filter((d) => d.objectId !== updated_piece.objectId);
+      return unique_by_objectId(
+        data.filter((d) => d.objectId !== updated_piece.objectId)
+      );
 
     default:
       throw new Error("unsupported `event_type`");

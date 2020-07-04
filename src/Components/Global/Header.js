@@ -3,16 +3,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { useHistory, useRouteMatch, useLocation } from "react-router-dom";
 import { IonHeader, IonToolbar, IonButtons, IonButton } from "@ionic/react";
 import { log_user_out } from "Store/user/thinks";
-import {
-  select_project_data,
-  select_consultation_data,
-} from "Store/projects/selectors";
+import { select_project_data } from "Store/projects/selectors";
 
 const Header = () => {
   const { user } = useSelector((state) => state);
   const dispatch = useDispatch();
   const history = useHistory();
-  const location = useLocation();
   const log_out_handler = () => dispatch(log_user_out(history));
 
   return (
@@ -40,7 +36,7 @@ const BackButton = () => {
       const project_data = select_project_data({ state, match });
 
       return [
-        project_data.name || "loading...",
+        project_data?.name || "loading...",
         `/projects/${match.params.project_objectId}`,
         "back",
       ];

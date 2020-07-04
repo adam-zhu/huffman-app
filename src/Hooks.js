@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useCamera } from "@ionic/react-hooks/camera";
 import { useFilesystem, base64FromPath } from "@ionic/react-hooks/filesystem";
-import { useStorage } from "@ionic/react-hooks/storage";
 import { isPlatform } from "@ionic/react";
 import {
   CameraResultType,
@@ -11,33 +11,11 @@ import {
   FilesystemDirectory,
 } from "@capacitor/core";
 
-const PHOTO_STORAGE = "photos";
-
-export const usePhotoGallery = () => {
-  const [photos, setPhotos] = useState([]);
+export const usePhotos = ({ selector, update_handler }) => {
   const { getPhoto } = useCamera();
-  const { deleteFile, getUri, readFile, writeFile } = useFilesystem();
-  const { get, set } = useStorage();
+  const { deleteFile, readFile, writeFile } = useFilesystem();
 
-  useEffect(() => {
-    const loadSaved = async () => {
-      const photosString = await get(PHOTO_STORAGE);
-      const photosInStorage = photosString ? JSON.parse(photosString) : [];
-      // If running on the web...
-      if (!isPlatform("hybrid")) {
-        for (let photo of photosInStorage) {
-          const file = await readFile({
-            path: photo.filepath,
-            directory: FilesystemDirectory.Data,
-          });
-          // Web platform only: Save the photo into the base64 field
-          photo.base64 = `data:image/jpeg;base64,${file.data}`;
-        }
-      }
-      setPhotos(photosInStorage);
-    };
-    loadSaved();
-  }, [get, readFile]);
+  const photos = useSelector(selector);
 
   const takePhoto = async () => {
     const cameraPhoto = await getPhoto({
@@ -48,28 +26,15 @@ export const usePhotoGallery = () => {
     const fileName = new Date().getTime() + ".jpeg";
     const savedFileImage = await savePicture(cameraPhoto, fileName);
     const newPhotos = [savedFileImage, ...photos];
-    setPhotos(newPhotos);
-    set(
-      PHOTO_STORAGE,
-      isPlatform("hybrid")
-        ? JSON.stringify(newPhotos)
-        : JSON.stringify(
-            newPhotos.map((p) => {
-              // Don't save the base64 representation of the photo data,
-              // since it's already saved on the Filesystem
-              const photoCopy = { ...p };
-              delete photoCopy.base64;
-              return photoCopy;
-            })
-          )
-    );
+
+    update_handler(newPhotos);
   };
 
   const getPhotoFromFilesystem = async (base64Data, fileName) => {
     const savedFileImage = await savePhotoFromFilesystem(base64Data, fileName);
     const newPhotos = [savedFileImage, ...photos];
-    setPhotos(newPhotos);
-    set(PHOTO_STORAGE, JSON.stringify(newPhotos));
+
+    update_handler(newPhotos);
   };
 
   const savePhotoFromFilesystem = async (base64Data, fileName) => {
@@ -138,22 +103,25 @@ export const usePhotoGallery = () => {
     // Remove this photo from the Photos reference data array
     const newPhotos = photos.filter((p) => p.filepath !== photo.filepath);
 
-    // Update photos array cache by overwriting the existing photo array
-    set(PHOTO_STORAGE, JSON.stringify(newPhotos));
-
     // delete photo file from filesystem
     const filename = photo.filepath.substr(photo.filepath.lastIndexOf("/") + 1);
+
     await deleteFile({
       path: filename,
       directory: FilesystemDirectory.Data,
     });
-    setPhotos(newPhotos);
+
+    update_handler(newPhotos);
   };
 
+  useEffect(() => {
+    return photos.forEach(deletePhoto);
+  }, []);
+
   return {
-    deletePhoto,
-    photos,
     takePhoto,
     getPhotoFromFilesystem,
+    deletePhoto,
+    photos,
   };
 };

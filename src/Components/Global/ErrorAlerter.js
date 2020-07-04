@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { IonModal, IonButton } from "@ionic/react";
-import "Styles/ErrorAlerter.scss";
+import "Styles/Global/ErrorAlerter.scss";
 import { clear_app_errors } from "Store/errors/thinks";
 
 const ErrorAlerter = () => {

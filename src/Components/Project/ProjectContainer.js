@@ -6,18 +6,16 @@ import {
   IonRow,
   IonCol,
   IonButton,
-  IonChip,
-  IonLabel,
   IonSkeletonText,
   IonText,
 } from "@ionic/react";
 import { formatRelative } from "date-fns";
 import PageContainer from "Components/Global/PageContainer";
-import "Styles/Project.scss";
+import "Styles/Project/ProjectContainer.scss";
 import { begin_new_consultation } from "Store/project/thinks";
-import { inches_to_feet } from "Utils";
 import { select_project_data } from "Store/projects/selectors";
 import { get_open_closed } from "Store/projects/utils";
+import ProjectDetails from "Components/Project/ProjectDetails";
 
 const ProjectContainer = () => {
   const { projects } = useSelector((state) => state);
@@ -33,40 +31,6 @@ const ProjectContainer = () => {
         </>
       )}
     </PageContainer>
-  );
-};
-
-const ProjectDetails = () => {
-  const state = useSelector((state) => state);
-  const match = useRouteMatch();
-  const project_data = select_project_data({ state, match });
-  const { name, description, room_width, room_length, room_height } =
-    project_data || {};
-
-  if (project_data === undefined) {
-    return <IonSkeletonText animated />;
-  }
-
-  return (
-    <IonGrid className="project-details">
-      <IonRow>
-        <h2 className="name">{name}</h2>
-      </IonRow>
-      <IonRow>
-        <p className="description">{description}</p>
-      </IonRow>
-      <IonRow className="room-dimensions">
-        <IonChip>
-          <IonLabel>Width {inches_to_feet(room_width)}'</IonLabel>
-        </IonChip>
-        <IonChip>
-          <IonLabel>Length {inches_to_feet(room_length)}'</IonLabel>
-        </IonChip>
-        <IonChip>
-          <IonLabel>Height {inches_to_feet(room_height)}'</IonLabel>
-        </IonChip>
-      </IonRow>
-    </IonGrid>
   );
 };
 

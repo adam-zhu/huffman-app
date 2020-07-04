@@ -3,13 +3,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { IonToast, IonAlert, IonButton, IonSkeletonText } from "@ionic/react";
 import PageContainer from "Components/Global/PageContainer";
-import "Styles/Consultation.scss";
+import "Styles/Consultation/ConsultationContainer.scss";
 import Messages from "./Messages";
 import {
   select_project_data,
   select_consultation_data,
 } from "Store/projects/selectors";
 import { close_consultation } from "Store/consultation/thinks";
+import ProjectDetails from "Components/Project/ProjectDetails";
 
 const ConsultationContainer = () => {
   const state = useSelector((state) => state);
@@ -22,18 +23,21 @@ const ConsultationContainer = () => {
   useEffect(() => {
     if (consultation_data?.is_open === false) {
       setTimeout(
-        () => history.push(`/projects/${project_data.objectId}`),
+        () => history.push(`/projects/${project_data?.objectId}`),
         toast_duration
       );
     }
-  }, [project_data.objectId, consultation_data?.is_open]);
+  }, [project_data?.objectId, consultation_data?.is_open]);
 
   return (
     <PageContainer className="consultation-page-container">
       {consultation_data === undefined ? (
         <IonSkeletonText animated />
       ) : consultation_data.is_open === true ? (
-        <ConsultationMessages />
+        <>
+          <ProjectDetails hide_title />
+          <ConsultationMessages />
+        </>
       ) : (
         <ConsultationClosed
           message={`This consultation has been closed. Redirecting back to ${project_data.name}...`}
