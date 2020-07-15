@@ -29,10 +29,12 @@ export default (state = initialState, action) => {
       };
 
     case NEW_PROJECT_CREATE_REQUEST_END:
-      return {
-        ...state,
-        busy: false,
-      };
+      return action.payload.objectId
+        ? { ...initialState }
+        : {
+            ...state,
+            busy: false,
+          };
 
     default:
       return state;

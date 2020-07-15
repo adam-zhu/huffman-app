@@ -139,9 +139,7 @@ const update_projects_data = ({
 
   if (data_type === "project_image") {
     return projects_data.map((p) => {
-      const { project_images } = p;
-
-      if (project_images.find((i) => i.objectId === data.objectId)) {
+      if (p.objectId === data.project.objectId) {
         return {
           ...p,
           project_images: update_data({

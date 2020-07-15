@@ -109,11 +109,7 @@ const ProjectConsultations = () => {
             <h6>Closed Consultations:</h6>
           </IonRow>
           {closed_consultations.map((c) => (
-            <ConsultationRow
-              key={c.objectId}
-              consultation={c}
-              disabled={state.user.data.is_admin === false}
-            />
+            <ConsultationRow key={c.objectId} consultation={c} />
           ))}
         </>
       )}

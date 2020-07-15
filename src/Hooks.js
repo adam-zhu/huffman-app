@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useCamera } from "@ionic/react-hooks/camera";
 import { useFilesystem, base64FromPath } from "@ionic/react-hooks/filesystem";
-import { isPlatform } from "@ionic/react";
+import { isPlatform, useIonViewDidEnter } from "@ionic/react";
 import {
   CameraResultType,
   CameraSource,
@@ -10,6 +10,24 @@ import {
   Capacitor,
   FilesystemDirectory,
 } from "@capacitor/core";
+
+export const useScrollIonContentToBottom = ({ after_every_render }) => {
+  const { ion_content_ref } = useSelector((state) => state.App);
+  const scroll_to_bottom = async () => {
+    if (ion_content_ref.current !== null) {
+      const scroll_element = await ion_content_ref.current.getScrollElement();
+
+      scroll_element.scrollTop = scroll_element.scrollHeight;
+    }
+  };
+
+  useIonViewDidEnter(scroll_to_bottom);
+  useEffect(() => {
+    if (after_every_render === true) {
+      scroll_to_bottom();
+    }
+  });
+};
 
 export const usePhotos = ({ selector, update_handler }) => {
   const { getPhoto } = useCamera();

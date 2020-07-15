@@ -30,32 +30,32 @@ const ConsultationContainer = () => {
   }, [project_data?.objectId, consultation_data?.is_open]);
 
   return (
-    <PageContainer className="consultation-page-container">
-      {consultation_data === undefined ? (
-        <IonSkeletonText animated />
-      ) : consultation_data.is_open === true ? (
-        <>
-          <ProjectDetails hide_title />
-          <ConsultationMessages />
-        </>
-      ) : (
-        <ConsultationClosed
-          message={`This consultation has been closed. Redirecting back to ${project_data.name}...`}
-          toast_duration={toast_duration}
-        />
-      )}
-    </PageContainer>
+    <>
+      <PageContainer className="consultation-page-container">
+        {consultation_data === undefined ? (
+          <IonSkeletonText animated />
+        ) : consultation_data.is_open === true ? (
+          <>
+            <ProjectDetails hide_title />
+            <ConsultationMessages />
+          </>
+        ) : (
+          <ConsultationClosed
+            message={`This consultation has been closed. Redirecting back to ${project_data.name}...`}
+            toast_duration={toast_duration}
+          />
+        )}
+      </PageContainer>
+    </>
   );
 };
 
 const ConsultationMessages = () => {
   const state = useSelector((state) => state);
-  const match = useRouteMatch();
-  const consultation_data = select_consultation_data({ state, match });
 
   return (
     <>
-      <Messages messages={consultation_data.messages} />
+      <Messages />
       {state.user.data.is_admin === true && <CloseConsultation />}
     </>
   );

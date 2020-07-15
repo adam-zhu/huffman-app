@@ -67,6 +67,7 @@ const get_and_attach_project_images = (projects_data) => async (
 
   project_images_query.include("created_by");
   project_images_query.include("project");
+  project_images_query.include("message");
   project_images_query.descending("createdAt");
   project_images_query.containedIn(
     "project",
@@ -249,6 +250,7 @@ const listen_for_changes = (projects_data) => async (
     );
   }
 
+  project_images_query.include("message");
   project_images_query.include("project");
   project_images_query.containedIn("project", project_pointers);
 

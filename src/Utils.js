@@ -64,7 +64,7 @@ export const unique_by_objectId = (arr) =>
     ({ unique_objectIds, unique_objects }, obj) => {
       if (!unique_objectIds.has(obj.objectId)) {
         unique_objectIds.add(obj.objectId);
-        unique_objects.push(obj);
+        unique_objects.push({ ...obj });
       }
 
       return { unique_objectIds, unique_objects };

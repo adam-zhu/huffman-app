@@ -1,4 +1,5 @@
 import { combineReducers } from "redux";
+import App from "./App/reducer";
 import errors from "./errors/reducer";
 import user from "./user/reducer";
 import projects from "./projects/reducer";
@@ -8,6 +9,7 @@ import consultation from "./consultation/reducer";
 import packages from "./packages/reducer";
 
 export default combineReducers({
+  App,
   errors,
   user,
   projects,

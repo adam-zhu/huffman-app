@@ -63,17 +63,17 @@ const create_project_images = ({ history, new_project_data }) => async (
   const ProjectImageObjects = new_project.project_images.map((p) => {
     const { base64, filepath } = p;
     const ProjectImage = Parse.Object.extend("project_image");
-    const ProjecImageObject = new ProjectImage();
+    const ProjectImageObject = new ProjectImage();
 
-    ProjecImageObject.set(
+    ProjectImageObject.set(
       "project",
       Parse.Object.extend("project").createWithoutData(
         new_project_data.objectId
       )
     );
-    ProjecImageObject.set("image", new Parse.File(filepath, { base64 }));
+    ProjectImageObject.set("image", new Parse.File(filepath, { base64 }));
 
-    return ProjecImageObject;
+    return ProjectImageObject;
   });
 
   try {

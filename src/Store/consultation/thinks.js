@@ -1,5 +1,6 @@
 import {
   MESSAGE_ENTERED,
+  MESSAGE_IMAGES_CHANGED,
   SEND_MESSAGE_REQUEST_START,
   SEND_MESSAGE_REQUEST_END,
   CONSULTATION_CLOSE_REQUEST_START,
@@ -12,57 +13,100 @@ export const enter_message = (payload) => ({
   payload,
 });
 
+export const change_message_images = (payload) => ({
+  type: MESSAGE_IMAGES_CHANGED,
+  payload,
+});
+
 export const send_message = ({
   project_objectId,
   consultation_objectId,
 }) => async (dispatch, getState, Parse) => {
-  const { projects, user } = getState();
+  const { projects, consultation } = getState();
+  const { message_input_value, message_images } = consultation;
   const project_data = projects.data.find(
     (p) => p.objectId === project_objectId
   );
-  const consultation = project_data.consultations.find(
+  const consultation_data = project_data.consultations.find(
     (c) => c.objectId === consultation_objectId
   );
-  const { amount_of_included_consultations } = project_data.package;
-  const amount_of_messages_sent = (consultation.messages || []).filter(
-    (m) => m.author.objectId === user.data.objectId
-  ).length;
-  const has_messages_remaining =
-    amount_of_messages_sent < Number(amount_of_included_consultations);
+  const Message = Parse.Object.extend("message");
+  const new_message = new Message();
 
-  if (user.data.is_admin === true || has_messages_remaining) {
-    const Message = Parse.Object.extend("message");
-    const new_message = new Message();
+  dispatch({
+    type: SEND_MESSAGE_REQUEST_START,
+  });
+
+  new_message.set("string_content", message_input_value);
+  new_message.set("author", Parse.User.current());
+  new_message.set(
+    "consultation",
+    Parse.Object.extend("consultation").createWithoutData(
+      consultation_data.objectId
+    )
+  );
+
+  try {
+    const new_message_data = await new_message.save();
+
+    if (message_images.length > 0) {
+      return dispatch(
+        create_and_attach_project_images({
+          message_data: new_message_data.toJSON(),
+          project_objectId,
+        })
+      );
+    }
 
     dispatch({
-      type: SEND_MESSAGE_REQUEST_START,
+      type: SEND_MESSAGE_REQUEST_END,
+    });
+  } catch (e) {
+    dispatch({
+      type: SEND_MESSAGE_REQUEST_END,
     });
 
-    new_message.set(
-      "string_content",
-      getState().consultation.message_input_value
+    dispatch(add_app_error(e.message));
+  }
+};
+
+const create_and_attach_project_images = ({
+  message_data,
+  project_objectId,
+}) => async (dispatch, getState, Parse) => {
+  const state = getState();
+  const { consultation } = state;
+  const ProjectImageObjects = consultation.message_images.map((p) => {
+    const { base64, filepath } = p;
+    const ProjectImage = Parse.Object.extend("project_image");
+    const ProjectImageObject = new ProjectImage();
+
+    ProjectImageObject.set(
+      "project",
+      Parse.Object.extend("project").createWithoutData(project_objectId)
     );
-    new_message.set("author", Parse.User.current());
-    new_message.set(
-      "consultation",
-      Parse.Object.extend("consultation").createWithoutData(
-        consultation.objectId
-      )
+    ProjectImageObject.set("image", new Parse.File(filepath, { base64 }));
+    ProjectImageObject.set(
+      "message",
+      Parse.Object.extend("message").createWithoutData(message_data.objectId)
     );
 
-    try {
-      await new_message.save();
+    return ProjectImageObject;
+  });
 
-      dispatch({
-        type: SEND_MESSAGE_REQUEST_END,
-      });
-    } catch (e) {
-      dispatch({
-        type: SEND_MESSAGE_REQUEST_END,
-      });
+  try {
+    const result = await Promise.all(ProjectImageObjects.map((o) => o.save()));
+    const project_images_data = result.map((r) => r.toJSON());
 
-      dispatch(add_app_error(e.message));
-    }
+    dispatch({
+      type: SEND_MESSAGE_REQUEST_END,
+    });
+  } catch (e) {
+    dispatch({
+      type: SEND_MESSAGE_REQUEST_END,
+    });
+
+    dispatch(add_app_error(e.message));
   }
 };
 

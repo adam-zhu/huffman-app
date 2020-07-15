@@ -15,20 +15,16 @@ import {
   IonSkeletonText,
   IonThumbnail,
   IonIcon,
-  IonGrid,
-  IonRow,
-  IonCol,
   IonImg,
-  IonActionSheet,
 } from "@ionic/react";
-import { camera, trash, close } from "ionicons/icons";
+import { camera } from "ionicons/icons";
 import {
   set_form_field_value,
   create_new_project,
 } from "Store/new_project/thinks";
 import { resolve_input_element_value, cents_to_dollars } from "Utils";
 import { usePhotos } from "Hooks";
-import Modal from "Components/Global/Modal";
+import ImagesModal from "Components/Global/ImagesModal";
 
 const NewProjectForm = () => {
   const [
@@ -247,122 +243,6 @@ const NewProjectForm = () => {
         />
       )}
     </>
-  );
-};
-
-const ImagesModal = ({
-  photos,
-  deletePhoto,
-  takePhoto,
-  getPhotoFromFilesystem,
-  close_handler,
-}) => {
-  const [photoToDelete, setPhotoToDelete] = useState();
-  const file_input_change_handler = (e) => {
-    const target = e.nativeEvent.target;
-    const { files } = target;
-    const file = files[0];
-
-    if (file) {
-      const reader = new FileReader();
-
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        getPhotoFromFilesystem(reader.result, file.name);
-      };
-    }
-  };
-
-  return (
-    <Modal
-      className="photo-upload-modal"
-      title="Upload images"
-      close_handler={close_handler}
-    >
-      <IonGrid>
-        {photos.length > 0 && (
-          <>
-            <h6>Project images</h6>
-            <IonRow
-              className={photoToDelete ? "has-selection" : "no-selection"}
-            >
-              {photos.map((photo, index) => {
-                const src = photo.base64 ?? photo.webPath;
-
-                return (
-                  <IonCol key={index + photo.filepath}>
-                    <IonThumbnail className="thumb">
-                      <IonImg
-                        onClick={() => setPhotoToDelete(photo)}
-                        src={src}
-                        className={
-                          photo.filepath === photoToDelete?.filepath
-                            ? "selected-for-deletion"
-                            : "not-selected"
-                        }
-                      />
-                    </IonThumbnail>
-                  </IonCol>
-                );
-              })}
-            </IonRow>
-          </>
-        )}
-        <IonRow>
-          <h6>Add project images</h6>
-        </IonRow>
-        <IonRow className="trigger-buttons">
-          <IonCol size="12">
-            <IonButton
-              expand="block"
-              fill="outline"
-              color="dark"
-              onClick={takePhoto}
-            >
-              <IonIcon icon={camera} slot="start"></IonIcon> Take Photo
-            </IonButton>
-          </IonCol>
-        </IonRow>
-        <IonRow className="trigger-buttons">
-          <IonCol size="12">
-            <IonText>or</IonText>
-          </IonCol>
-        </IonRow>
-        <IonRow className="trigger-buttons">
-          <IonCol size="12">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={file_input_change_handler}
-            />
-          </IonCol>
-        </IonRow>
-      </IonGrid>
-
-      <IonActionSheet
-        isOpen={!!photoToDelete}
-        buttons={[
-          {
-            text: "Delete",
-            role: "destructive",
-            icon: trash,
-            handler: () => {
-              if (photoToDelete) {
-                deletePhoto(photoToDelete);
-                setPhotoToDelete(undefined);
-              }
-            },
-          },
-          {
-            text: "Cancel",
-            icon: close,
-            role: "cancel",
-          },
-        ]}
-        onDidDismiss={() => setPhotoToDelete(undefined)}
-      />
-      <IonButton onClick={close_handler}>Done</IonButton>
-    </Modal>
   );
 };
 

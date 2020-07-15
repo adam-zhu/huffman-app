@@ -4,6 +4,7 @@ const initialState = {
   consultation_subscription: undefined, // this stores the Parse LiveQuery object
   message_subscription: undefined, // this stores the Parse LiveQuery object
   message_input_value: "",
+  message_images: [],
   is_message_sending: false,
 };
 
@@ -11,6 +12,7 @@ export const NEW_CONSULTATION_START_SUCCESS = "NEW_CONSULTATION_START_SUCCESS";
 export const CONSULTATION_GET_REQUEST_START = "CONSULTATION_GET_REQUEST_START";
 export const CONSULTATION_GET_REQUEST_END = "CONSULTATION_GET_REQUEST_END";
 export const MESSAGE_ENTERED = "MESSAGE_ENTERED";
+export const MESSAGE_IMAGES_CHANGED = "MESSAGE_IMAGES_CHANGED";
 export const SEND_MESSAGE_REQUEST_START = "SEND_MESSAGE_REQUEST_START";
 export const SEND_MESSAGE_REQUEST_END = "SEND_MESSAGE_REQUEST_END";
 export const MESSAGES_SUBSCRIBED = "MESSAGES_SUBSCRIBED";
@@ -48,6 +50,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         message_input_value: action.payload,
+      };
+
+    case MESSAGE_IMAGES_CHANGED:
+      return {
+        ...state,
+        message_images: action.payload,
       };
 
     case SEND_MESSAGE_REQUEST_START:
