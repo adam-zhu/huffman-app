@@ -110,11 +110,7 @@ const Form = () => {
       />
       <IonButton
         expand="block"
-        disabled={
-          email_input_value.trim().length === 0 ||
-          new RegExp(password_regex).test(password_input_value) === false ||
-          is_form_busy
-        }
+        disabled={is_form_busy}
         type="button"
         onClick={submit_handler}
       >
