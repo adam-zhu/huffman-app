@@ -8,8 +8,9 @@ import {
   IonLabel,
   IonSkeletonText,
   IonText,
+  IonButton,
 } from "@ionic/react";
-import "Styles/Project/ProjectDetails.scss";
+import "Styles/Global/ProjectDetails.scss";
 import { inches_to_feet } from "Utils";
 import { select_project_data } from "Store/projects/selectors";
 import ThumbnailGallery from "Components/Global/ThumbnailGallery";
@@ -35,8 +36,16 @@ const ProjectDetails = ({ hide_title }) => {
     <>
       <IonGrid className="project-details">
         {hide_title !== true && (
-          <IonRow>
+          <IonRow className="top">
             <h2 className="name">{name}</h2>
+            <IonButton
+              className="questionnaire"
+              size="small"
+              fill="outline"
+              routerLink={`/questionnaire/${project_data.objectId}`}
+            >
+              Questionnaire &rarr;
+            </IonButton>
           </IonRow>
         )}
         <IonGrid />

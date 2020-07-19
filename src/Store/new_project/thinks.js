@@ -92,7 +92,7 @@ const create_project_images = ({ history, new_project_data }) => async (
     await dispatch(get_data_and_listen_for_changes());
 
     return Promise.resolve(
-      history.push(`/projects/${new_project_data.objectId}`)
+      history.push(`/questionnaire/${new_project_data.objectId}`)
     );
   } catch (e) {
     dispatch({

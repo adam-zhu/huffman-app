@@ -3,8 +3,8 @@ const initialState = {
   data: undefined,
 };
 
-export const PACKAGES_REQUEST_START = "PACKAGES_REQUEST_START";
-export const PACKAGES_REQUEST_END = "PACKAGES_REQUEST_END";
+export const PACKAGES_REQUEST_START = "packages/PACKAGES_REQUEST_START";
+export const PACKAGES_REQUEST_END = "packages/PACKAGES_REQUEST_END";
 
 export default (state = initialState, action) => {
   switch (action.type) {

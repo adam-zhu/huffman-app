@@ -28,7 +28,7 @@ import ImagesModal from "Components/Global/ImagesModal";
 
 const NewProjectForm = () => {
   const [
-    is_images_upload_model_open,
+    is_images_upload_modal_open,
     set_is_images_upload_modal_open,
   ] = useState(false);
   const { packages, new_project } = useSelector((state) => state);
@@ -233,7 +233,7 @@ const NewProjectForm = () => {
           Create Project &rarr;
         </IonButton>
       </form>
-      {is_images_upload_model_open && (
+      {is_images_upload_modal_open && (
         <ImagesModal
           photos={photos}
           deletePhoto={deletePhoto}

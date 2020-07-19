@@ -10,7 +10,7 @@ import {
   select_consultation_data,
 } from "Store/projects/selectors";
 import { close_consultation } from "Store/consultation/thinks";
-import ProjectDetails from "Components/Project/ProjectDetails";
+import ProjectDetails from "Components/Global/ProjectDetails";
 
 const ConsultationContainer = () => {
   const state = useSelector((state) => state);

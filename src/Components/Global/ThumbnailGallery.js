@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { IonGrid, IonRow, IonThumbnail, IonImg } from "@ionic/react";
-import "Styles/Project/ProjectDetails.scss";
 import Modal from "Components/Global/Modal";
 import "Styles/Global/ThumbnailGallery.scss";
 

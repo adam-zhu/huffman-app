@@ -15,7 +15,7 @@ import "Styles/Project/ProjectContainer.scss";
 import { begin_new_consultation } from "Store/project/thinks";
 import { select_project_data } from "Store/projects/selectors";
 import { get_open_closed } from "Store/projects/utils";
-import ProjectDetails from "Components/Project/ProjectDetails";
+import ProjectDetails from "Components/Global/ProjectDetails";
 
 const ProjectContainer = () => {
   const { projects } = useSelector((state) => state);

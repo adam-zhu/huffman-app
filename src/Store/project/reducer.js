@@ -3,9 +3,9 @@ const initialState = {
 };
 
 export const CONSULTATION_CREATE_REQUEST_START =
-  "CONSULTATION_CREATE_REQUEST_START";
+  "project/CONSULTATION_CREATE_REQUEST_START";
 export const CONSULTATION_CREATE_REQUEST_END =
-  "CONSULTATION_CREATE_REQUEST_END";
+  "project/CONSULTATION_CREATE_REQUEST_END";
 
 export default (state = initialState, action) => {
   switch (action.type) {

@@ -1,7 +1,7 @@
 const initial_state = [];
 
-export const ERROR_OCCURRED = "ERROR_OCCURRED";
-export const ERRORS_DISMISSED = "ERRORS_DISMISSED";
+export const ERROR_OCCURRED = "errors/ERROR_OCCURRED";
+export const ERRORS_DISMISSED = "errors/ERRORS_DISMISSED";
 
 export default (state = initial_state, action) => {
   switch (action.type) {

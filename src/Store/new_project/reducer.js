@@ -9,10 +9,11 @@ const initialState = {
   project_images: [],
 };
 
-export const FORM_STATE_CHANGED = "FORM_STATE_CHANGED";
+export const FORM_STATE_CHANGED = "new_project/FORM_STATE_CHANGED";
 export const NEW_PROJECT_CREATE_REQUEST_START =
-  "NEW_PROJECT_CREATE_REQUEST_START";
-export const NEW_PROJECT_CREATE_REQUEST_END = "NEW_PROJECT_CREATE_REQUEST_END";
+  "new_project/NEW_PROJECT_CREATE_REQUEST_START";
+export const NEW_PROJECT_CREATE_REQUEST_END =
+  "new_project/NEW_PROJECT_CREATE_REQUEST_END";
 
 export default (state = initialState, action) => {
   switch (action.type) {

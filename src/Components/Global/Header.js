@@ -32,7 +32,10 @@ const BackButton = () => {
   const location = useLocation();
   const state = useSelector((state) => state);
   const [text, href, routerDirection] = (() => {
-    if (match.params.consultation_objectId !== undefined) {
+    if (
+      match.params.consultation_objectId !== undefined ||
+      location.pathname.indexOf("questionnaire") !== -1
+    ) {
       const project_data = select_project_data({ state, match });
 
       return [
