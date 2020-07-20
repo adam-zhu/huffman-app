@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
+import qs from "query-string";
 import {
   IonButton,
   IonInput,
@@ -22,9 +23,10 @@ import {
   set_form_field_value,
   create_new_project,
 } from "Store/new_project/thinks";
-import { resolve_input_element_value, cents_to_dollars } from "Utils";
+import { resolve_input_element_value } from "Utils";
 import { usePhotos } from "Hooks";
 import ImagesModal from "Components/Global/ImagesModal";
+import PackagePreviewCard from "Components/Packages/PackagePreviewCard";
 
 const NewProjectForm = () => {
   const [
@@ -39,8 +41,13 @@ const NewProjectForm = () => {
     room_width,
     room_length,
     room_height,
-    package_objectId,
   } = new_project;
+  const location = useLocation();
+  const { package_objectId } = qs.parse(location.search);
+  const selected_package =
+    package_objectId && packages.data
+      ? packages.data.find((p) => p.objectId === package_objectId)
+      : undefined;
   const { deletePhoto, photos, takePhoto, getPhotoFromFilesystem } = usePhotos({
     selector: (state) => state.new_project.project_images || [],
     update_handler: (photos) =>
@@ -66,7 +73,7 @@ const NewProjectForm = () => {
   const submit_handler = async (e) => {
     e.preventDefault();
 
-    await dispatch(create_new_project(history));
+    await dispatch(create_new_project({ package_objectId, history }));
     photos.forEach(deletePhoto);
   };
 
@@ -158,32 +165,6 @@ const NewProjectForm = () => {
             </IonItem>
           </IonItemGroup>
 
-          <IonItem>
-            <IonLabel position="stacked">
-              Package <IonText color="danger">*</IonText>
-            </IonLabel>
-            <IonSelect
-              value={package_objectId}
-              placeholder="Select a package"
-              okText="Select package"
-              cancelText="Dismiss"
-              onIonChange={(e) => {
-                const { value } = e.detail;
-
-                dispatch(
-                  set_form_field_value({ key: "package_objectId", value })
-                );
-              }}
-            >
-              {packages.data.map((p) => (
-                <IonSelectOption key={p.objectId} value={p.objectId}>
-                  {p.amount_of_included_consultations} consultations - $
-                  {cents_to_dollars(p.price_cents)}
-                </IonSelectOption>
-              ))}
-            </IonSelect>
-          </IonItem>
-
           <IonItem onClick={open_images_upload_modal}>
             <IonLabel position="stacked">
               Images <IonText color="danger">*</IonText>
@@ -220,6 +201,30 @@ const NewProjectForm = () => {
                 className="images-button"
               >
                 <IonIcon icon={camera} slot="start"></IonIcon>Add Images
+              </IonButton>
+            )}
+          </IonItem>
+
+          <IonItem>
+            <IonLabel position="stacked">
+              Package <IonText color="danger">*</IonText>
+            </IonLabel>
+            {selected_package ? (
+              <PackagePreviewCard package_data={selected_package} />
+            ) : (
+              <IonButton
+                type="button"
+                expand="block"
+                color="dark"
+                fill="outline"
+                className="packages-button"
+                routerLink={
+                  package_objectId
+                    ? `/packages?package_objectId=${package_objectId}`
+                    : `/packages`
+                }
+              >
+                Select a package
               </IonButton>
             )}
           </IonItem>

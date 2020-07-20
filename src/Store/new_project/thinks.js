@@ -14,7 +14,7 @@ export const set_form_field_value = (payload) => ({
   payload,
 });
 
-export const create_new_project = (history) => async (
+export const create_new_project = ({ package_objectId, history }) => async (
   dispatch,
   getState,
   Parse
@@ -30,9 +30,7 @@ export const create_new_project = (history) => async (
   NewProjectObject.set("room_height", new_project.room_height);
   NewProjectObject.set(
     "package",
-    Parse.Object.extend("package").createWithoutData(
-      new_project.package_objectId
-    )
+    Parse.Object.extend("package").createWithoutData(package_objectId)
   );
   NewProjectObject.set("created_by", Parse.User.current());
 

@@ -12,6 +12,18 @@ export const resolve_input_element_value = (input_node) => {
 
 const round_to_decimal_precision = (value, precision) =>
   Math.round(Number(value) * precision) / precision;
+export const to_dollars_cents = (cents_number) => {
+  const cents_string = cents_number.toString();
+  const [dollars, cents] = [
+    cents_string.substring(0, cents_string.length - 2),
+    cents_string.substring(cents_string.length - 2, cents_string.length),
+  ];
+
+  return {
+    dollars,
+    cents,
+  };
+};
 
 export const inches_to_feet = (inches, decimal_precision) => {
   const precision =

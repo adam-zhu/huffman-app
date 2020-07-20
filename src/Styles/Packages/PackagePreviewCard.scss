@@ -1,0 +1,19 @@
+.package-preview-card {
+  background-size: cover;
+  background-position: center center;
+  padding: 0;
+
+  .title {
+    padding: 1.25rem 1.25rem 5rem 1.25rem;
+    background: rgba(255, 255, 255, 0.4);
+  }
+
+  .price {
+    font-weight: bold;
+    color: black;
+
+    strong {
+      font-size: 1.75em;
+    }
+  }
+}

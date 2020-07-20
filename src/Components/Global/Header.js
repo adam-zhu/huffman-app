@@ -45,6 +45,10 @@ const BackButton = () => {
       ];
     }
 
+    if (location.pathname === "/packages") {
+      return ["Create project", `/projects/new`, "back"];
+    }
+
     if (
       match.params.project_objectId !== undefined ||
       location.pathname === "/projects/new"
