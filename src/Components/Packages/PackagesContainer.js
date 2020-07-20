@@ -11,10 +11,12 @@ import {
   IonCardTitle,
   IonCardSubtitle,
   IonButton,
+  IonTitle,
   IonSkeletonText,
   IonThumbnail,
   IonImg,
   IonIcon,
+  IonList,
 } from "@ionic/react";
 import PackageCard from "Components/Packages/PackageCard";
 import { load_packages } from "Store/packages/thinks";
@@ -38,14 +40,21 @@ const Packages = () => {
 
   return (
     <PageContainer className="packages-page-container">
-      <h1>Select your package</h1>
-      {data.map((p) => (
-        <PackageCard
-          key={p.objectId}
-          package_data={p}
-          is_selected={package_objectId === p.objectId}
-        />
-      ))}
+      <h1 className="title">
+        Select your
+        <br />
+        package
+      </h1>
+      <br />
+      <div className="scroll">
+        {data.map((p) => (
+          <PackageCard
+            key={p.objectId}
+            package_data={p}
+            is_selected={package_objectId === p.objectId}
+          />
+        ))}
+      </div>
     </PageContainer>
   );
 };

@@ -1,2 +1,19 @@
 .packages-page-container {
+  .title {
+    font-weight: bold;
+    font-size: 2.25rem;
+  }
+  .scroll {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .package-card {
+      flex: 0 0 auto;
+    }
+  }
 }

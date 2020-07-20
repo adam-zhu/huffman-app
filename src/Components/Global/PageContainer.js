@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { IonContent, IonPage } from "@ionic/react";
+import { IonContent, IonPage, IonFooter } from "@ionic/react";
 import ErrorAlerter from "Components/Global/ErrorAlerter";
 import Header from "Components/Global/Header";
 import "Styles/Global/PageContainer.scss";
@@ -35,7 +35,7 @@ const PageContainer = ({ className, children, header, footer }) => {
           {children}
         </div>
       </IonContent>
-      {typeof footer === "function" && footer()}
+      {footer && <IonFooter>{footer}</IonFooter>}
     </IonPage>
   );
 };

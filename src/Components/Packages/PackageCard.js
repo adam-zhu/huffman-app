@@ -17,7 +17,7 @@ const PackageCard = ({ package_data, is_selected }) => {
       button
       routerLink={`/projects/new?package_objectId=${package_data.objectId}`}
       routerDirection="back"
-      className="package-card"
+      className={`package-card ${is_selected ? "selected" : ""}`}
     >
       {is_selected && (
         <div className="selected-icon">
