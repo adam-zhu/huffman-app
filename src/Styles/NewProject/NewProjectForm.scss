@@ -1,0 +1,102 @@
+#page-container.new-project-page-container {
+  padding-left: 0;
+  padding-right: 0;
+
+  form.new-project {
+    h1,
+    h2 {
+      font-weight: bold;
+      font-size: 2.25rem;
+      padding: 0 1rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      color: var(--alt-text-color);
+    }
+
+    ion-input,
+    ion-textarea {
+      border-bottom: 1px solid lightgray;
+      font-size: 0.825rem;
+
+      &.has-focus {
+        border-color: var(--primary-theme-color);
+      }
+    }
+
+    .field {
+      width: calc(100% - 1rem);
+    }
+
+    .measurements {
+      .item {
+        width: 33.33%;
+        display: inline-block;
+        position: relative;
+
+        input {
+          padding-right: 2.5rem;
+        }
+
+        .units {
+          font-size: 0.666em;
+          font-weight: 500;
+          position: absolute;
+          bottom: 0.5rem;
+          right: 1.75rem;
+          color: var(--alt-text-color);
+        }
+      }
+    }
+
+    .images-title-item {
+      --ion-background-color: var(--alt-background-color);
+
+      h2 {
+        padding: 0 0 0.5rem 0;
+      }
+    }
+
+    .images-item {
+      --ion-background-color: var(--alt-background-color);
+
+      .inner {
+        width: 100%;
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: scroll;
+
+        .add-button {
+          flex: none;
+          width: 4rem;
+          height: 4rem;
+          position: relative;
+          border-radius: 10px;
+          background: var(--ion-color-secondary);
+          margin-right: 1rem;
+
+          i {
+            color: var(--ion-color-primary);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+          }
+        }
+
+        .thumb {
+          flex: none;
+          margin-right: 1rem;
+          --size: 4rem;
+        }
+      }
+    }
+
+    .images-spacer-item {
+      height: 1.5rem;
+      --ion-background-color: var(--alt-background-color);
+    }
+  }
+}

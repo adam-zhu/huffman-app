@@ -11,13 +11,13 @@
       flex-direction: row-reverse;
 
       .message-bubble {
-        background: var(--ion-color-primary, #3880ff);
+        background: dimgray;
       }
     }
 
     &.received {
       .message-bubble {
-        background: dimgray;
+        background: var(--ion-color-primary);
       }
     }
 

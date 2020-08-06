@@ -9,7 +9,7 @@ import {
 } from "Store/consultation/thinks";
 import { IonButton, IonTextarea } from "@ionic/react";
 import { useScrollIonContentToBottom, usePhotos } from "Hooks";
-import ImagesModal from "Components/Global/ImagesModal";
+import ImagesModalWithGallery from "Components/Global/ImagesModalWithGallery";
 import ThumbnailGallery from "Components/Global/ThumbnailGallery";
 import {
   select_project_data,
@@ -140,21 +140,24 @@ const MessageInputForm = () => {
         {message_images.length > 0 && (
           <ThumbnailGallery images={message_images.map(to_thumbnail_gallery)} />
         )}
+        <IonButton
+          expand="block"
+          type="button"
+          color="secondary"
+          onClick={(e) => {
+            e.preventDefault();
+            set_is_images_modal_open(true);
+          }}
+          disabled={is_images_modal_open || is_message_sending}
+        >
+          {message_images.length > 0 ? "Add/Remove Images" : "Add Images"}
+        </IonButton>
         <IonButton expand="block" type="submit" disabled={is_message_sending}>
           Send
         </IonButton>
       </form>
-      <IonButton
-        expand="block"
-        type="button"
-        color="secondary"
-        onClick={(e) => set_is_images_modal_open(true)}
-        disabled={is_images_modal_open || is_message_sending}
-      >
-        {message_images.length > 0 ? "Add/Remove Images" : "Add Images"}
-      </IonButton>
       {is_images_modal_open && (
-        <ImagesModal
+        <ImagesModalWithGallery
           photos={photos}
           deletePhoto={deletePhoto}
           takePhoto={takePhoto}

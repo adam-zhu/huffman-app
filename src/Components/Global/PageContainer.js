@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { IonContent, IonPage, IonFooter } from "@ionic/react";
@@ -15,16 +15,18 @@ const PageContainer = ({ className, children, header, footer }) => {
   const is_home_page = match.url === "/";
   const ion_content_ref = useRef(null);
   const dispatch = useDispatch();
+  const user_not_logged_in_and_not_on_home_page =
+    !is_user_logged_in && !is_home_page;
 
-  useLayoutEffect(() => {
-    if (!is_user_logged_in && !is_home_page) {
+  useEffect(() => {
+    if (user_not_logged_in_and_not_on_home_page) {
       history.replace("/");
     }
 
     dispatch(ion_content_mounted(ion_content_ref));
 
     return () => dispatch(ion_content_unmounted());
-  }, [!is_user_logged_in && !is_home_page, ion_content_ref.current]);
+  }, [user_not_logged_in_and_not_on_home_page, ion_content_ref]);
 
   return (
     <IonPage id={className} className="ion-page">

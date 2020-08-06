@@ -74,16 +74,25 @@
 
       /** Ionic CSS Variables **/
       :root {
+        --primary-theme-color: #ff7d70;
+        --secondary-theme-color: #ffe5de;
+        --alt-background-color: #eef1f8;
+        --alt-text-color: #979fac;
+
         /** primary **/
-        --ion-color-primary: #3880ff;
-        --ion-color-primary-rgb: 56, 128, 255;
+        --ion-color-primary: #ff7d70;
+        /* --ion-color-primary: #3880ff; */
+        --ion-color-primary-rgb: 255, 125, 112;
+        /* --ion-color-primary-rgb: 56, 128, 255; */
         --ion-color-primary-contrast: #ffffff;
         --ion-color-primary-contrast-rgb: 255, 255, 255;
-        --ion-color-primary-shade: #3171e0;
-        --ion-color-primary-tint: #4c8dff;
+        --ion-color-primary-shade: #e66457;
+        /* --ion-color-primary-shade: #3171e0; */
+        --ion-color-primary-tint: #ff978a;
+        /* --ion-color-primary-tint: #4c8dff; */
 
         /** secondary **/
-        --ion-color-secondary: #3dc2ff;
+        --ion-color-secondary: #ffe5de;
         --ion-color-secondary-rgb: 61, 194, 255;
         --ion-color-secondary-contrast: #ffffff;
         --ion-color-secondary-contrast-rgb: 255, 255, 255;
@@ -151,8 +160,13 @@
       }
 
       /** custom Huffman app overrides **/
-      ion-button {
+      ion-button,
+      ion-thumbnail {
         --border-radius: 10px;
+      }
+
+      ion-label {
+        font-weight: 500;
       }
 
       * {
@@ -166,12 +180,15 @@
       i.material-icons.md-18 {
         font-size: 18px;
       }
+
       i.material-icons.md-24 {
         font-size: 24px;
       }
+
       i.material-icons.md-36 {
         font-size: 36px;
       }
+
       i.material-icons.md-48 {
         font-size: 48px;
       }

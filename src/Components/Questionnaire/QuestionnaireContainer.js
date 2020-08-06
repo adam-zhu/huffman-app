@@ -27,7 +27,7 @@ const QuestionnaireContainer = () => {
   useEffect(() => {
     dispatch(get_questions());
     dispatch(get_answers(match.params.project_objectId));
-  }, []);
+  }, [match.params.project_objectId]);
 
   return (
     <PageContainer className="new-project-page-container">
@@ -96,7 +96,7 @@ const QuestionnaireForm = () => {
           disabled={answer_submission_busy}
           type="submit"
         >
-          Submit Answers &rarr;
+          Save Answers &rarr;
         </IonButton>
       </form>
     </>

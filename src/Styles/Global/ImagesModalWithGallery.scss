@@ -1,0 +1,29 @@
+.images-modal-with-gallery {
+  color: black;
+
+  h6 {
+    padding-left: 0.5rem;
+  }
+
+  .inner {
+    padding: 1rem 1rem 0 1rem;
+  }
+
+  .thumb {
+    --size: 156px;
+  }
+
+  .trigger-buttons {
+    text-align: center;
+  }
+
+  .has-selection {
+    .not-selected {
+      opacity: 0.5;
+    }
+
+    .selected-for-deletion {
+      border: 2px solid var(--ion-color-danger, #eb445a);
+    }
+  }
+}

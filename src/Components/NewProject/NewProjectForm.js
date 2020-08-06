@@ -11,8 +11,6 @@ import {
   IonLabel,
   IonText,
   IonItemGroup,
-  IonSelect,
-  IonSelectOption,
   IonSkeletonText,
   IonThumbnail,
   IonIcon,
@@ -25,7 +23,8 @@ import {
 } from "Store/new_project/thinks";
 import { resolve_input_element_value } from "Utils";
 import { usePhotos } from "Hooks";
-import ImagesModal from "Components/Global/ImagesModal";
+import "Styles/NewProject/NewProjectForm.scss";
+import ImagesModalWithGallery from "Components/Global/ImagesModalWithGallery";
 import PackagePreviewCard from "Components/Packages/PackagePreviewCard";
 
 const NewProjectForm = () => {
@@ -33,6 +32,7 @@ const NewProjectForm = () => {
     is_images_upload_modal_open,
     set_is_images_upload_modal_open,
   ] = useState(false);
+  const [is_textarea_focused, set_is_textarea_focused] = useState(false);
   const { packages, new_project } = useSelector((state) => state);
   const {
     busy,
@@ -84,13 +84,14 @@ const NewProjectForm = () => {
   return (
     <>
       <form className="new-project" onSubmit={submit_handler}>
+        <h1 className="title">Create a new project</h1>
         <IonList lines="none">
           <IonItem>
             <IonLabel position="floating">
-              Name <IonText color="danger">*</IonText>
+              Name<IonText color="danger">*</IonText>
             </IonLabel>
             <IonInput
-              cssClass="field"
+              className="field"
               placeholder="the name of your project"
               type="text"
               value={name}
@@ -100,27 +101,31 @@ const NewProjectForm = () => {
               autofocus
             />
           </IonItem>
+          <br />
           <IonItem>
             <IonLabel position="floating">
-              Description <IonText color="danger">*</IonText>
+              Description<IonText color="danger">*</IonText>
             </IonLabel>
             <IonTextarea
-              cssClass="field"
+              className={`field ${is_textarea_focused ? "has-focus" : ""}`}
               placeholder="a brief description of your project"
               value={description}
               onIonChange={form_field_change_handler("description")}
               disabled={busy}
+              onFocus={() => set_is_textarea_focused(true)}
+              onBlur={() => set_is_textarea_focused(false)}
               required
             />
           </IonItem>
-
-          <IonItemGroup>
+          <br />
+          <h2>Room measures</h2>
+          <IonItemGroup className="measurements">
             <IonItem>
               <IonLabel position="floating">
-                Room width (inches) <IonText color="danger">*</IonText>
+                Width<IonText color="danger">*</IonText>
               </IonLabel>
               <IonInput
-                cssClass="field"
+                className="field measurement"
                 placeholder="width (inches)"
                 type="number"
                 inputmode="numeric"
@@ -130,13 +135,14 @@ const NewProjectForm = () => {
                 min={0}
                 required
               />
+              <span className="units">inches</span>
             </IonItem>
             <IonItem>
               <IonLabel position="floating">
-                Room length (inches) <IonText color="danger">*</IonText>
+                Length<IonText color="danger">*</IonText>
               </IonLabel>
               <IonInput
-                cssClass="field"
+                className="field measurement"
                 placeholder="length (inches)"
                 type="number"
                 inputmode="numeric"
@@ -146,13 +152,14 @@ const NewProjectForm = () => {
                 min={0}
                 required
               />
+              <span className="units">inches</span>
             </IonItem>
             <IonItem>
               <IonLabel position="floating">
-                Room height (inches) <IonText color="danger">*</IonText>
+                Height<IonText color="danger">*</IonText>
               </IonLabel>
               <IonInput
-                cssClass="field"
+                className="field measurement"
                 placeholder="height (inches)"
                 type="number"
                 inputmode="numeric"
@@ -162,49 +169,31 @@ const NewProjectForm = () => {
                 min={0}
                 required
               />
+              <span className="units">inches</span>
             </IonItem>
           </IonItemGroup>
-
-          <IonItem onClick={open_images_upload_modal}>
-            <IonLabel position="stacked">
-              Images <IonText color="danger">*</IonText>
-            </IonLabel>
-            {photos.length > 0 ? (
-              <div className="images-uploaded">
-                <div className="images">
-                  {photos.map((p, index) => {
-                    const src = p.base64 ?? p.webPath;
-
-                    return (
-                      <IonThumbnail key={index + src}>
-                        <IonImg src={src} className="preview" />
-                      </IonThumbnail>
-                    );
-                  })}
-                </div>
-                <IonButton
-                  type="button"
-                  expand="block"
-                  color="dark"
-                  fill="outline"
-                  className="images-button"
-                >
-                  <IonIcon icon={camera} slot="start"></IonIcon>Edit Images
-                </IonButton>
-              </div>
-            ) : (
-              <IonButton
-                type="button"
-                expand="block"
-                color="dark"
-                fill="outline"
-                className="images-button"
-              >
-                <IonIcon icon={camera} slot="start"></IonIcon>Add Images
-              </IonButton>
-            )}
+          <br />
+          <IonItem className="images-title-item">
+            <h2>Upload your pictures</h2>
           </IonItem>
+          <IonItem className="images-item" onClick={open_images_upload_modal}>
+            <div className="inner">
+              <div className="add-button">
+                <i className="material-icons">add</i>
+              </div>
+              {photos.map((p, index) => {
+                const src = p.base64 ?? p.webPath;
 
+                return (
+                  <IonThumbnail key={index + src} className="thumb">
+                    <IonImg src={src} className="preview" />
+                  </IonThumbnail>
+                );
+              })}
+            </div>
+          </IonItem>
+          <IonItem className="images-spacer-item">&nbsp;</IonItem>
+          <br />
           <IonItem>
             <IonLabel position="stacked">
               Package <IonText color="danger">*</IonText>
@@ -239,7 +228,7 @@ const NewProjectForm = () => {
         </IonButton>
       </form>
       {is_images_upload_modal_open && (
-        <ImagesModal
+        <ImagesModalWithGallery
           photos={photos}
           deletePhoto={deletePhoto}
           takePhoto={takePhoto}

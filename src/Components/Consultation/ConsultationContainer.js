@@ -18,6 +18,8 @@ const ConsultationContainer = () => {
   const match = useRouteMatch();
   const project_data = select_project_data({ state, match });
   const consultation_data = select_consultation_data({ state, match });
+  const project_obejectId = project_data?.objectId;
+  const consultation_is_open = consultation_data?.is_open;
   const toast_duration = 2400;
 
   useEffect(() => {
@@ -27,7 +29,7 @@ const ConsultationContainer = () => {
         toast_duration
       );
     }
-  }, [project_data?.objectId, consultation_data?.is_open]);
+  }, [project_obejectId, consultation_is_open]);
 
   return (
     <>
