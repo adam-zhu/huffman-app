@@ -14,6 +14,7 @@ export const NEW_PROJECT_CREATE_REQUEST_START =
   "new_project/NEW_PROJECT_CREATE_REQUEST_START";
 export const NEW_PROJECT_CREATE_REQUEST_END =
   "new_project/NEW_PROJECT_CREATE_REQUEST_END";
+export const RESET_REDUCER_STATE = "new_project/RESET_REDUCER_STATE";
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -36,6 +37,9 @@ export default (state = initialState, action) => {
             ...state,
             busy: false,
           };
+
+    case RESET_REDUCER_STATE:
+      return { ...initialState };
 
     default:
       return state;

@@ -29,7 +29,11 @@ export const useScrollIonContentToBottom = ({ after_every_render }) => {
   });
 };
 
-export const usePhotos = ({ selector, update_handler }) => {
+export const usePhotos = ({
+  selector,
+  update_handler,
+  preserve_photo_data_on_unmount,
+}) => {
   const { getPhoto } = useCamera();
   const { deleteFile, readFile, writeFile } = useFilesystem();
 
@@ -133,7 +137,9 @@ export const usePhotos = ({ selector, update_handler }) => {
   };
 
   useEffect(() => {
-    return photos.forEach(deletePhoto);
+    if (!preserve_photo_data_on_unmount) {
+      return photos.forEach(deletePhoto);
+    }
   }, []);
 
   return {

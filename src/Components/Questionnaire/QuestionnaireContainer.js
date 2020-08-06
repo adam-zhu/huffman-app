@@ -71,7 +71,7 @@ const QuestionnaireForm = () => {
 
   return (
     <>
-      <form className="new-project" onSubmit={submit_handler}>
+      <form onSubmit={submit_handler}>
         <IonList lines="none">
           {questions.map((q, i) => {
             const answer = answers.find(

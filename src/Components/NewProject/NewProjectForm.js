@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useLayoutEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import qs from "query-string";
@@ -13,10 +13,9 @@ import {
   IonItemGroup,
   IonSkeletonText,
   IonThumbnail,
-  IonIcon,
   IonImg,
 } from "@ionic/react";
-import { camera } from "ionicons/icons";
+import { createGesture } from "@ionic/core";
 import {
   set_form_field_value,
   create_new_project,
@@ -34,6 +33,7 @@ const NewProjectForm = () => {
   ] = useState(false);
   const [is_textarea_focused, set_is_textarea_focused] = useState(false);
   const { packages, new_project } = useSelector((state) => state);
+  const [is_tooltip_drawer_open, set_is_tooltip_drawer_open] = useState(false);
   const {
     busy,
     name,
@@ -52,6 +52,7 @@ const NewProjectForm = () => {
     selector: (state) => state.new_project.project_images || [],
     update_handler: (photos) =>
       dispatch(set_form_field_value({ key: "project_images", value: photos })),
+    preserve_photo_data_on_unmount: true,
   });
   const dispatch = useDispatch();
   const history = useHistory();
@@ -76,6 +77,34 @@ const NewProjectForm = () => {
     await dispatch(create_new_project({ package_objectId, history }));
     photos.forEach(deletePhoto);
   };
+  const drawer_ref = useRef(null);
+  const drawer_content_ref = useRef(null);
+  const drawer_overlay_click_handler = (e) => {
+    if (
+      drawer_content_ref.current &&
+      e.target.contains(drawer_content_ref.current)
+    ) {
+      set_is_tooltip_drawer_open(false);
+    }
+  };
+
+  useLayoutEffect(() => {
+    if (drawer_ref.current) {
+      const gesture = createGesture({
+        el: drawer_ref.current,
+        gestureName: "down-swipe",
+        direction: "y",
+        onMove: (event) => {
+          if (event.deltaY > 20) {
+            return set_is_tooltip_drawer_open(false);
+          }
+        },
+      });
+
+      // enable the gesture for the item
+      gesture.enable(true);
+    }
+  }, [drawer_ref.current]);
 
   if (packages.data === undefined) {
     return <IonSkeletonText animated />;
@@ -92,7 +121,7 @@ const NewProjectForm = () => {
             </IonLabel>
             <IonInput
               className="field"
-              placeholder="the name of your project"
+              placeholder="Name your project"
               type="text"
               value={name}
               onIonChange={form_field_change_handler("name")}
@@ -108,7 +137,7 @@ const NewProjectForm = () => {
             </IonLabel>
             <IonTextarea
               className={`field ${is_textarea_focused ? "has-focus" : ""}`}
-              placeholder="a brief description of your project"
+              placeholder="What is your design goal?"
               value={description}
               onIonChange={form_field_change_handler("description")}
               disabled={busy}
@@ -173,59 +202,81 @@ const NewProjectForm = () => {
             </IonItem>
           </IonItemGroup>
           <br />
-          <IonItem className="images-title-item">
+          <IonItem className="images-title-item background">
             <h2>Upload your pictures</h2>
           </IonItem>
-          <IonItem className="images-item" onClick={open_images_upload_modal}>
+          <IonItem className="background tooltip-trigger">
+            <span onClick={() => set_is_tooltip_drawer_open(true)}>
+              <div className="icon">
+                <i className="material-icons">photo_camera</i>
+              </div>
+              See photos best practices
+            </span>
+          </IonItem>
+          <IonItem className="background spacer-item">&nbsp;</IonItem>
+          <IonItem
+            className="images-item background"
+            onClick={open_images_upload_modal}
+          >
             <div className="inner">
-              <div className="add-button">
+              <div className="add-button thumb-item">
                 <i className="material-icons">add</i>
               </div>
               {photos.map((p, index) => {
                 const src = p.base64 ?? p.webPath;
 
                 return (
-                  <IonThumbnail key={index + src} className="thumb">
+                  <IonThumbnail key={index + src} className="thumb-item">
                     <IonImg src={src} className="preview" />
                   </IonThumbnail>
                 );
               })}
+              {[
+                ...new Array(photos.length < 3 ? 3 - photos.length : 0).keys(),
+              ].map(() => (
+                <div className="blank-photo-slot thumb-item"></div>
+              ))}
             </div>
           </IonItem>
-          <IonItem className="images-spacer-item">&nbsp;</IonItem>
-          <br />
-          <IonItem>
-            <IonLabel position="stacked">
-              Package <IonText color="danger">*</IonText>
-            </IonLabel>
-            {selected_package ? (
-              <PackagePreviewCard package_data={selected_package} />
-            ) : (
-              <IonButton
-                type="button"
-                expand="block"
-                color="dark"
-                fill="outline"
-                className="packages-button"
-                routerLink={
-                  package_objectId
-                    ? `/packages?package_objectId=${package_objectId}`
-                    : `/packages`
-                }
-              >
-                Select a package
-              </IonButton>
-            )}
-          </IonItem>
+          <IonItem className="background spacer-item">&nbsp;</IonItem>
+          <IonItem className="background spacer-item">&nbsp;</IonItem>
+          {photos.length > 0 && !selected_package && (
+            <IonItem
+              className="select-package"
+              routerLink={`/packages`}
+              button
+              color=""
+            >
+              <h2>Select a package</h2>
+            </IonItem>
+          )}
+          {photos.length === 0 && !selected_package && (
+            <>
+              <IonItem className="background spacer-item">&nbsp;</IonItem>
+              <IonItem className="background spacer-item">&nbsp;</IonItem>
+              <IonItem className="background spacer-item">&nbsp;</IonItem>
+            </>
+          )}
+          {selected_package && (
+            <>
+              <br />
+              <h2>Selected package</h2>
+              <IonItem>
+                <PackagePreviewCard package_data={selected_package} />
+              </IonItem>
+            </>
+          )}
         </IonList>
-        <IonButton
-          className="submit-button"
-          expand="block"
-          disabled={busy}
-          type="submit"
-        >
-          Create Project &rarr;
-        </IonButton>
+        {selected_package && (
+          <IonButton
+            className="submit-button"
+            expand="block"
+            disabled={busy}
+            type="submit"
+          >
+            Create Project &rarr;
+          </IonButton>
+        )}
       </form>
       {is_images_upload_modal_open && (
         <ImagesModalWithGallery
@@ -236,6 +287,98 @@ const NewProjectForm = () => {
           close_handler={close_images_upload_modal}
         />
       )}
+      <div
+        className={`tooltip-drawer ${is_tooltip_drawer_open ? "is-open" : ""}`}
+        ref={drawer_ref}
+        onClick={drawer_overlay_click_handler}
+      >
+        <div className="inner" ref={drawer_content_ref}>
+          <div className="content">
+            <div
+              className="close-bar"
+              onClick={() => set_is_tooltip_drawer_open(false)}
+            />
+            <br />
+            <h3>Take better pictures</h3>
+            <br />
+            <div className="tips">
+              <div className="scroll-container">
+                <div className="tip">
+                  <div className="pic" />
+                  <br />
+                  <strong>Frame the entire space</strong>
+                  <p>
+                    First of all, in photography, there are no rules, just
+                    guidelines that you can follow until you discover your
+                    style. I love bright and airy shots; others prefer dark and
+                    moody. But when you use my tips, you will have a good start
+                    in interior photography.
+                  </p>
+                </div>
+                <div className="tip alt">
+                  <div className="pic" />
+                  <br />
+                  <strong>Use natural light whenever possible!</strong>
+                  <p>
+                    So turn all the lights off. I repeat OFF! Light bulbs cause
+                    terrible shadows and color casts. As human beings, we are
+                    very capable of interpreting the yellow color cast of
+                    incandescent bulbs or the dull green of fluorescent lights
+                    as white light, but the camera is a different story.
+                  </p>
+                </div>
+                <div className="tip">
+                  <div className="pic" />
+                  <br />
+                  <strong>Use a tripod</strong>
+                  <p>
+                    The light conditions are rarely good enough to shoot
+                    handheld indoors. So a tripod is a must! I prefer to keep my
+                    aperture between F/9 and F/11 and my ISO as low as possible
+                    (100 yes!) to create an overall sharp image. And with your
+                    camera mounted on a tripod, the shutter speed is no longer
+                    an issue.
+                  </p>
+                </div>
+                <div className="tip alt">
+                  <div className="pic" />
+                  <br />
+                  <strong>Keep your lines straight</strong>
+                  <p>
+                    Keep your verticals vertical and, when shooting a one-point
+                    perspective, your horizontals horizontal too! Our brain is
+                    capable of realizing that doors are vertical even if we see
+                    them from an angled view, but the camera is not.
+                  </p>
+                </div>
+                <div className="tip">
+                  <div className="pic" />
+                  <br />
+                  <strong>Overcast days are the best</strong>
+                  <p>
+                    Every house in its surroundings looks better when the sun is
+                    shining, and the sky is blue. But the sunlight creates a
+                    very sharp difference between lights and darks indoors
+                    especially when it is shining straight through the windows.
+                  </p>
+                </div>
+                <div className="tip alt">
+                  <div className="pic" />
+                  <br />
+                  <strong>Create space</strong>
+                  <p>
+                    The hardest part of interior photography (besides the light)
+                    is the lack of space. So don’t be afraid to move furniture
+                    when it is standing in the way of creating a beautiful shot.
+                    Or shoot from the hallway into the room at the point where
+                    you won’t see the doorposts in the viewfinder anymore.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
 };

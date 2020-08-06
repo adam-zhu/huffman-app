@@ -46,7 +46,7 @@ const BackButton = () => {
     }
 
     if (location.pathname === "/packages") {
-      return ["Create project", `/projects/new`, "back"];
+      return ["New project", `/projects/new`, "back"];
     }
 
     if (

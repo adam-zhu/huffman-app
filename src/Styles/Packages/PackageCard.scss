@@ -1,6 +1,7 @@
 .package-card {
   width: 13rem;
   flex: 0 0 auto;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.15);
 
   .image {
     width: 100%;
@@ -16,14 +17,14 @@
   }
 
   &.selected {
-    transform: scale(1.05);
-    border: 1px solid lightgray;
+    transform: scale(1.1);
+    border: 1px solid dimgray;
   }
 
   .selected-icon {
     position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
+    top: 1rem;
+    right: 1rem;
 
     .inner {
       position: relative;
@@ -31,13 +32,14 @@
       border-radius: 100%;
       width: 1.75rem;
       height: 1.75rem;
-      box-shadow: 0px 0px 4px 2px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.15);
 
       i {
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+        font-weight: bold;
       }
     }
   }

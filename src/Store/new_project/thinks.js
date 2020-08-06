@@ -2,6 +2,7 @@ import {
   FORM_STATE_CHANGED,
   NEW_PROJECT_CREATE_REQUEST_START,
   NEW_PROJECT_CREATE_REQUEST_END,
+  RESET_REDUCER_STATE,
 } from "./reducer";
 import { add_app_error } from "Store/errors/thinks";
 import {
@@ -88,6 +89,8 @@ const create_project_images = ({ history, new_project_data }) => async (
 
     await dispatch(stop_listening_for_changes());
     await dispatch(get_data_and_listen_for_changes());
+
+    dispatch({ type: RESET_REDUCER_STATE });
 
     return Promise.resolve(
       history.push(`/questionnaire/${new_project_data.objectId}`)

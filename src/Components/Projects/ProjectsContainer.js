@@ -22,7 +22,7 @@ const ProjectsContainer = () => {
       <div className="page-top">
         <h1>Projects</h1>
         <IonButton fill="outline" routerLink="/projects/new">
-          New Project &rarr;
+          New project &rarr;
         </IonButton>
       </div>
       {loading || data === undefined ? (
