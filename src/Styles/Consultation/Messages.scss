@@ -11,7 +11,7 @@
       flex-direction: row-reverse;
 
       .message-bubble {
-        background: dimgray;
+        background: var(--ion-color-secondary-shade);
       }
     }
 
@@ -26,23 +26,27 @@
       border-radius: 0.5rem;
       color: white;
       display: inline-block;
-      max-width: 50%;
+      max-width: 75%;
       font-size: 0.75rem;
       margin: 0;
 
       p {
         margin: 0;
       }
+
+      &:last-child {
+        margin-bottom: 1rem;
+      }
     }
   }
 
   form {
     border-top: 1px solid gainsboro;
-    margin-top: 1rem;
   }
 
   .empty-state {
-    text-align: center;
     width: 100%;
+    font-size: 0.75rem;
+    line-height: 1 !important;
   }
 }

@@ -39,6 +39,7 @@ const ConsultationContainer = () => {
         ) : consultation_data.is_open === true ? (
           <>
             <ProjectDetails hide_title />
+            <br />
             <ConsultationMessages />
           </>
         ) : (

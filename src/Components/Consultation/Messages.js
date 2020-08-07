@@ -7,7 +7,7 @@ import {
   change_message_images,
   send_message,
 } from "Store/consultation/thinks";
-import { IonButton, IonTextarea } from "@ionic/react";
+import { IonButton, IonTextarea, IonText } from "@ionic/react";
 import { useScrollIonContentToBottom, usePhotos } from "Hooks";
 import ImagesModalWithGallery from "Components/Global/ImagesModalWithGallery";
 import ThumbnailGallery from "Components/Global/ThumbnailGallery";
@@ -42,10 +42,9 @@ const Messages = () => {
 
   return (
     <div id="consultation-messages">
-      {messages.length > 0
-        ? messages.map((m) => <MessageRow key={m.objectId} message={m} />)
-        : "This consultation doesn't have any messages yet. Type a message below and press send to begin."}
-      <MessageInputForm />
+      {messages.length > 0 &&
+        messages.map((m) => <MessageRow key={m.objectId} message={m} />)}
+      <MessageInputForm no_messages={messages.length === 0} />
     </div>
   );
 };
@@ -79,7 +78,7 @@ const MessageRow = ({ message }) => {
   );
 };
 
-const MessageInputForm = () => {
+const MessageInputForm = ({ no_messages }) => {
   const [is_images_modal_open, set_is_images_modal_open] = useState(false);
   const { deletePhoto, photos, takePhoto, getPhotoFromFilesystem } = usePhotos({
     selector: (state) => state.consultation.message_images,
@@ -126,7 +125,11 @@ const MessageInputForm = () => {
     <>
       <form onSubmit={message_submit_handler}>
         <IonTextarea
-          placeholder="type a message..."
+          placeholder={
+            no_messages
+              ? "Send a message to begin this consultation"
+              : "type a message..."
+          }
           inputmode="text"
           value={message_input_value}
           onIonChange={message_input_handler}

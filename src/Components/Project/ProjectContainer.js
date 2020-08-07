@@ -8,6 +8,9 @@ import {
   IonButton,
   IonSkeletonText,
   IonText,
+  IonList,
+  IonListHeader,
+  IonItem,
 } from "@ionic/react";
 import { formatRelative } from "date-fns";
 import PageContainer from "Components/Global/PageContainer";
@@ -27,6 +30,7 @@ const ProjectContainer = () => {
       ) : (
         <>
           <ProjectDetails />
+          <br />
           <ProjectConsultations />
         </>
       )}
@@ -53,86 +57,102 @@ const ProjectConsultations = () => {
   }
 
   return (
-    <IonGrid>
-      <IonRow>
-        <IonCol className="consultation-count">
-          <IonText>
-            <span className="count">
-              <strong>
-                <IonText
-                  color={
-                    project_data.consultations.length >=
-                    project_data.package.amount_of_included_consultations
-                      ? "danger"
-                      : "dark"
-                  }
-                >
-                  {project_data.consultations.length}
-                </IonText>
-              </strong>{" "}
-              / {project_data.package.amount_of_included_consultations}
-            </span>
-          </IonText>
-          <br />
-          <IonText color="medium">consultations used</IonText>
-        </IonCol>
-        <IonCol>
-          <IonButton
-            className="new-consultation"
-            size="small"
-            fill="outline"
-            onClick={new_consultation_handler}
-            disabled={
-              consultation_creation_busy ||
-              project_data.consultations.length >=
-                project_data.package.amount_of_included_consultations
-            }
-          >
-            Begin new consultation &rarr;
-          </IonButton>
-        </IonCol>
-      </IonRow>
-      <IonRow>
-        <hr />
-      </IonRow>
-      <IonRow>
-        <h6>Open Consultations:</h6>
-      </IonRow>
-      {open_consultations.length > 0
-        ? open_consultations.map((c) => (
+    <>
+      <IonGrid>
+        <IonRow>
+          <IonCol className="consultation-count">
+            <IonText>
+              <span className="count">
+                <strong>
+                  <IonText
+                    color={
+                      project_data.consultations.length >=
+                      project_data.package.amount_of_included_consultations
+                        ? "danger"
+                        : "dark"
+                    }
+                  >
+                    {project_data.consultations.length}
+                  </IonText>
+                </strong>{" "}
+                / {project_data.package.amount_of_included_consultations}
+              </span>
+            </IonText>
+            <br />
+            <IonText color="medium">consultations used</IonText>
+          </IonCol>
+          <IonCol>
+            <IonButton
+              className="new-consultation"
+              size="small"
+              fill="outline"
+              onClick={new_consultation_handler}
+              disabled={
+                consultation_creation_busy ||
+                project_data.consultations.length >=
+                  project_data.package.amount_of_included_consultations
+              }
+            >
+              Begin new consultation &rarr;
+            </IonButton>
+          </IonCol>
+        </IonRow>
+        <IonRow>
+          <hr />
+        </IonRow>
+      </IonGrid>
+      <IonList lines="inset">
+        <IonListHeader>Open Consultations</IonListHeader>
+        {open_consultations.length > 0 ? (
+          open_consultations.map((c) => (
             <ConsultationRow key={c.objectId} consultation={c} />
           ))
-        : "none"}
+        ) : (
+          <IonItem>
+            <IonText>none</IonText>
+          </IonItem>
+        )}
+      </IonList>
       {closed_consultations.length > 0 && (
         <>
-          <IonRow>
-            <h6>Closed Consultations:</h6>
-          </IonRow>
-          {closed_consultations.map((c) => (
-            <ConsultationRow key={c.objectId} consultation={c} />
-          ))}
+          <br />
+          <IonList lines="inset">
+            <IonListHeader>Closed Consultations</IonListHeader>
+            {closed_consultations.map((c) => (
+              <ConsultationRow key={c.objectId} consultation={c} />
+            ))}
+          </IonList>
         </>
       )}
-    </IonGrid>
+    </>
   );
 };
 
 const ConsultationRow = ({ consultation }) => {
-  return (
-    <IonRow>
-      <IonButton
-        expand="block"
-        color={consultation.is_open ? "dark" : "medium"}
+  if (consultation.is_open) {
+    return (
+      <IonItem
+        button
         routerLink={{
           pathname: `/projects/${consultation.project.objectId}/${consultation.objectId}`,
           state: consultation,
         }}
-        disabled={consultation.is_open === false}
       >
+        <IonText>
+          last active:{" "}
+          {formatRelative(new Date(consultation.last_active_date), new Date())}
+        </IonText>
+      </IonItem>
+    );
+  }
+
+  return (
+    <IonItem className="closed">
+      <IonText>
         last active:{" "}
         {formatRelative(new Date(consultation.last_active_date), new Date())}
-      </IonButton>
-    </IonRow>
+      </IonText>
+    </IonItem>
   );
 };
 

@@ -2,10 +2,28 @@
   .top {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+
+    .name {
+      margin-right: 1rem;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .questionnaire {
+      transform: scale(0.75) translate(12.5%, -12.5%);
+    }
   }
 
   .description {
     margin-top: 0;
+    color: var(--alt-text-color);
+    font-size: 0.825rem;
+  }
+
+  ion-chip {
+    font-size: 0.75rem;
   }
 }

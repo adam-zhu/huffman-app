@@ -11,7 +11,7 @@ import {
   IonSkeletonText,
 } from "@ionic/react";
 import PageContainer from "Components/Global/PageContainer";
-import "Styles/NewProject/NewProjectContainer.scss";
+import "Styles/Questionnaire/QuestionnaireContainer.scss";
 import {
   get_questions,
   get_answers,
@@ -30,7 +30,7 @@ const QuestionnaireContainer = () => {
   }, [match.params.project_objectId]);
 
   return (
-    <PageContainer className="new-project-page-container">
+    <PageContainer className="questionnaire-page-container">
       <QuestionnaireForm />
     </PageContainer>
   );
@@ -110,7 +110,7 @@ const Question = ({ index, question, answer, change_handler, busy }) => {
         {question.string_content} <IonText color="danger">*</IonText>
       </IonLabel>
       <IonInput
-        cssClass="field"
+        className="field"
         placeholder="type answer..."
         type="text"
         value={answer ? answer.string_content : ""}

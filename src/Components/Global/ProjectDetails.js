@@ -13,7 +13,7 @@ import {
 import "Styles/Global/ProjectDetails.scss";
 import { inches_to_feet } from "Utils";
 import { select_project_data } from "Store/projects/selectors";
-import ThumbnailGallery from "Components/Global/ThumbnailGallery";
+import HorizontalScrollThumbnailGallery from "Components/Global/HorizontalScrollThumbnailGallery";
 
 const ProjectDetails = ({ hide_title }) => {
   const state = useSelector((state) => state);
@@ -37,7 +37,7 @@ const ProjectDetails = ({ hide_title }) => {
       <IonGrid className="project-details">
         {hide_title !== true && (
           <IonRow className="top">
-            <h2 className="name">{name}</h2>
+            <h1 className="name">{name}</h1>
             <IonButton
               className="questionnaire"
               size="small"
@@ -48,26 +48,28 @@ const ProjectDetails = ({ hide_title }) => {
             </IonButton>
           </IonRow>
         )}
-        <IonGrid />
-        {project_images?.length > 0 && (
-          <ThumbnailGallery images={project_images} />
-        )}
         <IonRow>
           <IonText>
             <p className="description">{description}</p>
           </IonText>
         </IonRow>
         <IonRow className="room-dimensions">
-          <IonChip>
+          <IonChip color="secondary" outline>
             <IonLabel>Width {inches_to_feet(room_width)}'</IonLabel>
           </IonChip>
-          <IonChip>
+          <IonChip color="secondary" outline>
             <IonLabel>Length {inches_to_feet(room_length)}'</IonLabel>
           </IonChip>
-          <IonChip>
+          <IonChip color="secondary" outline>
             <IonLabel>Height {inches_to_feet(room_height)}'</IonLabel>
           </IonChip>
         </IonRow>
+        {project_images?.length > 0 && (
+          <>
+            <br />
+            <HorizontalScrollThumbnailGallery images={project_images} />
+          </>
+        )}
       </IonGrid>
     </>
   );

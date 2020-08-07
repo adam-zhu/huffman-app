@@ -14,7 +14,7 @@ import {
 export const useScrollIonContentToBottom = ({ after_every_render }) => {
   const { ion_content_ref } = useSelector((state) => state.App);
   const scroll_to_bottom = async () => {
-    if (ion_content_ref.current !== null) {
+    if (ion_content_ref && ion_content_ref.current !== null) {
       const scroll_element = await ion_content_ref.current.getScrollElement();
 
       scroll_element.scrollTop = scroll_element.scrollHeight;

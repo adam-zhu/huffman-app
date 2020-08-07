@@ -1,11 +1,16 @@
-.thumbnail-gallery {
-  margin-bottom: 1rem;
+.horizontal-thumbnail-gallery {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: scroll;
+
+  .inner {
+    display: flex;
+    flex-wrap: nowrap;
+  }
 
   .thumb {
-    display: inline-block;
     margin-right: 0.5rem;
-
-    --size: 4rem;
+    --size: 5rem;
   }
 }
 
