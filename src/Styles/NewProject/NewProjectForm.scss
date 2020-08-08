@@ -40,7 +40,7 @@
 
         .units {
           font-size: 0.666em;
-          font-weight: bold;
+          font-weight: 600;
           position: absolute;
           bottom: 0.5rem;
           right: 1.75rem;
@@ -86,7 +86,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-weight: bold;
+            font-weight: 600;
             font-size: 2rem;
           }
         }
@@ -99,7 +99,7 @@
 
     .tooltip-trigger {
       color: var(--ion-color-primary);
-      font-weight: bold;
+      font-weight: 600;
       font-size: 0.825rem;
 
       .icon {
@@ -118,7 +118,7 @@
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          font-weight: bold;
+          font-weight: 600;
           font-size: 0.825rem;
         }
       }
