@@ -1,209 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Ionic App</title>
 
-    <base href="/" />
+<head>
+  <meta charset="utf-8" />
+  <title>Ionic App</title>
 
-    <meta name="color-scheme" content="light dark" />
-    <meta
-      name="viewport"
-      content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
-    <meta name="format-detection" content="telephone=no" />
-    <meta name="msapplication-tap-highlight" content="no" />
+  <base href="/" />
 
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="viewport"
+    content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="msapplication-tap-highlight" content="no" />
 
-    <link
-      rel="shortcut icon"
-      type="image/png"
-      href="%PUBLIC_URL%/assets/icon/favicon.png"
-    />
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
-    <!-- add to homescreen for ios -->
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-title" content="Ionic App" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <link rel="shortcut icon" type="image/png" href="%PUBLIC_URL%/assets/icon/favicon.png" />
 
-    <!-- material design icons -->
-    <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet"
-    />
-    <style>
-      @font-face {
-        font-family: "eina";
-        font-weight: 300;
-        src: url("./assets/fonts/eina-01-light.ttf") format("ttf"),
-          url("./assets/fonts/eina-01-light.eot") format("eot"),
-          url("./assets/fonts/eina-01-light.woff") format("woff"),
-          url("./assets/fonts/eina-01-light.woff2") format("woff2");
-      }
+  <!-- add to homescreen for ios -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Ionic App" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
-      @font-face {
-        font-family: "eina";
-        font-weight: "normal";
-        src: url("./assets/fonts/eina-01-regular.ttf") format("ttf"),
-          url("./assets/fonts/eina-01-regular.eot") format("eot"),
-          url("./assets/fonts/eina-01-regular.woff") format("woff"),
-          url("./assets/fonts/eina-01-regular.woff2") format("woff2");
-      }
+  <!-- material design icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <style>
+    @font-face {
+      font-family: "eina";
+      font-weight: "light", 300;
+      src: url("./assets/fonts/eina-01-light.ttf") format("ttf"),
+        url("./assets/fonts/eina-01-light.eot") format("eot"),
+        url("./assets/fonts/eina-01-light.woff") format("woff"),
+        url("./assets/fonts/eina-01-light.woff2") format("woff2");
+    }
 
-      @font-face {
-        font-family: "eina";
-        font-weight: 500;
-        src: url("./assets/fonts/eina-01-semibold.ttf") format("ttf"),
-          url("./assets/fonts/eina-01-semibold.eot") format("eot"),
-          url("./assets/fonts/eina-01-semibold.woff") format("woff"),
-          url("./assets/fonts/eina-01-semibold.woff2") format("woff2");
-      }
+    @font-face {
+      font-family: "eina";
+      font-weight: "normal", 400;
+      src: url("./assets/fonts/eina-01-regular.ttf") format("ttf"),
+        url("./assets/fonts/eina-01-regular.eot") format("eot"),
+        url("./assets/fonts/eina-01-regular.woff") format("woff"),
+        url("./assets/fonts/eina-01-regular.woff2") format("woff2");
+    }
 
-      @font-face {
-        font-family: "eina";
-        font-weight: "bold";
-        src: url("./assets/fonts/eina-01-bold.ttf") format("ttf"),
-          url("./assets/fonts/eina-01-bold.eot") format("eot"),
-          url("./assets/fonts/eina-01-light.woff") format("woff"),
-          url("./assets/fonts/eina-01-bold.woff2") format("woff2");
-      }
+    @font-face {
+      font-family: "eina";
+      font-weight: "semibold", 500;
+      src: url("./assets/fonts/eina-01-semibold.ttf") format("ttf"),
+        url("./assets/fonts/eina-01-semibold.eot") format("eot"),
+        url("./assets/fonts/eina-01-semibold.woff") format("woff"),
+        url("./assets/fonts/eina-01-semibold.woff2") format("woff2");
+    }
 
-      /* Ionic Variables and Theming. For more info, please see:
+    @font-face {
+      font-family: "eina";
+      font-weight: "bold", 700;
+      src: url("./assets/fonts/eina-01-bold.ttf") format("ttf"),
+        url("./assets/fonts/eina-01-bold.eot") format("eot"),
+        url("./assets/fonts/eina-01-bold.woff") format("woff"),
+        url("./assets/fonts/eina-01-bold.woff2") format("woff2");
+    }
+
+    /* Ionic Variables and Theming. For more info, please see:
       http://ionicframework.com/docs/theming/ */
 
-      /** Ionic CSS Variables **/
-      :root {
-        --primary-theme-color: #f27063;
-        --secondary-theme-color: #ffe7db;
-        --alt-background-color: #edf0f8;
-        --alt-text-color: #979eaf;
+    /** Ionic CSS Variables **/
+    :root {
+      --primary-theme-color: #f27063;
+      --secondary-theme-color: #ffe7db;
+      --alt-background-color: #edf0f8;
+      --alt-text-color: #979eaf;
 
-        /** primary **/
-        --ion-color-primary: #ff7575;
-        /* --ion-color-primary: #3880ff; */
-        --ion-color-primary-rgb: 255, 125, 112;
-        /* --ion-color-primary-rgb: 56, 128, 255; */
-        --ion-color-primary-contrast: #ffffff;
-        --ion-color-primary-contrast-rgb: 255, 255, 255;
-        --ion-color-primary-shade: #e65c5c;
-        /* --ion-color-primary-shade: #3171e0; */
-        --ion-color-primary-tint: #ff8f8f;
-        /* --ion-color-primary-tint: #4c8dff; */
+      /** primary **/
+      --ion-color-primary: #ff7575;
+      /* --ion-color-primary: #3880ff; */
+      --ion-color-primary-rgb: 255, 125, 112;
+      /* --ion-color-primary-rgb: 56, 128, 255; */
+      --ion-color-primary-contrast: #ffffff;
+      --ion-color-primary-contrast-rgb: 255, 255, 255;
+      --ion-color-primary-shade: #e65c5c;
+      /* --ion-color-primary-shade: #3171e0; */
+      --ion-color-primary-tint: #ff8f8f;
+      /* --ion-color-primary-tint: #4c8dff; */
 
-        /** secondary **/
-        --ion-color-secondary: #979eaf;
-        --ion-color-secondary-rgb: 151, 158, 175;
-        --ion-color-secondary-contrast: #edf0f8;
-        --ion-color-secondary-contrast-rgb: 255, 255, 255;
-        --ion-color-secondary-shade: #7e8596;
-        --ion-color-secondary-tint: #b1b8c9;
+      /** secondary **/
+      --ion-color-secondary: #979eaf;
+      --ion-color-secondary-rgb: 151, 158, 175;
+      --ion-color-secondary-contrast: #edf0f8;
+      --ion-color-secondary-contrast-rgb: 255, 255, 255;
+      --ion-color-secondary-shade: #7e8596;
+      --ion-color-secondary-tint: #b1b8c9;
 
-        /** tertiary **/
-        --ion-color-tertiary: #5260ff;
-        --ion-color-tertiary-rgb: 82, 96, 255;
-        --ion-color-tertiary-contrast: #ffffff;
-        --ion-color-tertiary-contrast-rgb: 255, 255, 255;
-        --ion-color-tertiary-shade: #4854e0;
-        --ion-color-tertiary-tint: #6370ff;
+      /** tertiary **/
+      --ion-color-tertiary: #5260ff;
+      --ion-color-tertiary-rgb: 82, 96, 255;
+      --ion-color-tertiary-contrast: #ffffff;
+      --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+      --ion-color-tertiary-shade: #4854e0;
+      --ion-color-tertiary-tint: #6370ff;
 
-        --ion-color-tertiary: #fee8dc;
-        --ion-color-tertiary-rgb: 61, 194, 255;
-        --ion-color-tertiary-contrast: #ffffff;
-        --ion-color-tertiary-contrast-rgb: 255, 255, 255;
-        --ion-color-tertiary-shade: #e5cfc3;
-        --ion-color-tertiary-tint: #fffff6;
+      --ion-color-tertiary: #fee8dc;
+      --ion-color-tertiary-rgb: 61, 194, 255;
+      --ion-color-tertiary-contrast: #ffffff;
+      --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+      --ion-color-tertiary-shade: #e5cfc3;
+      --ion-color-tertiary-tint: #fffff6;
 
-        /** success **/
-        --ion-color-success: #2dd36f;
-        --ion-color-success-rgb: 45, 211, 111;
-        --ion-color-success-contrast: #ffffff;
-        --ion-color-success-contrast-rgb: 255, 255, 255;
-        --ion-color-success-shade: #28ba62;
-        --ion-color-success-tint: #42d77d;
+      /** success **/
+      --ion-color-success: #2dd36f;
+      --ion-color-success-rgb: 45, 211, 111;
+      --ion-color-success-contrast: #ffffff;
+      --ion-color-success-contrast-rgb: 255, 255, 255;
+      --ion-color-success-shade: #28ba62;
+      --ion-color-success-tint: #42d77d;
 
-        /** warning **/
-        --ion-color-warning: #ffc409;
-        --ion-color-warning-rgb: 255, 196, 9;
-        --ion-color-warning-contrast: #000000;
-        --ion-color-warning-contrast-rgb: 0, 0, 0;
-        --ion-color-warning-shade: #e0ac08;
-        --ion-color-warning-tint: #ffca22;
+      /** warning **/
+      --ion-color-warning: #ffc409;
+      --ion-color-warning-rgb: 255, 196, 9;
+      --ion-color-warning-contrast: #000000;
+      --ion-color-warning-contrast-rgb: 0, 0, 0;
+      --ion-color-warning-shade: #e0ac08;
+      --ion-color-warning-tint: #ffca22;
 
-        /** danger **/
-        --ion-color-danger: #eb445a;
-        --ion-color-danger-rgb: 235, 68, 90;
-        --ion-color-danger-contrast: #ffffff;
-        --ion-color-danger-contrast-rgb: 255, 255, 255;
-        --ion-color-danger-shade: #cf3c4f;
-        --ion-color-danger-tint: #ed576b;
+      /** danger **/
+      --ion-color-danger: #eb445a;
+      --ion-color-danger-rgb: 235, 68, 90;
+      --ion-color-danger-contrast: #ffffff;
+      --ion-color-danger-contrast-rgb: 255, 255, 255;
+      --ion-color-danger-shade: #cf3c4f;
+      --ion-color-danger-tint: #ed576b;
 
-        /** dark **/
-        --ion-color-dark: #222428;
-        --ion-color-dark-rgb: 34, 36, 40;
-        --ion-color-dark-contrast: #ffffff;
-        --ion-color-dark-contrast-rgb: 255, 255, 255;
-        --ion-color-dark-shade: #1e2023;
-        --ion-color-dark-tint: #383a3e;
+      /** dark **/
+      --ion-color-dark: #222428;
+      --ion-color-dark-rgb: 34, 36, 40;
+      --ion-color-dark-contrast: #ffffff;
+      --ion-color-dark-contrast-rgb: 255, 255, 255;
+      --ion-color-dark-shade: #1e2023;
+      --ion-color-dark-tint: #383a3e;
 
-        /** medium **/
-        --ion-color-medium: #92949c;
-        --ion-color-medium-rgb: 146, 148, 156;
-        --ion-color-medium-contrast: #ffffff;
-        --ion-color-medium-contrast-rgb: 255, 255, 255;
-        --ion-color-medium-shade: #808289;
-        --ion-color-medium-tint: #9d9fa6;
+      /** medium **/
+      --ion-color-medium: #92949c;
+      --ion-color-medium-rgb: 146, 148, 156;
+      --ion-color-medium-contrast: #ffffff;
+      --ion-color-medium-contrast-rgb: 255, 255, 255;
+      --ion-color-medium-shade: #808289;
+      --ion-color-medium-tint: #9d9fa6;
 
-        /** light **/
-        --ion-color-light: #f4f5f8;
-        --ion-color-light-rgb: 244, 245, 248;
-        --ion-color-light-contrast: #000000;
-        --ion-color-light-contrast-rgb: 0, 0, 0;
-        --ion-color-light-shade: #d7d8da;
-        --ion-color-light-tint: #f5f6f9;
-
-        /** custom Huffman app overrides **/
-        --ion--default--font: "eina";
-      }
+      /** light **/
+      --ion-color-light: #f4f5f8;
+      --ion-color-light-rgb: 244, 245, 248;
+      --ion-color-light-contrast: #000000;
+      --ion-color-light-contrast-rgb: 0, 0, 0;
+      --ion-color-light-shade: #d7d8da;
+      --ion-color-light-tint: #f5f6f9;
 
       /** custom Huffman app overrides **/
-      ion-button,
-      ion-thumbnail {
-        --border-radius: 10px;
-      }
+      --ion--default--font: "eina";
+    }
 
-      strong,
-      ion-label {
-        font-weight: 500;
-      }
+    /** custom Huffman app overrides **/
+    ion-button,
+    ion-thumbnail {
+      --border-radius: 10px;
+    }
 
-      * {
-        font-family: "eina" !important;
-      }
+    strong,
+    ion-label {
+      font-weight: 500;
+    }
 
-      i.material-icons {
-        font-family: "Material Icons" !important;
-      }
+    * {
+      font-family: "eina" !important;
+    }
 
-      i.material-icons.md-18 {
-        font-size: 18px;
-      }
+    i.material-icons {
+      font-family: "Material Icons" !important;
+    }
 
-      i.material-icons.md-24 {
-        font-size: 24px;
-      }
+    i.material-icons.md-18 {
+      font-size: 18px;
+    }
 
-      i.material-icons.md-36 {
-        font-size: 36px;
-      }
+    i.material-icons.md-24 {
+      font-size: 24px;
+    }
 
-      i.material-icons.md-48 {
-        font-size: 48px;
-      }
-    </style>
-  </head>
+    i.material-icons.md-36 {
+      font-size: 36px;
+    }
 
-  <body>
-    <div id="root"></div>
-  </body>
+    i.material-icons.md-48 {
+      font-size: 48px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+</body>
+
 </html>
