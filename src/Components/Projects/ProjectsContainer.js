@@ -21,7 +21,7 @@ const ProjectsContainer = () => {
     <PageContainer className="projects-page-container">
       <div className="page-top">
         <h1>Projects</h1>
-        <IonButton fill="outline" routerLink="/projects/new">
+        <IonButton fill="outline" routerLink="/new">
           New project &rarr;
         </IonButton>
       </div>

@@ -16,11 +16,7 @@ const Routes = () => {
       <IonRouterOutlet>
         <Route exact={true} path="/" component={HomeContainer} />
         <Route exact={true} path="/projects" component={ProjectsContainer} />
-        <Route
-          exact={true}
-          path="/projects/new"
-          component={NewProjectContainer}
-        />
+        <Route exact={true} path="/new" component={NewProjectContainer} />
         <Route exact={true} path="/packages" component={PackagesContainer} />
         <Route
           exact={true}

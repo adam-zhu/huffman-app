@@ -7,6 +7,15 @@
     padding: 0.125rem;
     display: flex;
 
+    &:first-child {
+      padding-top: 1rem;
+      border-top: 1px solid gainsboro;
+    }
+
+    &:last-of-type {
+      padding-bottom: 1rem;
+    }
+
     &.sent {
       flex-direction: row-reverse;
 
@@ -32,10 +41,6 @@
 
       p {
         margin: 0;
-      }
-
-      &:last-child {
-        margin-bottom: 1rem;
       }
     }
   }

@@ -7,7 +7,7 @@ import {
   change_message_images,
   send_message,
 } from "Store/consultation/thinks";
-import { IonButton, IonTextarea, IonText } from "@ionic/react";
+import { IonButton, IonTextarea } from "@ionic/react";
 import { useScrollIonContentToBottom, usePhotos } from "Hooks";
 import ImagesModalWithGallery from "Components/Global/ImagesModalWithGallery";
 import ThumbnailGallery from "Components/Global/ThumbnailGallery";
@@ -32,19 +32,19 @@ const Messages = () => {
 
   useScrollIonContentToBottom({ after_every_render: true });
 
-  if (
-    !consultation_data ||
-    !consultation_data?.is_open ||
-    !consultation_data?.messages
-  ) {
+  if (!consultation_data || !consultation_data?.messages) {
     return null;
   }
 
   return (
     <div id="consultation-messages">
-      {messages.length > 0 &&
-        messages.map((m) => <MessageRow key={m.objectId} message={m} />)}
-      <MessageInputForm no_messages={messages.length === 0} />
+      {messages.map((m) => (
+        <MessageRow key={m.objectId} message={m} />
+      ))}
+      <MessageInputForm
+        no_messages={messages.length === 0}
+        consultation_data={consultation_data}
+      />
     </div>
   );
 };
@@ -78,7 +78,7 @@ const MessageRow = ({ message }) => {
   );
 };
 
-const MessageInputForm = ({ no_messages }) => {
+const MessageInputForm = ({ no_messages, consultation_data }) => {
   const [is_images_modal_open, set_is_images_modal_open] = useState(false);
   const { deletePhoto, photos, takePhoto, getPhotoFromFilesystem } = usePhotos({
     selector: (state) => state.consultation.message_images,
@@ -126,14 +126,16 @@ const MessageInputForm = ({ no_messages }) => {
       <form onSubmit={message_submit_handler}>
         <IonTextarea
           placeholder={
-            no_messages
+            !consultation_data.is_open
+              ? "Consultation closed."
+              : no_messages
               ? "Send a message to begin this consultation"
               : "type a message..."
           }
           inputmode="text"
           value={message_input_value}
           onIonChange={message_input_handler}
-          disabled={is_message_sending}
+          disabled={is_message_sending || !consultation_data.is_open}
           ref={textarea_input_ref}
           required={message_images.length === 0}
           auto-grow
@@ -151,11 +153,19 @@ const MessageInputForm = ({ no_messages }) => {
             e.preventDefault();
             set_is_images_modal_open(true);
           }}
-          disabled={is_images_modal_open || is_message_sending}
+          disabled={
+            is_images_modal_open ||
+            is_message_sending ||
+            !consultation_data.is_open
+          }
         >
           {message_images.length > 0 ? "Add/Remove Images" : "Add Images"}
         </IonButton>
-        <IonButton expand="block" type="submit" disabled={is_message_sending}>
+        <IonButton
+          expand="block"
+          type="submit"
+          disabled={is_message_sending || !consultation_data.is_open}
+        >
           Send
         </IonButton>
       </form>

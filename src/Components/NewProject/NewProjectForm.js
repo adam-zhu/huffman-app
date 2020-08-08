@@ -11,7 +11,6 @@ import {
   IonLabel,
   IonText,
   IonItemGroup,
-  IonSkeletonText,
   IonThumbnail,
   IonImg,
 } from "@ionic/react";
@@ -105,10 +104,6 @@ const NewProjectForm = () => {
       gesture.enable(true);
     }
   }, [drawer_ref.current]);
-
-  if (packages.data === undefined) {
-    return <IonSkeletonText animated />;
-  }
 
   return (
     <>

@@ -10,6 +10,15 @@
   ion-item {
     font-size: 0.825rem;
   }
+
+  ion-list-header {
+    &.open-consultations {
+      color: var(--ion-color-primary);
+    }
+    &.closed-consultations {
+      color: var(--ion-color-secondary);
+    }
+  }
 }
 
 .enlarge-image {

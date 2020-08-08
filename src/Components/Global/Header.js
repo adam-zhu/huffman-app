@@ -46,12 +46,12 @@ const BackButton = () => {
     }
 
     if (location.pathname === "/packages") {
-      return ["New project", `/projects/new`, "back"];
+      return ["New project", `/new`, "back"];
     }
 
     if (
       match.params.project_objectId !== undefined ||
-      location.pathname === "/projects/new"
+      location.pathname === "/new"
     ) {
       return ["Projects", `/projects`, "back"];
     }

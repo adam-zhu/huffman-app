@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useRouteMatch, useHistory } from "react-router-dom";
+import { useRouteMatch, useHistory, useLocation } from "react-router-dom";
 import { IonToast, IonAlert, IonButton, IonSkeletonText } from "@ionic/react";
 import PageContainer from "Components/Global/PageContainer";
 import "Styles/Consultation/ConsultationContainer.scss";
@@ -14,39 +14,20 @@ import ProjectDetails from "Components/Global/ProjectDetails";
 
 const ConsultationContainer = () => {
   const state = useSelector((state) => state);
-  const history = useHistory();
   const match = useRouteMatch();
-  const project_data = select_project_data({ state, match });
   const consultation_data = select_consultation_data({ state, match });
-  const project_obejectId = project_data?.objectId;
-  const consultation_is_open = consultation_data?.is_open;
-  const toast_duration = 2400;
-
-  useEffect(() => {
-    if (consultation_data?.is_open === false) {
-      setTimeout(
-        () => history.push(`/projects/${project_data?.objectId}`),
-        toast_duration
-      );
-    }
-  }, [project_obejectId, consultation_is_open]);
 
   return (
     <>
       <PageContainer className="consultation-page-container">
         {consultation_data === undefined ? (
           <IonSkeletonText animated />
-        ) : consultation_data.is_open === true ? (
+        ) : (
           <>
             <ProjectDetails hide_title />
             <br />
             <ConsultationMessages />
           </>
-        ) : (
-          <ConsultationClosed
-            message={`This consultation has been closed. Redirecting back to ${project_data.name}...`}
-            toast_duration={toast_duration}
-          />
         )}
       </PageContainer>
     </>
@@ -54,12 +35,55 @@ const ConsultationContainer = () => {
 };
 
 const ConsultationMessages = () => {
+  const [
+    initial_consultation_is_open,
+    set_initial_consultation_is_open,
+  ] = useState(undefined);
+  const [show_toast, set_show_toast] = useState(false);
   const state = useSelector((state) => state);
+  const match = useRouteMatch();
+  const history = useHistory();
+  const location = useLocation();
+  const project_data = select_project_data({ state, match });
+  const consultation_data = select_consultation_data({ state, match });
+  const project_objectId = project_data?.objectId;
+  const toast_duration = 2400;
+
+  useEffect(() => {
+    set_initial_consultation_is_open(consultation_data.is_open);
+  }, []);
+
+  useEffect(() => {
+    if (
+      consultation_data.is_open === false &&
+      initial_consultation_is_open === true
+    ) {
+      set_show_toast(true);
+
+      setTimeout(
+        () => history.push(`/projects/${project_data?.objectId}`),
+        toast_duration
+      );
+    }
+  }, [
+    project_objectId,
+    location.search.includes("closed"),
+    consultation_data.is_open,
+    initial_consultation_is_open,
+  ]);
 
   return (
     <>
       <Messages />
-      {state.user.data.is_admin === true && <CloseConsultation />}
+      {state.user.data.is_admin === true && consultation_data.is_open && (
+        <CloseConsultation />
+      )}
+      {show_toast && (
+        <ConsultationClosed
+          message={`This consultation has been closed. Redirecting back to ${project_data.name}...`}
+          toast_duration={toast_duration}
+        />
+      )}
     </>
   );
 };
@@ -70,6 +94,7 @@ const CloseConsultation = () => {
     set_confirm_close_consultation_modal_open,
   ] = useState(false);
   const match = useRouteMatch();
+  const history = useHistory();
   const dispatch = useDispatch();
   const close_consultation_handler = () =>
     dispatch(close_consultation(match.params.consultation_objectId));

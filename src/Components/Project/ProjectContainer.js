@@ -102,7 +102,9 @@ const ProjectConsultations = () => {
         </IonRow>
       </IonGrid>
       <IonList lines="inset">
-        <IonListHeader>Open Consultations</IonListHeader>
+        <IonListHeader className="open-consultations">
+          Open Consultations
+        </IonListHeader>
         {open_consultations.length > 0 ? (
           open_consultations.map((c) => (
             <ConsultationRow key={c.objectId} consultation={c} />
@@ -117,7 +119,9 @@ const ProjectConsultations = () => {
         <>
           <br />
           <IonList lines="inset">
-            <IonListHeader>Closed Consultations</IonListHeader>
+            <IonListHeader className="closed-consultations">
+              Closed Consultations
+            </IonListHeader>
             {closed_consultations.map((c) => (
               <ConsultationRow key={c.objectId} consultation={c} />
             ))}
@@ -129,25 +133,14 @@ const ProjectConsultations = () => {
 };
 
 const ConsultationRow = ({ consultation }) => {
-  if (consultation.is_open) {
-    return (
-      <IonItem
-        button
-        routerLink={{
-          pathname: `/projects/${consultation.project.objectId}/${consultation.objectId}`,
-          state: consultation,
-        }}
-      >
-        <IonText>
-          last active:{" "}
-          {formatRelative(new Date(consultation.last_active_date), new Date())}
-        </IonText>
-      </IonItem>
-    );
-  }
-
   return (
-    <IonItem className="closed">
+    <IonItem
+      button
+      routerLink={{
+        pathname: `/projects/${consultation.project.objectId}/${consultation.objectId}`,
+        state: consultation,
+      }}
+    >
       <IonText>
         last active:{" "}
         {formatRelative(new Date(consultation.last_active_date), new Date())}
