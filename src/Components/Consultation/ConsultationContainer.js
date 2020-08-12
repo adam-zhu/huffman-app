@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useRouteMatch, useHistory, useLocation } from "react-router-dom";
-import { IonToast, IonAlert, IonButton, IonSkeletonText } from "@ionic/react";
+import { IonToast, IonSkeletonText } from "@ionic/react";
 import PageContainer from "Components/Global/PageContainer";
 import "Styles/Consultation/ConsultationContainer.scss";
 import Messages from "./Messages";
@@ -9,7 +9,6 @@ import {
   select_project_data,
   select_consultation_data,
 } from "Store/projects/selectors";
-import { close_consultation } from "Store/consultation/thinks";
 import ProjectDetails from "Components/Global/ProjectDetails";
 
 const ConsultationContainer = () => {
@@ -24,7 +23,9 @@ const ConsultationContainer = () => {
           <IonSkeletonText animated />
         ) : (
           <>
-            <ProjectDetails hide_title />
+            <div className="project-meta">
+              <ProjectDetails hide_title />
+            </div>
             <br />
             <ConsultationMessages />
           </>
@@ -74,60 +75,15 @@ const ConsultationMessages = () => {
 
   return (
     <>
-      <Messages />
-      {state.user.data.is_admin === true && consultation_data.is_open && (
-        <CloseConsultation />
-      )}
+      <div className="messages-container">
+        <Messages />
+      </div>
       {show_toast && (
         <ConsultationClosed
           message={`This consultation has been closed. Redirecting back to ${project_data.name}...`}
           toast_duration={toast_duration}
         />
       )}
-    </>
-  );
-};
-
-const CloseConsultation = () => {
-  const [
-    is_confrim_close_consultation_modal_open,
-    set_confirm_close_consultation_modal_open,
-  ] = useState(false);
-  const match = useRouteMatch();
-  const history = useHistory();
-  const dispatch = useDispatch();
-  const close_consultation_handler = () =>
-    dispatch(close_consultation(match.params.consultation_objectId));
-
-  return (
-    <>
-      <IonButton
-        expand="block"
-        type="button"
-        color="danger"
-        onClick={(e) => set_confirm_close_consultation_modal_open(true)}
-      >
-        Close Consultation
-      </IonButton>
-      <IonAlert
-        isOpen={is_confrim_close_consultation_modal_open}
-        message="Are you sure you want to close this consultation?"
-        cssClass="confirm-consultation-close-modal"
-        header="Close Consultation"
-        buttons={[
-          {
-            text: "Cancel",
-            role: "cancel",
-            cssClass: "secondary",
-            handler: (e) => set_confirm_close_consultation_modal_open(false),
-          },
-          {
-            text: "Close Consultation",
-            cssClass: "primary",
-            handler: close_consultation_handler,
-          },
-        ]}
-      />
     </>
   );
 };

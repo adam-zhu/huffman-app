@@ -1,7 +1,21 @@
-.message-container {
-  .limit-reached {
-    margin-left: 1rem;
-    font-size: 0.75em;
-    color: red;
+#page-container.consultation-page-container {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - var(--offset-top));
+
+  .close-consultation {
+    position: absolute;
+  }
+
+  .project-meta {
+    flex: none;
+    padding-top: 1rem;
+    padding-left: 1rem;
+  }
+
+  .messages-container {
+    overflow-y: scroll;
+    border-top: 1px solid gainsboro;
   }
 }

@@ -7,14 +7,16 @@ import {
   change_message_images,
   send_message,
 } from "Store/consultation/thinks";
-import { IonButton, IonTextarea } from "@ionic/react";
+import { IonButton, IonTextarea, IonAlert } from "@ionic/react";
 import { useScrollIonContentToBottom, usePhotos } from "Hooks";
 import ImagesModalWithGallery from "Components/Global/ImagesModalWithGallery";
+import HorizontalScrollThumbnailGallery from "Components/Global/HorizontalScrollThumbnailGallery";
 import ThumbnailGallery from "Components/Global/ThumbnailGallery";
 import {
   select_project_data,
   select_consultation_data,
 } from "Store/projects/selectors";
+import { close_consultation } from "Store/consultation/thinks";
 
 const Messages = () => {
   const state = useSelector((state) => state);
@@ -124,50 +126,59 @@ const MessageInputForm = ({ no_messages, consultation_data }) => {
   return (
     <>
       <form onSubmit={message_submit_handler}>
-        <IonTextarea
-          placeholder={
-            !consultation_data.is_open
-              ? "Consultation closed."
-              : no_messages
-              ? "Send a message to begin this consultation"
-              : "type a message..."
-          }
-          inputmode="text"
-          value={message_input_value}
-          onIonChange={message_input_handler}
-          disabled={is_message_sending || !consultation_data.is_open}
-          ref={textarea_input_ref}
-          required={message_images.length === 0}
-          auto-grow
-          spellcheck
-          autofocus
-        />
+        <div className="controls">
+          <IonButton
+            className="images"
+            type="button"
+            color="tertiary"
+            onClick={(e) => {
+              e.preventDefault();
+              set_is_images_modal_open(true);
+            }}
+            disabled={
+              is_images_modal_open ||
+              is_message_sending ||
+              !consultation_data.is_open
+            }
+          >
+            <i className="material-icons">camera_alt</i>
+          </IonButton>
+          <div className="input-area">
+            <IonTextarea
+              placeholder={
+                !consultation_data.is_open
+                  ? "Consultation closed."
+                  : no_messages
+                  ? "Send a message to begin this consultation"
+                  : "type a message..."
+              }
+              inputmode="text"
+              value={message_input_value}
+              onIonChange={message_input_handler}
+              disabled={is_message_sending || !consultation_data.is_open}
+              ref={textarea_input_ref}
+              required={message_images.length === 0}
+              auto-grow
+              spellcheck
+              autofocus
+            />
+            <IonButton
+              className="send"
+              type="submit"
+              disabled={is_message_sending || !consultation_data.is_open}
+            >
+              <i className="material-icons send">send</i>
+            </IonButton>
+          </div>
+        </div>
         {message_images.length > 0 && (
-          <ThumbnailGallery images={message_images.map(to_thumbnail_gallery)} />
+          <HorizontalScrollThumbnailGallery
+            images={message_images.map(to_thumbnail_gallery)}
+          />
         )}
-        <IonButton
-          expand="block"
-          type="button"
-          color="secondary"
-          onClick={(e) => {
-            e.preventDefault();
-            set_is_images_modal_open(true);
-          }}
-          disabled={
-            is_images_modal_open ||
-            is_message_sending ||
-            !consultation_data.is_open
-          }
-        >
-          {message_images.length > 0 ? "Add/Remove Images" : "Add Images"}
-        </IonButton>
-        <IonButton
-          expand="block"
-          type="submit"
-          disabled={is_message_sending || !consultation_data.is_open}
-        >
-          Send
-        </IonButton>
+        {state.user.data.is_admin === true && consultation_data.is_open && (
+          <CloseConsultation />
+        )}
       </form>
       {is_images_modal_open && (
         <ImagesModalWithGallery
@@ -180,6 +191,50 @@ const MessageInputForm = ({ no_messages, consultation_data }) => {
         />
       )}
     </>
+  );
+};
+
+const CloseConsultation = () => {
+  const [
+    is_confrim_close_consultation_modal_open,
+    set_confirm_close_consultation_modal_open,
+  ] = useState(false);
+  const match = useRouteMatch();
+  const dispatch = useDispatch();
+  const close_consultation_handler = () =>
+    dispatch(close_consultation(match.params.consultation_objectId));
+
+  return (
+    <div className="close-consultation-container">
+      <IonButton
+        type="button"
+        size="small"
+        expand="block"
+        color="danger"
+        onClick={(e) => set_confirm_close_consultation_modal_open(true)}
+      >
+        Close Consultation
+      </IonButton>
+      <IonAlert
+        isOpen={is_confrim_close_consultation_modal_open}
+        message="Are you sure you want to close this consultation?"
+        cssClass="confirm-consultation-close-modal"
+        header="Close Consultation"
+        buttons={[
+          {
+            text: "Cancel",
+            role: "cancel",
+            cssClass: "secondary",
+            handler: (e) => set_confirm_close_consultation_modal_open(false),
+          },
+          {
+            text: "Close Consultation",
+            cssClass: "primary",
+            handler: close_consultation_handler,
+          },
+        ]}
+      />
+    </div>
   );
 };
 

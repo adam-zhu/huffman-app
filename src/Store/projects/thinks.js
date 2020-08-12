@@ -68,7 +68,7 @@ const get_and_attach_project_images = (projects_data) => async (
   project_images_query.include("created_by");
   project_images_query.include("project");
   project_images_query.include("message");
-  project_images_query.descending("createdAt");
+  project_images_query.ascending("createdAt");
   project_images_query.containedIn(
     "project",
     projects_data.map((p) =>

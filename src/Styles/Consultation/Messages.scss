@@ -1,4 +1,6 @@
 #consultation-messages {
+  background: var(--alt-background-color);
+
   .inner {
     padding-top: 1rem;
   }
@@ -9,7 +11,6 @@
 
     &:first-child {
       padding-top: 1rem;
-      border-top: 1px solid gainsboro;
     }
 
     &:last-of-type {
@@ -18,22 +19,20 @@
 
     &.sent {
       flex-direction: row-reverse;
-
-      .message-bubble {
-        background: var(--ion-color-secondary-shade);
-      }
     }
 
     &.received {
       .message-bubble {
         background: var(--ion-color-primary);
+        color: white;
       }
     }
 
     .message-bubble {
       padding: 0.5rem;
       border-radius: 0.5rem;
-      color: white;
+      background: white;
+      color: black;
       display: inline-block;
       max-width: 75%;
       font-size: 0.75rem;
@@ -47,11 +46,54 @@
 
   form {
     border-top: 1px solid gainsboro;
+    background: white;
   }
 
   .empty-state {
     width: 100%;
     font-size: 0.75rem;
     line-height: 1 !important;
+  }
+
+  .controls {
+    display: flex;
+    width: 100%;
+    padding-top: 0.5rem;
+
+    .input-area {
+      width: 100%;
+      display: flex;
+      border-radius: 10px;
+      background: var(--alt-background-color);
+      margin-right: 0.5rem;
+
+      ion-textarea {
+        padding-left: 10px;
+        font-size: 0.825rem;
+      }
+
+      ion-button.send {
+        --background: transparent;
+        --background-activated: rgba(0, 0, 0, 0.2);
+        --background-focused: rgba(0, 0, 0, 0.1);
+        --background-hover: rgba(0, 0, 0, 0.1);
+
+        i {
+          color: black;
+          transform: rotate(-45deg);
+        }
+      }
+    }
+
+    ion-button.images {
+      flex: none;
+      height: 56px;
+      margin-left: 0.4rem;
+      margin-right: 0.5rem;
+
+      i {
+        color: var(--ion-color-primary);
+      }
+    }
   }
 }

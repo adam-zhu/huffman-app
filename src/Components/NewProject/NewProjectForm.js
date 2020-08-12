@@ -23,6 +23,7 @@ import { resolve_input_element_value } from "Utils";
 import { usePhotos } from "Hooks";
 import "Styles/NewProject/NewProjectForm.scss";
 import ImagesModalWithGallery from "Components/Global/ImagesModalWithGallery";
+import BottomDrawer from "Components/Global/BottomDrawer";
 import PackagePreviewCard from "Components/Packages/PackagePreviewCard";
 
 const NewProjectForm = () => {
@@ -282,98 +283,89 @@ const NewProjectForm = () => {
           close_handler={close_images_upload_modal}
         />
       )}
-      <div
-        className={`tooltip-drawer ${is_tooltip_drawer_open ? "is-open" : ""}`}
-        ref={drawer_ref}
-        onClick={drawer_overlay_click_handler}
+      <BottomDrawer
+        cssClass="tooltip-drawer"
+        is_open={is_tooltip_drawer_open}
+        close_handler={(e) => set_is_tooltip_drawer_open(false)}
       >
-        <div className="inner" ref={drawer_content_ref}>
-          <div className="content">
-            <div
-              className="close-bar"
-              onClick={() => set_is_tooltip_drawer_open(false)}
-            />
-            <br />
-            <h3>Take better pictures</h3>
-            <br />
-            <div className="tips">
-              <div className="scroll-container">
-                <div className="tip">
-                  <div className="pic" />
-                  <br />
-                  <strong>Frame the entire space</strong>
-                  <p>
-                    First of all, in photography, there are no rules, just
-                    guidelines that you can follow until you discover your
-                    style. I love bright and airy shots; others prefer dark and
-                    moody. But when you use my tips, you will have a good start
-                    in interior photography.
-                  </p>
-                </div>
-                <div className="tip alt">
-                  <div className="pic" />
-                  <br />
-                  <strong>Use natural light whenever possible!</strong>
-                  <p>
-                    So turn all the lights off. I repeat OFF! Light bulbs cause
-                    terrible shadows and color casts. As human beings, we are
-                    very capable of interpreting the yellow color cast of
-                    incandescent bulbs or the dull green of fluorescent lights
-                    as white light, but the camera is a different story.
-                  </p>
-                </div>
-                <div className="tip">
-                  <div className="pic" />
-                  <br />
-                  <strong>Use a tripod</strong>
-                  <p>
-                    The light conditions are rarely good enough to shoot
-                    handheld indoors. So a tripod is a must! I prefer to keep my
-                    aperture between F/9 and F/11 and my ISO as low as possible
-                    (100 yes!) to create an overall sharp image. And with your
-                    camera mounted on a tripod, the shutter speed is no longer
-                    an issue.
-                  </p>
-                </div>
-                <div className="tip alt">
-                  <div className="pic" />
-                  <br />
-                  <strong>Keep your lines straight</strong>
-                  <p>
-                    Keep your verticals vertical and, when shooting a one-point
-                    perspective, your horizontals horizontal too! Our brain is
-                    capable of realizing that doors are vertical even if we see
-                    them from an angled view, but the camera is not.
-                  </p>
-                </div>
-                <div className="tip">
-                  <div className="pic" />
-                  <br />
-                  <strong>Overcast days are the best</strong>
-                  <p>
-                    Every house in its surroundings looks better when the sun is
-                    shining, and the sky is blue. But the sunlight creates a
-                    very sharp difference between lights and darks indoors
-                    especially when it is shining straight through the windows.
-                  </p>
-                </div>
-                <div className="tip alt">
-                  <div className="pic" />
-                  <br />
-                  <strong>Create space</strong>
-                  <p>
-                    The hardest part of interior photography (besides the light)
-                    is the lack of space. So don’t be afraid to move furniture
-                    when it is standing in the way of creating a beautiful shot.
-                    Or shoot from the hallway into the room at the point where
-                    you won’t see the doorposts in the viewfinder anymore.
-                  </p>
-                </div>
-              </div>
+        <br />
+        <h3>Take better pictures</h3>
+        <br />
+        <div className="tips">
+          <div className="scroll-container">
+            <div className="tip">
+              <div className="pic" />
+              <br />
+              <strong>Frame the entire space</strong>
+              <p>
+                First of all, in photography, there are no rules, just
+                guidelines that you can follow until you discover your style. I
+                love bright and airy shots; others prefer dark and moody. But
+                when you use my tips, you will have a good start in interior
+                photography.
+              </p>
+            </div>
+            <div className="tip alt">
+              <div className="pic" />
+              <br />
+              <strong>Use natural light whenever possible!</strong>
+              <p>
+                So turn all the lights off. I repeat OFF! Light bulbs cause
+                terrible shadows and color casts. As human beings, we are very
+                capable of interpreting the yellow color cast of incandescent
+                bulbs or the dull green of fluorescent lights as white light,
+                but the camera is a different story.
+              </p>
+            </div>
+            <div className="tip">
+              <div className="pic" />
+              <br />
+              <strong>Use a tripod</strong>
+              <p>
+                The light conditions are rarely good enough to shoot handheld
+                indoors. So a tripod is a must! I prefer to keep my aperture
+                between F/9 and F/11 and my ISO as low as possible (100 yes!) to
+                create an overall sharp image. And with your camera mounted on a
+                tripod, the shutter speed is no longer an issue.
+              </p>
+            </div>
+            <div className="tip alt">
+              <div className="pic" />
+              <br />
+              <strong>Keep your lines straight</strong>
+              <p>
+                Keep your verticals vertical and, when shooting a one-point
+                perspective, your horizontals horizontal too! Our brain is
+                capable of realizing that doors are vertical even if we see them
+                from an angled view, but the camera is not.
+              </p>
+            </div>
+            <div className="tip">
+              <div className="pic" />
+              <br />
+              <strong>Overcast days are the best</strong>
+              <p>
+                Every house in its surroundings looks better when the sun is
+                shining, and the sky is blue. But the sunlight creates a very
+                sharp difference between lights and darks indoors especially
+                when it is shining straight through the windows.
+              </p>
+            </div>
+            <div className="tip alt">
+              <div className="pic" />
+              <br />
+              <strong>Create space</strong>
+              <p>
+                The hardest part of interior photography (besides the light) is
+                the lack of space. So don’t be afraid to move furniture when it
+                is standing in the way of creating a beautiful shot. Or shoot
+                from the hallway into the room at the point where you won’t see
+                the doorposts in the viewfinder anymore.
+              </p>
             </div>
           </div>
         </div>
-      </div>
+      </BottomDrawer>
     </>
   );
 };
