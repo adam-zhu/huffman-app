@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   IonContent,
   IonButton,
@@ -11,7 +11,7 @@ import {
   IonImg,
   IonActionSheet,
 } from "@ionic/react";
-import { camera, trash, close } from "ionicons/icons";
+import { cameraOutline, imageOutline, trash, close } from "ionicons/icons";
 import Modal from "Components/Global/Modal";
 import "Styles/Global/ImagesModalWithGallery.scss";
 
@@ -24,6 +24,7 @@ const ImagesModalWithGallery = ({
   mode,
 }) => {
   const [photo_to_delete, set_photo_to_delete] = useState();
+  const file_input_ref = useRef(null);
   const file_input_change_handler = (e) => {
     const target = e.nativeEvent.target;
     const { files } = target;
@@ -48,18 +49,20 @@ const ImagesModalWithGallery = ({
     >
       <IonContent>
         <IonGrid>
-          <IonRow>
-            <h6>Add photos</h6>
-          </IonRow>
           <IonRow className="trigger-buttons">
             <IonCol size="12">
               <IonButton
                 expand="block"
                 fill="outline"
-                color="dark"
+                color="primary"
                 onClick={takePhoto}
               >
-                <IonIcon icon={camera} slot="start"></IonIcon> Take Photo
+                <IonIcon
+                  icon={cameraOutline}
+                  slot="start"
+                  className="camera"
+                ></IonIcon>{" "}
+                Take Photo
               </IonButton>
             </IonCol>
           </IonRow>
@@ -71,10 +74,25 @@ const ImagesModalWithGallery = ({
           <IonRow className="trigger-buttons">
             <IonCol size="12">
               <input
+                hidden
+                ref={file_input_ref}
                 type="file"
                 accept="image/*"
                 onChange={file_input_change_handler}
               />
+              <IonButton
+                expand="block"
+                fill="outline"
+                color="dark"
+                onClick={() => {
+                  if (file_input_ref.current) {
+                    file_input_ref.current.click();
+                  }
+                }}
+              >
+                <IonIcon icon={imageOutline} slot="start"></IonIcon> Upload
+                Photo
+              </IonButton>
             </IonCol>
           </IonRow>
           {photos.length > 0 && (

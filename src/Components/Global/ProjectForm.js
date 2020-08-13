@@ -23,12 +23,12 @@ import {
 } from "Store/new_project/thinks";
 import { resolve_input_element_value } from "Utils";
 import { usePhotos } from "Hooks";
-import "Styles/NewProject/NewProjectForm.scss";
+import "Styles/Global/ProjectForm.scss";
 import ImagesModalWithGallery from "Components/Global/ImagesModalWithGallery";
 import BottomDrawer from "Components/Global/BottomDrawer";
 import PackagePreviewCard from "Components/Packages/PackagePreviewCard";
 
-const NewProjectForm = () => {
+const ProjectForm = () => {
   const [
     is_images_upload_modal_open,
     set_is_images_upload_modal_open,
@@ -372,4 +372,4 @@ const NewProjectForm = () => {
   );
 };
 
-export default NewProjectForm;
+export default ProjectForm;

@@ -5,6 +5,15 @@
     padding-top: 1rem;
   }
 
+  .no-messages {
+    display: block;
+    padding: 2rem 0;
+    width: 66.6%;
+    margin: auto;
+    font-size: 0.75rem;
+    color: var(--alt-text-color);
+  }
+
   .message-row {
     padding: 0.125rem;
     display: flex;
@@ -57,12 +66,14 @@
 
   .controls {
     display: flex;
+    align-items: stretch;
     width: 100%;
     padding-top: 0.5rem;
 
     .input-area {
       width: 100%;
       display: flex;
+      align-items: stretch;
       border-radius: 10px;
       background: var(--alt-background-color);
       margin-right: 0.5rem;
@@ -70,9 +81,17 @@
       ion-textarea {
         padding-left: 10px;
         font-size: 0.825rem;
+
+        textarea {
+          padding-right: 0;
+        }
       }
 
       ion-button.send {
+        display: block;
+        height: 56px;
+        margin-top: 0;
+        margin-bottom: 0;
         --background: transparent;
         --background-activated: rgba(0, 0, 0, 0.2);
         --background-focused: rgba(0, 0, 0, 0.1);
@@ -80,20 +99,23 @@
 
         i {
           color: black;
-          transform: rotate(-45deg);
         }
       }
     }
 
     ion-button.images {
-      flex: none;
+      display: block;
       height: 56px;
+      margin-top: 0;
+      margin-bottom: 0;
       margin-left: 0.4rem;
       margin-right: 0.5rem;
-
-      i {
-        color: var(--ion-color-primary);
-      }
     }
+  }
+
+  .close-consultation-container {
+    margin-top: 7px;
+    margin-left: 3px;
+    margin-right: 3px;
   }
 }

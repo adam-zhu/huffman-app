@@ -1,20 +1,110 @@
-.projects-page-container {
-  .page-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+#projects-page-container {
+  ion-content {
+    --background: var(--alt-background-color);
+  }
+}
+
+#page-container.projects-page-container {
+  padding: 0;
+  min-height: calc(100% - var(--offset-top));
+
+  .top {
+    background: white;
+    padding-top: 1.5rem;
+    padding-bottom: 2rem;
+  }
+
+  .page-title {
+    margin: 0 0 0 2rem;
+  }
+
+  h3 {
+    color: var(--ion-color-secondary);
+    margin: 0 0 0 2rem;
+  }
+
+  .new-project-button {
+    margin: 1rem 2rem 0 2rem;
+    padding: 100% 0 0 0;
+    background: url("/assets/images/bg-img.jpeg");
+    background-size: cover;
+    background-position: center center;
 
     h1 {
       margin: 0;
+      position: absolute;
+      top: 2rem;
+      left: 2rem;
+      color: white;
+      font-size: 2.125rem;
+      font-weight: 700;
+      text-shadow: 0 0 3px rgba(0, 0, 0, 0.05);
     }
   }
 
-  .images {
-    margin-bottom: 1rem;
+  .regular-projects-container {
+    padding-top: 1rem;
 
-    .thumb {
-      display: inline-block;
-      margin-right: 0.5rem;
+    .horiz-scroll-container {
+      display: flex;
+      flex-wrap: nowrap;
+      width: 100%;
+      overflow-x: scroll;
+      padding: 1rem 0 1rem 2rem;
+      margin: 0;
+    }
+
+    .project-preview-card {
+      margin: 0 1rem 0 0;
+      padding: 1rem;
+      width: 16rem;
+      // height: 8rem;
+      flex: 0 0 auto;
+
+      .inner {
+        display: flex;
+        flex-wrap: nowrap;
+
+        .image {
+          flex: 0 1 auto;
+          margin-right: 0.5rem;
+
+          ion-thumbnail {
+            --size: 6rem;
+          }
+        }
+
+        .meta {
+          .name {
+            font-weight: 600;
+          }
+
+          p {
+            margin: 0;
+            font-size: 0.9em;
+          }
+        }
+      }
+    }
+  }
+
+  .admin-projects-container {
+    background: transparent;
+    padding: 1rem;
+
+    h1 {
+      margin: 0.5rem 0 0 1rem;
+    }
+  }
+
+  .admin-project-card {
+    .images {
+      margin-bottom: 1rem;
+
+      .thumb {
+        display: inline-block;
+        margin-right: 0.5rem;
+      }
     }
   }
 }

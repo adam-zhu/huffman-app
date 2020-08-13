@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { useHistory, useRouteMatch, useLocation } from "react-router-dom";
 import {
   IonButton,
-  IonInput,
+  IonTextarea,
   IonList,
   IonItem,
   IonLabel,
-  IonText,
   IonSkeletonText,
+  IonToast,
 } from "@ionic/react";
 import PageContainer from "Components/Global/PageContainer";
 import "Styles/Questionnaire/QuestionnaireContainer.scss";
@@ -22,7 +22,10 @@ import { resolve_input_element_value } from "Utils";
 
 const QuestionnaireContainer = () => {
   const match = useRouteMatch();
+  const location = useLocation();
   const dispatch = useDispatch();
+  const is_new_project = location.search.includes("new_project");
+  const is_save_success = location.search.includes("saved");
 
   useEffect(() => {
     dispatch(get_questions());
@@ -32,6 +35,38 @@ const QuestionnaireContainer = () => {
   return (
     <PageContainer className="questionnaire-page-container">
       <QuestionnaireForm />
+      {is_new_project && (
+        <IonToast
+          className="questionnaire-toast"
+          isOpen={true}
+          header="Your project was successfully created!"
+          message="Answer the questions below to help us get to know your needs better."
+          duration={4000}
+          position="top"
+          buttons={[
+            {
+              text: "OK",
+              role: "cancel",
+            },
+          ]}
+        />
+      )}
+      {is_save_success && (
+        <IonToast
+          className="questionnaire-toast"
+          isOpen={true}
+          header="Answers successfully saved!"
+          message="Your answers were successfully saved."
+          duration={2000}
+          position="top"
+          buttons={[
+            {
+              text: "OK",
+              role: "cancel",
+            },
+          ]}
+        />
+      )}
     </PageContainer>
   );
 };
@@ -106,10 +141,13 @@ const QuestionnaireForm = () => {
 const Question = ({ index, question, answer, change_handler, busy }) => {
   return (
     <IonItem>
-      <IonLabel position="stacked" className="ion-text-wrap">
-        {question.string_content} <IonText color="danger">*</IonText>
+      <IonLabel
+        position="stacked"
+        className="ion-text-wrap questionnaire-question"
+      >
+        {question.string_content}
       </IonLabel>
-      <IonInput
+      <IonTextarea
         className="field"
         placeholder="type answer..."
         type="text"
@@ -117,7 +155,6 @@ const Question = ({ index, question, answer, change_handler, busy }) => {
         onIonChange={change_handler(question)}
         autofocus={index === 0}
         disabled={busy}
-        required
       />
     </IonItem>
   );

@@ -19,6 +19,11 @@
       color: var(--ion-color-secondary);
     }
   }
+
+  strong.time {
+    font-weight: 500;
+    margin-left: 0.175rem;
+  }
 }
 
 .enlarge-image {
@@ -34,4 +39,9 @@
     top: 50%;
     transform: translateY(-50%);
   }
+}
+
+ion-toast.new-project-toast {
+  --color: var(--ion-color-primary);
+  --background: var(--ion-color-tertiary);
 }

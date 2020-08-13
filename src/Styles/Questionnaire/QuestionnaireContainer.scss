@@ -1,5 +1,14 @@
-.questionnaire-page-container {
+#page-container.questionnaire-page-container {
   .field {
     font-size: 0.825rem;
   }
+}
+
+ion-toast.questionnaire-toast {
+  --color: var(--ion-color-primary);
+  --background: var(--ion-color-tertiary);
+}
+
+ion-label.questionnaire-question {
+  font-weight: 500;
 }

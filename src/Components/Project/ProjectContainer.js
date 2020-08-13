@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useRouteMatch, useHistory } from "react-router-dom";
+import { useRouteMatch, useHistory, useLocation } from "react-router-dom";
 import {
   IonGrid,
   IonRow,
@@ -11,6 +11,7 @@ import {
   IonList,
   IonListHeader,
   IonItem,
+  IonToast,
 } from "@ionic/react";
 import { formatRelative } from "date-fns";
 import PageContainer from "Components/Global/PageContainer";
@@ -22,6 +23,8 @@ import ProjectDetails from "Components/Global/ProjectDetails";
 
 const ProjectContainer = () => {
   const { projects } = useSelector((state) => state);
+  const { search } = useLocation();
+  const is_new_project = search.includes("new");
 
   return (
     <PageContainer className="project-page-container">
@@ -33,6 +36,23 @@ const ProjectContainer = () => {
           <br />
           <ProjectConsultations />
         </>
+      )}
+
+      {is_new_project && (
+        <IonToast
+          className="new-project-toast"
+          isOpen={true}
+          header="Welcome to your new project!"
+          message="Open a consultation below to get started."
+          duration={4000}
+          position="top"
+          buttons={[
+            {
+              text: "OK",
+              role: "cancel",
+            },
+          ]}
+        />
       )}
     </PageContainer>
   );
@@ -142,8 +162,10 @@ const ConsultationRow = ({ consultation }) => {
       }}
     >
       <IonText>
-        last active:{" "}
-        {formatRelative(new Date(consultation.last_active_date), new Date())}
+        last active:
+        <strong className="time">
+          {formatRelative(new Date(consultation.last_active_date), new Date())}
+        </strong>
       </IonText>
     </IonItem>
   );

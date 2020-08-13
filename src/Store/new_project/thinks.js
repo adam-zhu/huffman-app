@@ -92,8 +92,8 @@ const create_project_images = ({ history, new_project_data }) => async (
 
     dispatch({ type: RESET_REDUCER_STATE });
 
-    return Promise.resolve(
-      history.push(`/questionnaire/${new_project_data.objectId}`)
+    history.push(
+      `/questionnaire/${new_project_data.objectId}?new_project=true`
     );
   } catch (e) {
     dispatch({

@@ -26,7 +26,6 @@ const ConsultationContainer = () => {
             <div className="project-meta">
               <ProjectDetails hide_title />
             </div>
-            <br />
             <ConsultationMessages />
           </>
         )}

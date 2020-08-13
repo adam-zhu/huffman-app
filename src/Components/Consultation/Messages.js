@@ -7,7 +7,8 @@ import {
   change_message_images,
   send_message,
 } from "Store/consultation/thinks";
-import { IonButton, IonTextarea, IonAlert } from "@ionic/react";
+import { IonButton, IonTextarea, IonAlert, IonIcon } from "@ionic/react";
+import { cameraOutline, paperPlaneOutline } from "ionicons/icons";
 import { useScrollIonContentToBottom, usePhotos } from "Hooks";
 import ImagesModalWithGallery from "Components/Global/ImagesModalWithGallery";
 import HorizontalScrollThumbnailGallery from "Components/Global/HorizontalScrollThumbnailGallery";
@@ -40,6 +41,11 @@ const Messages = () => {
 
   return (
     <div id="consultation-messages">
+      {messages.length === 0 && (
+        <span className="no-messages">
+          Type a message below and press send to begin this consultation.
+        </span>
+      )}
       {messages.map((m) => (
         <MessageRow key={m.objectId} message={m} />
       ))}
@@ -141,16 +147,14 @@ const MessageInputForm = ({ no_messages, consultation_data }) => {
               !consultation_data.is_open
             }
           >
-            <i className="material-icons">camera_alt</i>
+            <IonIcon icon={cameraOutline} color="primary"></IonIcon>
           </IonButton>
           <div className="input-area">
             <IonTextarea
               placeholder={
                 !consultation_data.is_open
                   ? "Consultation closed."
-                  : no_messages
-                  ? "Send a message to begin this consultation"
-                  : "type a message..."
+                  : "Type a message..."
               }
               inputmode="text"
               value={message_input_value}
@@ -167,7 +171,7 @@ const MessageInputForm = ({ no_messages, consultation_data }) => {
               type="submit"
               disabled={is_message_sending || !consultation_data.is_open}
             >
-              <i className="material-icons send">send</i>
+              <IonIcon icon={paperPlaneOutline} color="dark"></IonIcon>
             </IonButton>
           </div>
         </div>
@@ -211,7 +215,10 @@ const CloseConsultation = () => {
         size="small"
         expand="block"
         color="danger"
-        onClick={(e) => set_confirm_close_consultation_modal_open(true)}
+        onClick={(e) => {
+          e.preventDefault();
+          set_confirm_close_consultation_modal_open(true);
+        }}
       >
         Close Consultation
       </IonButton>
@@ -225,7 +232,10 @@ const CloseConsultation = () => {
             text: "Cancel",
             role: "cancel",
             cssClass: "secondary",
-            handler: (e) => set_confirm_close_consultation_modal_open(false),
+            handler: (e) => {
+              e.preventDefault();
+              set_confirm_close_consultation_modal_open(false);
+            },
           },
           {
             text: "Close Consultation",

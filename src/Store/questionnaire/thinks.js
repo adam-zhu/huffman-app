@@ -75,11 +75,11 @@ export const update_question_answer = ({ question, value }) => ({
   payload: { question, value },
 });
 
-export const submit_answers = ({ project_objectId, history }) => async (
-  dispatch,
-  getState,
-  Parse
-) => {
+export const submit_answers = ({
+  project_objectId,
+  history,
+  is_new_project,
+}) => async (dispatch, getState, Parse) => {
   const { answers } = getState().questionnaire;
   const AnswerObjects = answers.map(({ question, string_content }) => {
     const Answer = Parse.Object.extend("answer");
@@ -109,7 +109,9 @@ export const submit_answers = ({ project_objectId, history }) => async (
       type: ANSWER_SUBMISSION_REQUEST_END,
     });
 
-    history.push(`/projects/${project_objectId}`);
+    is_new_project
+      ? history.push(`/projects/${project_objectId}?new=true`)
+      : history.replace(`/questionnaire/${project_objectId}?saved=true`);
   } catch (e) {
     dispatch({
       type: ANSWER_SUBMISSION_REQUEST_END,
