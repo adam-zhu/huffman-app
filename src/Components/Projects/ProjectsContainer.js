@@ -34,7 +34,7 @@ const NewProjectButton = () => {
     <div className="new-project-button-container">
       <IonCard type="button" routerLink={`/new`} className="new-project-button">
         <h1>
-          Create
+          <span>Create</span>
           <br />
           new project
         </h1>
