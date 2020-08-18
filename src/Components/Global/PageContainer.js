@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from "react";
+import React, { useLayoutEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { useHistory, useRouteMatch, useLocation } from "react-router-dom";
 import { IonContent, IonPage, IonFooter } from "@ionic/react";
 import ErrorAlerter from "Components/Global/ErrorAlerter";
 import Header from "Components/Global/Header";
@@ -10,6 +10,7 @@ import { ion_content_mounted, ion_content_unmounted } from "Store/App/thinks";
 const PageContainer = ({ className, children, header, footer }) => {
   const { data } = useSelector((state) => state.user);
   const match = useRouteMatch();
+  const location = useLocation();
   const history = useHistory();
   const is_user_logged_in = data !== undefined;
   const is_home_page = match.url === "/";
@@ -18,7 +19,7 @@ const PageContainer = ({ className, children, header, footer }) => {
   const user_not_logged_in_and_not_on_home_page =
     !is_user_logged_in && !is_home_page;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (user_not_logged_in_and_not_on_home_page) {
       history.replace("/");
     }
@@ -26,7 +27,12 @@ const PageContainer = ({ className, children, header, footer }) => {
     dispatch(ion_content_mounted(ion_content_ref));
 
     return () => dispatch(ion_content_unmounted());
-  }, [user_not_logged_in_and_not_on_home_page, ion_content_ref]);
+  }, [
+    user_not_logged_in_and_not_on_home_page,
+    ion_content_ref,
+    match,
+    location,
+  ]);
 
   return (
     <IonPage id={className} className="ion-page">

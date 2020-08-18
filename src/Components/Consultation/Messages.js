@@ -33,7 +33,7 @@ const Messages = () => {
       }))
     : [];
 
-  useScrollIonContentToBottom({ after_every_render: true });
+  useScrollIonContentToBottom({ trigger_condition: true });
 
   if (!consultation_data || !consultation_data?.messages) {
     return null;

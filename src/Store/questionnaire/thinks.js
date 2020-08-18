@@ -9,7 +9,11 @@ import {
 } from "./reducer";
 import { add_app_error } from "Store/errors/thinks";
 
-export const get_questions = () => async (dispatch, getState, Parse) => {
+export const get_questions = () => async (
+  dispatch,
+  getState,
+  { Parse, StripePromise }
+) => {
   const questions_query = new Parse.Query("question");
 
   questions_query.ascending("order");
@@ -38,7 +42,7 @@ export const get_questions = () => async (dispatch, getState, Parse) => {
 export const get_answers = (project_objectId) => async (
   dispatch,
   getState,
-  Parse
+  { Parse, StripePromise }
 ) => {
   const answers_query = new Parse.Query("answer");
 
@@ -79,7 +83,7 @@ export const submit_answers = ({
   project_objectId,
   history,
   is_new_project,
-}) => async (dispatch, getState, Parse) => {
+}) => async (dispatch, getState, { Parse, StripePromise }) => {
   const { answers } = getState().questionnaire;
   const AnswerObjects = answers.map(({ question, string_content }) => {
     const Answer = Parse.Object.extend("answer");
@@ -110,7 +114,7 @@ export const submit_answers = ({
     });
 
     is_new_project
-      ? history.push(`/projects/${project_objectId}?new=true`)
+      ? history.push(`/projects/${project_objectId}?new_project=true`)
       : history.replace(`/questionnaire/${project_objectId}?saved=true`);
   } catch (e) {
     dispatch({

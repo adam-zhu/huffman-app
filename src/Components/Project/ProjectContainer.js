@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouteMatch, useHistory, useLocation } from "react-router-dom";
+import qs from "query-string";
 import {
   IonGrid,
   IonRow,
@@ -24,7 +25,7 @@ import ProjectDetails from "Components/Global/ProjectDetails";
 const ProjectContainer = () => {
   const { projects } = useSelector((state) => state);
   const { search } = useLocation();
-  const is_new_project = search.includes("new");
+  const is_new_project = qs.parse(search).new_project;
 
   return (
     <PageContainer className="project-page-container">

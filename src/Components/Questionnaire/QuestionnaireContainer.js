@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useRouteMatch, useLocation } from "react-router-dom";
+import qs from "query-string";
 import {
   IonButton,
   IonTextarea,
@@ -9,6 +10,7 @@ import {
   IonLabel,
   IonSkeletonText,
   IonToast,
+  IonText,
 } from "@ionic/react";
 import PageContainer from "Components/Global/PageContainer";
 import "Styles/Questionnaire/QuestionnaireContainer.scss";
@@ -24,8 +26,9 @@ const QuestionnaireContainer = () => {
   const match = useRouteMatch();
   const location = useLocation();
   const dispatch = useDispatch();
-  const is_new_project = location.search.includes("new_project");
-  const is_save_success = location.search.includes("saved");
+  const { new_project, saved } = qs.parse(location.search);
+  const is_new_project = new_project;
+  const is_save_success = saved;
 
   useEffect(() => {
     dispatch(get_questions());
@@ -34,7 +37,7 @@ const QuestionnaireContainer = () => {
 
   return (
     <PageContainer className="questionnaire-page-container">
-      <QuestionnaireForm />
+      <QuestionnaireForm is_new_project={is_new_project} />
       {is_new_project && (
         <IonToast
           className="questionnaire-toast"
@@ -71,7 +74,7 @@ const QuestionnaireContainer = () => {
   );
 };
 
-const QuestionnaireForm = () => {
+const QuestionnaireForm = ({ is_new_project }) => {
   const { questionnaire } = useSelector((state) => state);
   const {
     questions,
@@ -92,12 +95,16 @@ const QuestionnaireForm = () => {
   const submit_handler = async (e) => {
     e.preventDefault();
 
-    dispatch(
+    await dispatch(
       submit_answers({
         project_objectId,
         history,
       })
     );
+
+    if (is_new_project) {
+      history.push(`/projects/${project_objectId}?new_project=true`);
+    }
   };
 
   if (questions_loading || answers_loading) {
@@ -131,7 +138,7 @@ const QuestionnaireForm = () => {
           disabled={answer_submission_busy}
           type="submit"
         >
-          Save Answers &rarr;
+          Save Answers{is_new_project && <IonText>&nbsp;&rarr;</IonText>}
         </IonButton>
       </form>
     </>

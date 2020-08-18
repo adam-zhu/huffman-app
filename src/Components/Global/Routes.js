@@ -9,6 +9,8 @@ import QuestionnaireContainer from "Components/Questionnaire/QuestionnaireContai
 import ProjectContainer from "Components/Project/ProjectContainer";
 import ConsultationContainer from "Components/Consultation/ConsultationContainer";
 import PackagesContainer from "Components/Packages/PackagesContainer";
+import StripeCallbackSuccessContainer from "Components/StripeCallback/SuccessContainer";
+import StripeCallbackCancelledContainer from "Components/StripeCallback/CancelledContainer";
 
 const Routes = () => {
   return (
@@ -32,6 +34,16 @@ const Routes = () => {
           exact={true}
           path="/projects/:project_objectId/:consultation_objectId"
           component={ConsultationContainer}
+        />
+        <Route
+          exact={true}
+          path="/stripe_callback/success"
+          component={StripeCallbackSuccessContainer}
+        />
+        <Route
+          exact={true}
+          path="/stripe_callback/cancelled"
+          component={StripeCallbackCancelledContainer}
         />
       </IonRouterOutlet>
     </IonReactRouter>

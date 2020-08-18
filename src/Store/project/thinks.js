@@ -11,7 +11,7 @@ import {
 export const begin_new_consultation = ({ history, project_objectId }) => async (
   dispatch,
   getState,
-  Parse
+  { Parse, StripePromise }
 ) => {
   const Consultation = Parse.Object.extend("consultation");
   const NewConsultation = new Consultation();

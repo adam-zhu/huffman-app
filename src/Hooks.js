@@ -11,7 +11,7 @@ import {
   FilesystemDirectory,
 } from "@capacitor/core";
 
-export const useScrollIonContentToBottom = ({ after_every_render }) => {
+export const useScrollIonContentToBottom = ({ trigger_condition }) => {
   const { ion_content_ref } = useSelector((state) => state.App);
   const scroll_to_bottom = async () => {
     if (ion_content_ref && ion_content_ref.current !== null) {
@@ -23,10 +23,10 @@ export const useScrollIonContentToBottom = ({ after_every_render }) => {
 
   useIonViewDidEnter(scroll_to_bottom);
   useEffect(() => {
-    if (after_every_render === true) {
+    if (trigger_condition === true) {
       scroll_to_bottom();
     }
-  });
+  }, [trigger_condition, ion_content_ref]);
 };
 
 export const usePhotos = ({

@@ -7,6 +7,7 @@ const initialState = {
   room_height: 0,
   package_objectId: "",
   project_images: [],
+  project_cancelled: undefined,
 };
 
 export const FORM_STATE_CHANGED = "new_project/FORM_STATE_CHANGED";
@@ -14,7 +15,10 @@ export const NEW_PROJECT_CREATE_REQUEST_START =
   "new_project/NEW_PROJECT_CREATE_REQUEST_START";
 export const NEW_PROJECT_CREATE_REQUEST_END =
   "new_project/NEW_PROJECT_CREATE_REQUEST_END";
-export const RESET_REDUCER_STATE = "new_project/RESET_REDUCER_STATE";
+export const NEW_PROJECT_CANCELLATION_REQUEST_START =
+  "new_project/NEW_PROJECT_CANCELLATION_REQUEST_START";
+export const NEW_PROJECT_CANCELLATION_REQUEST_END =
+  "new_project/NEW_PROJECT_CANCELLATION_REQUEST_END";
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -22,6 +26,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         [action.payload.key]: action.payload.value,
+        project_cancelled: false,
       };
 
     case NEW_PROJECT_CREATE_REQUEST_START:
@@ -31,15 +36,24 @@ export default (state = initialState, action) => {
       };
 
     case NEW_PROJECT_CREATE_REQUEST_END:
-      return action.payload.objectId
-        ? { ...initialState }
-        : {
-            ...state,
-            busy: false,
-          };
+      return {
+        ...state,
+        busy: false,
+      };
 
-    case RESET_REDUCER_STATE:
-      return { ...initialState };
+    case NEW_PROJECT_CANCELLATION_REQUEST_START:
+      return {
+        ...state,
+        busy: true,
+        project_cancelled: false,
+      };
+
+    case NEW_PROJECT_CANCELLATION_REQUEST_END:
+      return {
+        ...state,
+        busy: false,
+        project_cancelled: action.payload.success,
+      };
 
     default:
       return state;

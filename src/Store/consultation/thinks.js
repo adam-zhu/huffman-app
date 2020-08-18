@@ -21,7 +21,7 @@ export const change_message_images = (payload) => ({
 export const send_message = ({
   project_objectId,
   consultation_objectId,
-}) => async (dispatch, getState, Parse) => {
+}) => async (dispatch, getState, { Parse, StripePromise }) => {
   const { projects, consultation } = getState();
   const { message_input_value, message_images } = consultation;
   const project_data = projects.data.find(
@@ -73,7 +73,7 @@ export const send_message = ({
 const create_and_attach_project_images = ({
   message_data,
   project_objectId,
-}) => async (dispatch, getState, Parse) => {
+}) => async (dispatch, getState, { Parse, StripePromise }) => {
   const state = getState();
   const { consultation } = state;
   const ProjectImageObjects = consultation.message_images.map((p) => {
@@ -113,7 +113,7 @@ const create_and_attach_project_images = ({
 export const close_consultation = (consultation_objectId) => async (
   dispatch,
   getState,
-  Parse
+  { Parse, StripePromise }
 ) => {
   const consultation_query = new Parse.Query("consultation");
 

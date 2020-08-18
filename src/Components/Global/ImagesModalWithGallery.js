@@ -21,7 +21,6 @@ const ImagesModalWithGallery = ({
   takePhoto,
   getPhotoFromFilesystem,
   close_handler,
-  mode,
 }) => {
   const [photo_to_delete, set_photo_to_delete] = useState();
   const file_input_ref = useRef(null);

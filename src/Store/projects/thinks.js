@@ -13,14 +13,28 @@ import {
   LIVE_QUERIES_UNSUBSCRIBED,
   LIVE_QUERIES_DATA_UPDATED,
 } from "./reducer";
+import {
+  PACKAGES_REQUEST_START,
+  PACKAGES_REQUEST_END,
+} from "Store/packages/reducer";
 import { add_app_error } from "Store/errors/thinks";
 import { format_last_active_date, by_last_active_date } from "./utils";
 
 export const get_data_and_listen_for_changes = () => async (
   dispatch,
   getState,
-  Parse
+  { Parse, StripePromise }
 ) => {
+  dispatch({
+    type: ALL_PROJECTS_DATA_GET_REQUESTS_START,
+  });
+  dispatch({
+    type: PROJECTS_GET_REQUEST_START,
+  });
+  dispatch({
+    type: PACKAGES_REQUEST_START,
+  });
+
   const { user } = getState();
   const projects_query = new Parse.Query("project");
 
@@ -28,42 +42,62 @@ export const get_data_and_listen_for_changes = () => async (
     projects_query.equalTo("created_by", Parse.User.current());
   }
 
-  projects_query.include("package");
   projects_query.include("created_by");
   projects_query.descending("createdAt");
 
-  dispatch({
-    type: ALL_PROJECTS_DATA_GET_REQUESTS_START,
-  });
-  dispatch({
-    type: PROJECTS_GET_REQUEST_START,
-  });
-
   try {
-    const results = await projects_query.find();
-    const projects_data = results.map((r) => r.toJSON());
+    const [project_results, packages_product_data] = await Promise.all([
+      projects_query.find(),
+      Parse.Cloud.run("get_products"),
+    ]);
+    const projects_data = project_results.map((r) => {
+      const data = r.toJSON();
 
-    dispatch(get_and_attach_project_images(projects_data));
+      return {
+        ...data,
+        package: packages_product_data.find(
+          ({ objectId }) => objectId === data.stripe_product_id
+        ),
+      };
+    });
 
     dispatch({
       type: PROJECTS_GET_REQUEST_END,
       payload: projects_data,
     });
+
+    dispatch({
+      type: PACKAGES_REQUEST_END,
+      payload: packages_product_data,
+    });
+
+    dispatch(get_and_attach_project_images_and_consultations(projects_data));
   } catch (e) {
     dispatch({
       type: PROJECTS_GET_REQUEST_END,
+    });
+
+    dispatch({
+      type: PACKAGES_REQUEST_END,
     });
 
     dispatch(add_app_error(e.message));
   }
 };
 
-const get_and_attach_project_images = (projects_data) => async (
-  dispatch,
-  getState,
-  Parse
-) => {
+const get_and_attach_project_images_and_consultations = (
+  projects_data
+) => async (dispatch, getState, { Parse, StripePromise }) => {
+  dispatch({
+    type: PROJECT_IMAGES_GET_REQUEST_START,
+  });
+
+  dispatch({
+    type: CONSULTATIONS_GET_REQUEST_START,
+  });
+
   const project_images_query = new Parse.Query("project_image");
+  const consultations_query = new Parse.Query("consultation");
 
   project_images_query.include("created_by");
   project_images_query.include("project");
@@ -76,65 +110,30 @@ const get_and_attach_project_images = (projects_data) => async (
     )
   );
 
-  dispatch({
-    type: PROJECT_IMAGES_GET_REQUEST_START,
-  });
-
-  try {
-    const results = await project_images_query.find();
-    const project_images_data = results.map((r) => r.toJSON());
-    const projects_data_with_images = projects_data.map((p) => {
-      return {
-        ...p,
-        project_images: project_images_data.filter(
-          (c) => c.project.objectId === p.objectId
-        ),
-      };
-    });
-
-    dispatch(get_and_attach_consultations(projects_data_with_images));
-
-    dispatch({
-      type: PROJECT_IMAGES_GET_REQUEST_END,
-      payload: projects_data_with_images,
-    });
-  } catch (e) {
-    dispatch({
-      type: PROJECT_IMAGES_GET_REQUEST_END,
-    });
-
-    dispatch(add_app_error(e.message));
-  }
-};
-
-const get_and_attach_consultations = (projects_data_with_images) => async (
-  dispatch,
-  getState,
-  Parse
-) => {
-  const consultations_query = new Parse.Query("consultation");
-
   consultations_query.include("created_by");
   consultations_query.include("project");
   consultations_query.ascending("createdAt");
   consultations_query.containedIn(
     "project",
-    projects_data_with_images.map((p) =>
+    projects_data.map((p) =>
       Parse.Object.extend("project").createWithoutData(p.objectId)
     )
   );
 
-  dispatch({
-    type: CONSULTATIONS_GET_REQUEST_START,
-  });
-
   try {
-    const results = await consultations_query.find();
-    const consultations_data = results.map((r) => r.toJSON());
-    const projects_data_with_images_consultations = projects_data_with_images.map(
+    const [project_images_results, consultations_results] = await Promise.all([
+      project_images_query.find(),
+      consultations_query.find(),
+    ]);
+    const project_images_data = project_images_results.map((r) => r.toJSON());
+    const consultations_data = consultations_results.map((r) => r.toJSON());
+    const projects_data_with_images_and_consultations = projects_data.map(
       (p) => {
         return {
           ...p,
+          project_images: project_images_data.filter(
+            (c) => c.project.objectId === p.objectId
+          ),
           consultations: consultations_data.filter(
             (c) => c.project.objectId === p.objectId
           ),
@@ -142,13 +141,24 @@ const get_and_attach_consultations = (projects_data_with_images) => async (
       }
     );
 
-    dispatch(get_and_attach_messages(projects_data_with_images_consultations));
+    dispatch({
+      type: PROJECT_IMAGES_GET_REQUEST_END,
+      payload: projects_data_with_images_and_consultations,
+    });
 
     dispatch({
       type: CONSULTATIONS_GET_REQUEST_END,
-      payload: projects_data_with_images_consultations,
+      payload: projects_data_with_images_and_consultations,
     });
+
+    dispatch(
+      get_and_attach_messages(projects_data_with_images_and_consultations)
+    );
   } catch (e) {
+    dispatch({
+      type: PROJECT_IMAGES_GET_REQUEST_END,
+    });
+
     dispatch({
       type: CONSULTATIONS_GET_REQUEST_END,
     });
@@ -159,7 +169,7 @@ const get_and_attach_consultations = (projects_data_with_images) => async (
 
 const get_and_attach_messages = (
   projects_data_with_images_consultations
-) => async (dispatch, getState, Parse) => {
+) => async (dispatch, getState, { Parse, StripePromise }) => {
   const consultations_data = projects_data_with_images_consultations.flatMap(
     (p) => p.consultations
   );
@@ -229,7 +239,7 @@ const get_and_attach_messages = (
 const listen_for_changes = (projects_data) => async (
   dispatch,
   getState,
-  Parse
+  { Parse, StripePromise }
 ) => {
   const { user } = getState();
   const projects_query = new Parse.Query("project");
@@ -306,7 +316,7 @@ const listen_for_changes = (projects_data) => async (
 export const stop_listening_for_changes = () => async (
   dispatch,
   getState,
-  Parse
+  { Parse, StripePromise }
 ) => {
   const { subscriptions } = getState().projects;
 

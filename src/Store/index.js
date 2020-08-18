@@ -1,20 +1,34 @@
 import { createStore, applyMiddleware } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension/developmentOnly";
 import Parse from "parse";
+import { loadStripe } from "@stripe/stripe-js";
 import thunkMiddleware from "redux-thunk";
-// import logger from "redux-logger";
+import { createLogger } from "redux-logger";
+import {
+  PARSE_SERVER_URL,
+  PARSE_APP_ID,
+  PARSE_JS_ID,
+  STRIPE_PUBLISHABLE_KEY,
+} from "Constants";
 import root_reducer from "./root_reducer";
 
-Parse.serverURL = "https://letsdecorate.back4app.io"; // This is your Server URL
+Parse.serverURL = PARSE_SERVER_URL; // This is your Server URL
 Parse.initialize(
-  "W4f2B4g4iM635LZKAdf4adf65ZWEZ2f9bMXR5x59", // This is your Application ID
-  "qsQ7Bmfey7mwsxdLURceDSg5gxrsXYFjaA6ibjGz" // This is your Javascript key
+  PARSE_APP_ID, // This is your Application ID
+  PARSE_JS_ID // This is your Javascript key
 );
 
+// Make sure to call `loadStripe` outside of a component’s render to avoid
+// recreating the `Stripe` object on every render.
+const StripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
+const logger = createLogger({ collapsed: true });
 const store = createStore(
   root_reducer,
   {},
-  composeWithDevTools(applyMiddleware(thunkMiddleware.withExtraArgument(Parse))) // this is where we pass in the back4app SDK (standard development kit) [built on top of https://parseplatform.org/]
+  applyMiddleware(
+    thunkMiddleware.withExtraArgument({ Parse, StripePromise }),
+    logger
+  )
 );
 
 export default store;

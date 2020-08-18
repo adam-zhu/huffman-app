@@ -18,26 +18,28 @@ const ProjectsContainer = () => {
 
   return (
     <PageContainer className="projects-page-container">
-      {!user.data.is_admin && (
+      {!user.data?.is_admin && (
         <div className="top">
           <h1 className="page-title">Let's decorate</h1>
           <NewProjectButton />
         </div>
       )}
-      {user.data.is_admin ? <AdminProjectsList /> : <RegularProjectsList />}
+      {user.data?.is_admin ? <AdminProjectsList /> : <RegularProjectsList />}
     </PageContainer>
   );
 };
 
 const NewProjectButton = () => {
   return (
-    <IonCard type="button" routerLink={`/new`} className="new-project-button">
-      <h1>
-        Create
-        <br />
-        new project
-      </h1>
-    </IonCard>
+    <div className="new-project-button-container">
+      <IonCard type="button" routerLink={`/new`} className="new-project-button">
+        <h1>
+          Create
+          <br />
+          new project
+        </h1>
+      </IonCard>
+    </div>
   );
 };
 

@@ -1,5 +1,5 @@
 import React from "react";
-import "Styles/Packages/PackagePreviewCard.scss";
+import "Styles/Global/PackagePreviewCard.scss";
 import {
   IonCard,
   IonCardHeader,
