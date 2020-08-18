@@ -54,13 +54,13 @@ const ProjectDetails = ({ hide_title }) => {
           </IonText>
         </IonRow>
         <IonRow className="room-dimensions">
-          <IonChip color="secondary" outline>
+          <IonChip>
             <IonLabel>Width {inches_to_feet(room_width)}'</IonLabel>
           </IonChip>
-          <IonChip color="secondary" outline>
+          <IonChip>
             <IonLabel>Length {inches_to_feet(room_length)}'</IonLabel>
           </IonChip>
-          <IonChip color="secondary" outline>
+          <IonChip>
             <IonLabel>Height {inches_to_feet(room_height)}'</IonLabel>
           </IonChip>
         </IonRow>

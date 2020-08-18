@@ -348,6 +348,11 @@ const PackageSelection = ({ photos, selected_package }) => {
           <IonItem>
             <PackagePreviewCard package_data={selected_package} />
           </IonItem>
+          <IonItem
+            routerLink={`/packages?package_objectId=${selected_package.objectId}`}
+          >
+            Select a different package
+          </IonItem>
         </>
       )}
     </>

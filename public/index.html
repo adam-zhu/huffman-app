@@ -34,39 +34,39 @@
     />
     <style>
       @font-face {
-        font-family: "eina";
-        font-weight: 300;
-        src: url("./assets/fonts/eina-01-light.ttf") format("ttf"),
-          url("./assets/fonts/eina-01-light.eot") format("eot"),
-          url("./assets/fonts/eina-01-light.woff") format("woff"),
-          url("./assets/fonts/eina-01-light.woff2") format("woff2");
-      }
-
-      @font-face {
-        font-family: "eina";
+        font-family: "circular";
         font-weight: 400;
-        src: url("./assets/fonts/eina-01-regular.ttf") format("ttf"),
-          url("./assets/fonts/eina-01-regular.eot") format("eot"),
-          url("./assets/fonts/eina-01-regular.woff") format("woff"),
-          url("./assets/fonts/eina-01-regular.woff2") format("woff2");
+        src: url("./assets/fonts/CircularStd-Book.ttf") format("ttf"),
+          url("./assets/fonts/CircularStd-Book.eot") format("eot"),
+          url("./assets/fonts/CircularStd-Book.woff") format("woff"),
+          url("./assets/fonts/CircularStd-Book.woff2") format("woff2");
       }
 
       @font-face {
-        font-family: "eina";
+        font-family: "circular";
         font-weight: 500;
-        src: url("./assets/fonts/eina-01-semibold.ttf") format("ttf"),
-          url("./assets/fonts/eina-01-semibold.eot") format("eot"),
-          url("./assets/fonts/eina-01-semibold.woff") format("woff"),
-          url("./assets/fonts/eina-01-semibold.woff2") format("woff2");
+        src: url("./assets/fonts/CircularStd-Medium.ttf") format("ttf"),
+          url("./assets/fonts/CircularStd-Medium.eot") format("eot"),
+          url("./assets/fonts/CircularStd-Medium.woff") format("woff"),
+          url("./assets/fonts/CircularStd-Medium.woff2") format("woff2");
       }
 
       @font-face {
-        font-family: "eina";
+        font-family: "circular";
+        font-weight: 600;
+        src: url("./assets/fonts/CircularStd-Bold.ttf") format("ttf"),
+          url("./assets/fonts/CircularStd-Bold.eot") format("eot"),
+          url("./assets/fonts/CircularStd-Bold.woff") format("woff"),
+          url("./assets/fonts/CircularStd-Bold.woff2") format("woff2");
+      }
+
+      @font-face {
+        font-family: "circular";
         font-weight: 700;
-        src: url("./assets/fonts/eina-01-bold.ttf") format("ttf"),
-          url("./assets/fonts/eina-01-bold.eot") format("eot"),
-          url("./assets/fonts/eina-01-bold.woff") format("woff"),
-          url("./assets/fonts/eina-01-bold.woff2") format("woff2");
+        src: url("./assets/fonts/CircularStd-Black.ttf") format("ttf"),
+          url("./assets/fonts/CircularStd-Black.eot") format("eot"),
+          url("./assets/fonts/CircularStd-Black.woff") format("woff"),
+          url("./assets/fonts/CircularStd-Black.woff2") format("woff2");
       }
 
       /* Ionic Variables and Theming. For more info, please see:
@@ -163,28 +163,29 @@
         --ion-color-light-tint: #f5f6f9;
 
         /** custom Huffman app overrides **/
-        --ion--default--font: "eina";
+        --ion--default--font: "circular";
       }
 
       /** custom Huffman app overrides **/
       ion-button,
-      ion-thumbnail {
-        --border-radius: 10px;
+      ion-thumbnail,
+      ion-card {
+        --border-radius: 0.625rem;
       }
 
-      /* #root h1,
-    #root h2,
-    #root h3,
-    #root h4,
-    #root h5,
-    #root h6,
-    #root strong,
-    #root ion-label {
-      font-weight: 500;
-    } */
+      #root h1,
+      #root h2,
+      #root h3,
+      #root h4,
+      #root h5,
+      #root h6,
+      #root strong,
+      #root ion-label {
+        font-weight: 600;
+      }
 
       * {
-        font-family: "eina" !important;
+        font-family: "circular" !important;
       }
 
       i.material-icons {

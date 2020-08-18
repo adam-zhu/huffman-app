@@ -78,5 +78,5 @@ http://ionicframework.com/docs/theming/ */
 
 /** custom Huffman app overrides **/
 ion-button {
-  --border-radius: 10px;
+  --border-radius: 0.625rem;
 }

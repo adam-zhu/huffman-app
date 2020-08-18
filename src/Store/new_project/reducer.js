@@ -26,13 +26,13 @@ export default (state = initialState, action) => {
       return {
         ...state,
         [action.payload.key]: action.payload.value,
-        project_cancelled: false,
       };
 
     case NEW_PROJECT_CREATE_REQUEST_START:
       return {
         ...state,
         busy: true,
+        project_cancelled: undefined,
       };
 
     case NEW_PROJECT_CREATE_REQUEST_END:
@@ -45,7 +45,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         busy: true,
-        project_cancelled: false,
       };
 
     case NEW_PROJECT_CANCELLATION_REQUEST_END:

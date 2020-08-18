@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { IonGrid, IonRow, IonThumbnail, IonImg } from "@ionic/react";
+import { IonGrid, IonRow, IonThumbnail, IonImg, IonCard } from "@ionic/react";
 import Modal from "Components/Global/Modal";
 import "Styles/Global/ThumbnailGallery.scss";
 
@@ -13,13 +13,15 @@ const ThumbnailGallery = ({ images }) => {
           <div className="inner">
             {images.map((image_obj, index) => {
               return (
-                <IonThumbnail
+                <IonCard
                   className="thumb"
                   key={index + image_obj.image.url}
                   onClick={() => set_image_modal_src(image_obj.image.url)}
                 >
-                  <IonImg src={image_obj.image.url} />
-                </IonThumbnail>
+                  <IonThumbnail>
+                    <IonImg src={image_obj.image.url} />
+                  </IonThumbnail>
+                </IonCard>
               );
             })}
           </div>

@@ -27,5 +27,7 @@
     font-size: 0.5rem;
     padding: 0.5rem;
     height: auto;
+    --background: var(--ion-color-tertiary);
+    --color: var(--ion-color-primary);
   }
 }

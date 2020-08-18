@@ -14,6 +14,19 @@
     color: var(--alt-text-color);
   }
 
+  .day-date {
+    color: var(--alt-text-color);
+    display: block;
+    padding: 0.25rem;
+    font-size: 0.625rem;
+    width: 100%;
+    text-align: right;
+
+    &.by-admin {
+      text-align: left;
+    }
+  }
+
   .message-row {
     padding: 0.125rem;
     display: flex;
@@ -31,7 +44,8 @@
     }
 
     &.received {
-      .message-bubble {
+      .message-bubble,
+      .message-header {
         background: var(--ion-color-primary);
         color: white;
       }
@@ -39,13 +53,25 @@
 
     .message-bubble {
       padding: 0.5rem;
-      border-radius: 0.5rem;
+      border-radius: 0.625rem;
       background: white;
       color: black;
       display: inline-block;
       max-width: 75%;
+      min-width: 50%;
       font-size: 0.75rem;
       margin: 0;
+
+      .message-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.25rem;
+
+        .name,
+        .time {
+          font-size: 0.625rem;
+        }
+      }
 
       p {
         margin: 0;
@@ -74,7 +100,7 @@
       width: 100%;
       display: flex;
       align-items: stretch;
-      border-radius: 10px;
+      border-radius: 0.625rem;
       background: var(--alt-background-color);
       margin-right: 0.5rem;
 

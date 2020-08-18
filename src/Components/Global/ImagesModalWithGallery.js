@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import {
+  IonCard,
   IonContent,
   IonButton,
   IonText,
@@ -103,25 +104,30 @@ const ImagesModalWithGallery = ({
                   photo_to_delete ? "has-selection" : "no-selection"
                 }`}
               >
-                {photos.map((photo, index) => {
-                  const src = photo.base64 ?? photo.webPath;
+                {photos
+                  .slice()
+                  .reverse()
+                  .map((photo, index) => {
+                    const src = photo.base64 ?? photo.webPath;
 
-                  return (
-                    <IonCol key={index + photo.filepath}>
-                      <IonThumbnail className="thumb">
-                        <IonImg
-                          onClick={() => set_photo_to_delete(photo)}
-                          src={src}
-                          className={
-                            photo.filepath === photo_to_delete?.filepath
-                              ? "selected-for-deletion"
-                              : "not-selected"
-                          }
-                        />
-                      </IonThumbnail>
-                    </IonCol>
-                  );
-                })}
+                    return (
+                      <IonCol key={index + photo.filepath}>
+                        <IonCard>
+                          <IonThumbnail className="thumb">
+                            <IonImg
+                              onClick={() => set_photo_to_delete(photo)}
+                              src={src}
+                              className={
+                                photo.filepath === photo_to_delete?.filepath
+                                  ? "selected-for-deletion"
+                                  : "not-selected"
+                              }
+                            />
+                          </IonThumbnail>
+                        </IonCard>
+                      </IonCol>
+                    );
+                  })}
               </IonRow>
             </>
           )}

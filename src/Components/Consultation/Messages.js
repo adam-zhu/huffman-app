@@ -1,13 +1,20 @@
 import React, { useState, useLayoutEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouteMatch } from "react-router-dom";
+import { format, formatRelative } from "date-fns";
 import "Styles/Consultation/Messages.scss";
 import {
   enter_message,
   change_message_images,
   send_message,
 } from "Store/consultation/thinks";
-import { IonButton, IonTextarea, IonAlert, IonIcon } from "@ionic/react";
+import {
+  IonButton,
+  IonTextarea,
+  IonAlert,
+  IonIcon,
+  IonCard,
+} from "@ionic/react";
 import { cameraOutline, paperPlaneOutline } from "ionicons/icons";
 import { useScrollIonContentToBottom, usePhotos } from "Hooks";
 import ImagesModalWithGallery from "Components/Global/ImagesModalWithGallery";
@@ -32,6 +39,15 @@ const Messages = () => {
         ),
       }))
     : [];
+  const messages_by_day = messages.reduce((acc, message) => {
+    const day_date = format(new Date(message.createdAt), "MMMM d, y");
+    const day_acc = acc[day_date] || [];
+
+    return {
+      ...acc,
+      [day_date]: day_acc.concat([message]),
+    };
+  }, {});
 
   useScrollIonContentToBottom({ trigger_condition: true });
 
@@ -46,9 +62,22 @@ const Messages = () => {
           Type a message below and press send to begin this consultation.
         </span>
       )}
-      {messages.map((m) => (
-        <MessageRow key={m.objectId} message={m} />
-      ))}
+      {Object.entries(messages_by_day).map(([day, messages]) => {
+        return (
+          <React.Fragment key={day}>
+            <span
+              className={`day-date ${
+                messages[0].author.is_admin ? "by-admin" : ""
+              }`}
+            >
+              {day}
+            </span>
+            {messages.map((m) => (
+              <MessageRow key={m.objectId} message={m} />
+            ))}
+          </React.Fragment>
+        );
+      })}
       <MessageInputForm
         no_messages={messages.length === 0}
         consultation_data={consultation_data}
@@ -67,7 +96,13 @@ const MessageRow = ({ message }) => {
     <div
       className={`message-row ${is_author_current_user ? "sent" : "received"}`}
     >
-      <div className="message-bubble">
+      <IonCard className="message-bubble">
+        <div className="message-header">
+          <div className="name">{message.author.first_name}</div>
+          <div className="time">
+            {format(new Date(message.createdAt), "h:mma").toLowerCase()}
+          </div>
+        </div>
         {message.string_content &&
           message.string_content
             .split("\n")
@@ -81,7 +116,7 @@ const MessageRow = ({ message }) => {
         {message.project_images?.length > 0 && (
           <ThumbnailGallery images={message.project_images} />
         )}
-      </div>
+      </IonCard>
     </div>
   );
 };

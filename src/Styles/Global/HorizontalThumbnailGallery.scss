@@ -9,9 +9,12 @@
   }
 
   .thumb {
-    margin-right: 0.5rem;
-    --size: 5rem;
+    margin: 0 0.5rem 0 0;
     flex: none;
+
+    ion-thumbnail {
+      --size: 5rem;
+    }
   }
 }
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { IonThumbnail, IonImg } from "@ionic/react";
+import { IonCard, IonThumbnail, IonImg } from "@ionic/react";
 import Modal from "Components/Global/Modal";
 import "Styles/Global/HorizontalThumbnailGallery.scss";
 
@@ -13,13 +13,15 @@ const HorizontalScrollThumbnailGallery = ({ images }) => {
           <div className="inner">
             {images.map((image_obj, index) => {
               return (
-                <IonThumbnail
-                  className="thumb"
+                <IonCard
                   key={index + image_obj.image.url}
                   onClick={() => set_image_modal_src(image_obj.image.url)}
+                  className="thumb"
                 >
-                  <IonImg src={image_obj.image.url} />
-                </IonThumbnail>
+                  <IonThumbnail>
+                    <IonImg src={image_obj.image.url} />
+                  </IonThumbnail>
+                </IonCard>
               );
             })}
           </div>

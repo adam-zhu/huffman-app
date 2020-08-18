@@ -1,4 +1,5 @@
 import React from "react";
+import qs from "query-string";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory, useRouteMatch, useLocation } from "react-router-dom";
 import { IonHeader, IonToolbar, IonButtons, IonButton } from "@ionic/react";
@@ -31,6 +32,8 @@ const BackButton = () => {
   const match = useRouteMatch();
   const location = useLocation();
   const state = useSelector((state) => state);
+  const query_obj = qs.parse(location.search);
+  const { package_objectId } = query_obj;
   const [text, href, routerDirection] = (() => {
     if (
       match.params.consultation_objectId !== undefined ||
@@ -46,7 +49,13 @@ const BackButton = () => {
     }
 
     if (location.pathname === "/packages") {
-      return ["New project", `/new`, "back"];
+      return [
+        "New project",
+        package_objectId
+          ? `/new?${qs.stringify({ ...query_obj, package_objectId })}`
+          : `new`,
+        "back",
+      ];
     }
 
     if (
