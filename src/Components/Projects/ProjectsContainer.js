@@ -15,24 +15,24 @@ import "Styles/Projects/ProjectsContainer.scss";
 
 const ProjectsContainer = () => {
   const { user, projects } = useSelector((state) => state);
-  const projects_element = projects.data.length ? (
+  const projects_element = projects.data?.length ? (
     <>{user.data?.is_admin ? <AdminProjectsList /> : <RegularProjectsList />}</>
   ) : null;
 
   return (
     <PageContainer
       className={`projects-page-container ${
-        projects.data.length ? `has-projects` : `no-projects`
+        projects.data?.length ? `has-projects` : `no-projects`
       }`}
     >
       {!user.data?.is_admin && (
         <div className="top">
-          {!projects.data.length && <br />}
+          {!projects.data?.length && <br />}
           <h1 className="page-title">
-            {!projects.data.length && <span>Hi {user.data.first_name}</span>}
+            {!projects.data?.length && <span>Hi {user.data?.first_name}</span>}
             Let's decorate
           </h1>
-          {!projects.data.length && <br />}
+          {!projects.data?.length && <br />}
           <NewProjectButton />
         </div>
       )}

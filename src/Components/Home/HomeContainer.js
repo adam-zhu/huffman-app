@@ -98,15 +98,15 @@ const Form = () => {
   const autofocus_ref = useRef();
 
   useLayoutEffect(() => {
-    if (autofocus_ref.current) {
-      setTimeout(() => {
+    setTimeout(() => {
+      if (autofocus_ref.current) {
         const input_node = autofocus_ref.current.querySelector("input");
 
         if (input_node) {
           input_node.focus();
         }
-      }, 200);
-    }
+      }
+    }, 200);
   }, [autofocus_ref, mode, is_password_reset_screen]);
 
   return is_password_reset_screen ? (

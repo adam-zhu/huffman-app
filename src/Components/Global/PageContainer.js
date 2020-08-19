@@ -1,6 +1,11 @@
-import React, { useLayoutEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory, useRouteMatch, useLocation } from "react-router-dom";
+import {
+  useHistory,
+  useRouteMatch,
+  useLocation,
+  Redirect,
+} from "react-router-dom";
 import { IonContent, IonPage, IonFooter } from "@ionic/react";
 import ErrorAlerter from "Components/Global/ErrorAlerter";
 import Header from "Components/Global/Header";
@@ -18,8 +23,14 @@ const PageContainer = ({ className, children, header, footer }) => {
   const dispatch = useDispatch();
   const user_not_logged_in_and_not_on_home_page =
     !is_user_logged_in && !is_home_page;
+  const header_element =
+    typeof header === "function" ? (
+      header()
+    ) : header === false ? null : (
+      <Header />
+    );
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (user_not_logged_in_and_not_on_home_page) {
       history.replace("/");
     }
@@ -30,12 +41,10 @@ const PageContainer = ({ className, children, header, footer }) => {
 
     return () => dispatch(ion_content_unmounted());
   }, [ion_content_ref, match, location]);
-  const header_element =
-    typeof header === "function" ? (
-      header()
-    ) : header === false ? null : (
-      <Header />
-    );
+
+  if (user_not_logged_in_and_not_on_home_page) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <IonPage id={className} className="ion-page">
