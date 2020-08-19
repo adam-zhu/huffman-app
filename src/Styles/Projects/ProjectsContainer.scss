@@ -1,4 +1,4 @@
-#projects-page-container {
+#projects-page-container.has-projects {
   ion-content {
     --background: var(--alt-background-color);
   }
@@ -7,6 +7,17 @@
 #page-container.projects-page-container {
   padding: 0;
   min-height: calc(100% - var(--offset-top));
+
+  &.no-projects {
+    .page-title span {
+      color: var(--ion-color-secondary);
+      display: block;
+    }
+
+    .top .new-project-button-container .new-project-button {
+      padding-top: 150%;
+    }
+  }
 
   .top {
     background: white;

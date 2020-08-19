@@ -23,20 +23,23 @@ const PageContainer = ({ className, children, header, footer }) => {
     if (user_not_logged_in_and_not_on_home_page) {
       history.replace("/");
     }
+  }, [user_not_logged_in_and_not_on_home_page]);
 
+  useLayoutEffect(() => {
     dispatch(ion_content_mounted(ion_content_ref));
 
     return () => dispatch(ion_content_unmounted());
-  }, [
-    user_not_logged_in_and_not_on_home_page,
-    ion_content_ref,
-    match,
-    location,
-  ]);
+  }, [ion_content_ref, match, location]);
+  const header_element =
+    typeof header === "function" ? (
+      header()
+    ) : header === false ? null : (
+      <Header />
+    );
 
   return (
     <IonPage id={className} className="ion-page">
-      {typeof header === "function" ? header() : <Header />}
+      {header_element}
       <IonContent fullscreen ref={ion_content_ref}>
         <ErrorAlerter />
         <div id="page-container" className={className}>

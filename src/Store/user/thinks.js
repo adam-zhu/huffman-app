@@ -1,4 +1,6 @@
 import {
+  FIRST_NAME_INPUT_VALUE_CHANGE,
+  LAST_NAME_INPUT_VALUE_CHANGE,
   EMAIL_INPUT_VALUE_CHANGE,
   PASSWORD_INPUT_VALUE_CHANGE,
   USER_REGISTRATION_REQUEST_START,
@@ -11,16 +13,6 @@ import {
   RESTORE_USER_SESSION,
 } from "./reducer";
 import { add_app_error } from "Store/errors/thinks";
-
-export const set_email_input_value = (value) => ({
-  type: EMAIL_INPUT_VALUE_CHANGE,
-  payload: value,
-});
-
-export const set_password_input_value = (value) => ({
-  type: PASSWORD_INPUT_VALUE_CHANGE,
-  payload: value,
-});
 
 export const check_for_current_session = () => async (
   dispatch,
@@ -46,12 +38,49 @@ export const check_for_current_session = () => async (
   }
 };
 
+export const set_input_value = (type) => (payload) => {
+  switch (type) {
+    case "first_name":
+      return {
+        type: FIRST_NAME_INPUT_VALUE_CHANGE,
+        payload,
+      };
+
+    case "last_name":
+      return {
+        type: LAST_NAME_INPUT_VALUE_CHANGE,
+        payload,
+      };
+
+    case "email":
+      return {
+        type: EMAIL_INPUT_VALUE_CHANGE,
+        payload,
+      };
+
+    case "password":
+      return {
+        type: PASSWORD_INPUT_VALUE_CHANGE,
+        payload,
+      };
+
+    default:
+      return {};
+  }
+};
+
 export const register_user = () => async (
   dispatch,
   getState,
   { Parse, StripePromise }
 ) => {
-  const { email_input_value, password_input_value, user } = getState().user;
+  const {
+    first_name_input_value,
+    last_name_input_value,
+    email_input_value,
+    password_input_value,
+    user,
+  } = getState().user;
 
   dispatch({
     type: USER_REGISTRATION_REQUEST_START,
@@ -60,6 +89,8 @@ export const register_user = () => async (
   try {
     const new_user = new Parse.User();
 
+    new_user.set("first_name", first_name_input_value);
+    new_user.set("last_name", last_name_input_value);
     new_user.set("username", email_input_value);
     new_user.set("email", email_input_value);
     new_user.set("password", password_input_value);
@@ -161,5 +192,58 @@ export const log_user_out = (history) => async (
       payload: user,
     });
     dispatch(add_app_error(e.message));
+  }
+};
+
+export const send_password_reset_email = ({
+  success_callback,
+  failure_callback,
+}) => async (dispatch, getState, { Parse, StripePromise }) => {
+  const { email_input_value } = getState().user;
+
+  try {
+    await Parse.User.requestPasswordReset(email_input_value);
+
+    success_callback();
+  } catch (e) {
+    dispatch(add_app_error(e.message));
+    failure_callback();
+  }
+};
+
+export const resend_verification_email = ({
+  success_callback,
+  failure_callback,
+}) => async (dispatch, getState, { Parse, StripePromise }) => {
+  const { username } = getState().user.data;
+  const on_failure = (message) => {
+    dispatch(add_app_error(message));
+    failure_callback();
+  };
+
+  try {
+    const response = await fetch(
+      "https://letsdecorate.back4app.io/verificationEmailRequest",
+      {
+        method: "POST",
+        headers: {
+          "X-Parse-Application-Id": "W4f2B4g4iM635LZKAdf4adf65ZWEZ2f9bMXR5x59",
+          "X-Parse-REST-API-Key": "6eARd0rDu5jxU1XcSRPS8irv9DcSbJRCGgMAJrRo",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: username,
+        }),
+      }
+    );
+    const result = await response.json();
+
+    if (result.error) {
+      return on_failure(result.error);
+    }
+
+    success_callback();
+  } catch (e) {
+    on_failure(e.message);
   }
 };

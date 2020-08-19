@@ -1,4 +1,6 @@
 const initialState = {
+  first_name_input_value: "",
+  last_name_input_value: "",
   email_input_value: "",
   password_input_value: "",
   data: undefined,
@@ -7,6 +9,9 @@ const initialState = {
   is_signout_request_busy: false,
 };
 
+export const FIRST_NAME_INPUT_VALUE_CHANGE =
+  "user/FIRST_NAME_INPUT_VALUE_CHANGE";
+export const LAST_NAME_INPUT_VALUE_CHANGE = "user/LAST_NAME_INPUT_VALUE_CHANGE";
 export const EMAIL_INPUT_VALUE_CHANGE = "user/EMAIL_INPUT_VALUE_CHANGE";
 export const PASSWORD_INPUT_VALUE_CHANGE = "user/PASSWORD_INPUT_VALUE_CHANGE";
 export const USER_REGISTRATION_REQUEST_START =
@@ -22,6 +27,18 @@ export const RESTORE_USER_SESSION = "user/RESTORE_USER_SESSION";
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case FIRST_NAME_INPUT_VALUE_CHANGE:
+      return {
+        ...state,
+        first_name_input_value: action.payload,
+      };
+
+    case LAST_NAME_INPUT_VALUE_CHANGE:
+      return {
+        ...state,
+        last_name_input_value: action.payload,
+      };
+
     case EMAIL_INPUT_VALUE_CHANGE:
       return {
         ...state,
