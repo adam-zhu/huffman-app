@@ -27,12 +27,14 @@
 
   .form,
   .email-verification {
+    z-index: 1;
     background: white;
     flex: none;
     padding: 0 2rem 2rem 2rem;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
     h1 {
+      background: white;
       margin: 2rem 0 0 0;
       line-height: 1.4;
 
@@ -42,6 +44,8 @@
     }
 
     form {
+      background: white;
+      
       ion-list {
         padding: 0 0.5rem;
 
