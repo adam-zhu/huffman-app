@@ -21,9 +21,11 @@ const ProjectsContainer = () => {
 
   return (
     <PageContainer
-      className={`projects-page-container ${
-        projects.data?.length ? `has-projects` : `no-projects`
-      }`}
+      id={`projects`}
+      ionContentClassName={
+        projects.data?.length > 0 ? `has-projects` : `no-projects`
+      }
+      pageContainerClassName="projects"
     >
       {!user.data?.is_admin && (
         <div className="top">

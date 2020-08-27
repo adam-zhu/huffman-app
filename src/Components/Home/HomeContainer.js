@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState, useRef } from "react";
+import React, { useLayoutEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from "react-router-dom";
 import {
@@ -33,7 +33,7 @@ const HomeContainer = () => {
   }
 
   return (
-    <PageContainer className="home-page-container" header={false}>
+    <PageContainer id="home" pageContainerClassName="home" header={false}>
       <RegistrationLogin />
     </PageContainer>
   );

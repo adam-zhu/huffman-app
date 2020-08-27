@@ -1,5 +1,5 @@
 import React from "react";
-import "Styles/Packages/PackageCard.scss";
+import "Styles/Global/PackageCard.scss";
 import {
   IonCard,
   IonCardHeader,
@@ -9,15 +9,13 @@ import {
 } from "@ionic/react";
 import { to_dollars_cents } from "Utils";
 
-const PackageCard = ({ package_data, is_selected }) => {
+const PackageCard = ({ package_data, is_selected, ...rest }) => {
   const { dollars, cents } = to_dollars_cents(package_data.price_cents);
 
   return (
     <IonCard
-      button
-      routerLink={`/new?package_objectId=${package_data.objectId}`}
-      routerDirection="back"
       className={`package-card ${is_selected ? "selected" : ""}`}
+      {...rest}
     >
       {is_selected && (
         <div className="selected-icon">
@@ -31,21 +29,20 @@ const PackageCard = ({ package_data, is_selected }) => {
         style={{ backgroundImage: `url(${package_data.image.url})` }}
       />
       <IonCardHeader className="title">
-        <IonCardSubtitle>
-          {package_data.amount_of_included_consultations} CONSULTATIONS
+        <IonCardSubtitle className="title-consultation-count">
+          {package_data.included_consultations_count} CONSULTATIONS
         </IonCardSubtitle>
         <IonCardTitle>{package_data.name}</IonCardTitle>
       </IonCardHeader>
       <IonCardContent>
-        <br />
-        {package_data.description}
-        <br />
-        <strong>{package_data.tagline}</strong>
-        <br />
-        <br />
+        <p className="description">{package_data.description}</p>
         <span className="price">
           $<strong>{dollars}</strong>.<span>{cents}</span>
         </span>
+        <strong className="consultation-count">
+          {package_data.included_consultations_count} consultation
+          {package_data.included_consultations_count > 1 ? "s" : ""}
+        </strong>
       </IonCardContent>
     </IonCard>
   );

@@ -1,8 +1,8 @@
-import React, { useState, useRef, useLayoutEffect } from "react";
+import React, { useRef, useLayoutEffect } from "react";
 import { createGesture } from "@ionic/core";
 import "Styles/Global/BottomDrawer.scss";
 
-const BottomDrawer = ({ children, cssClass, is_open, close_handler }) => {
+const BottomDrawer = ({ children, is_open, close_handler, ...rest }) => {
   // const [is_drawer_open, set_is_drawer_open] = useState(false);
   const drawer_ref = useRef(null);
   const drawer_content_ref = useRef(null);
@@ -35,7 +35,10 @@ const BottomDrawer = ({ children, cssClass, is_open, close_handler }) => {
 
   return (
     <div
-      className={`bottom-drawer ${cssClass} ${is_open ? "is-open" : ""}`}
+      {...rest}
+      className={`bottom-drawer ${rest.className ? rest.className : ""} ${
+        is_open ? "is-open" : ""
+      }`}
       ref={drawer_ref}
       onClick={drawer_overlay_click_handler}
     >

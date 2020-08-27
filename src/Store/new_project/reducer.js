@@ -1,4 +1,4 @@
-const initialState = {
+const initial_state = {
   busy: false,
   name: "",
   description: "",
@@ -19,8 +19,9 @@ export const NEW_PROJECT_CANCELLATION_REQUEST_START =
   "new_project/NEW_PROJECT_CANCELLATION_REQUEST_START";
 export const NEW_PROJECT_CANCELLATION_REQUEST_END =
   "new_project/NEW_PROJECT_CANCELLATION_REQUEST_END";
+export const RESET_REDUCER_STATE = "new_project/RESET_REDUCER_STATE";
 
-export default (state = initialState, action) => {
+export default (state = initial_state, action) => {
   switch (action.type) {
     case FORM_STATE_CHANGED:
       return {
@@ -51,7 +52,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         busy: false,
-        project_cancelled: action.payload.success,
+        project_cancelled: action.payload,
+      };
+
+    case RESET_REDUCER_STATE:
+      return {
+        ...initial_state,
       };
 
     default:

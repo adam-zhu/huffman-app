@@ -9,8 +9,11 @@ import QuestionnaireContainer from "Components/Questionnaire/QuestionnaireContai
 import ProjectContainer from "Components/Project/ProjectContainer";
 import ConsultationContainer from "Components/Consultation/ConsultationContainer";
 import PackagesContainer from "Components/Packages/PackagesContainer";
-import StripeCallbackSuccessContainer from "Components/StripeCallback/SuccessContainer";
-import StripeCallbackCancelledContainer from "Components/StripeCallback/CancelledContainer";
+import MoreConsultationsContainer from "Components/MoreConsultations/MoreConsultationsContainer";
+import NewProjectSuccessContainer from "Components/StripeCallback/NewProject/NewProjectSuccessContainer";
+import NewProjectCancelledContainer from "Components/StripeCallback/NewProject/NewProjectCancelledContainer";
+import MoreConsultationsSuccessContainer from "Components/StripeCallback/MoreConsultations/MoreConsultationsSuccessContainer";
+import MoreConsultationsCancelledContainer from "Components/StripeCallback/MoreConsultations/MoreConsultationsCancelledContainer";
 
 const Routes = () => {
   return (
@@ -37,13 +40,28 @@ const Routes = () => {
         />
         <Route
           exact={true}
-          path="/stripe_callback/success"
-          component={StripeCallbackSuccessContainer}
+          path="/more_consultations/:project_objectId"
+          component={MoreConsultationsContainer}
         />
         <Route
           exact={true}
-          path="/stripe_callback/cancelled"
-          component={StripeCallbackCancelledContainer}
+          path="/stripe_callback/new_project/success"
+          component={NewProjectSuccessContainer}
+        />
+        <Route
+          exact={true}
+          path="/stripe_callback/new_project/cancelled"
+          component={NewProjectCancelledContainer}
+        />
+        <Route
+          exact={true}
+          path="/stripe_callback/more_consultations/success"
+          component={MoreConsultationsSuccessContainer}
+        />
+        <Route
+          exact={true}
+          path="/stripe_callback/more_consultations/cancelled"
+          component={MoreConsultationsCancelledContainer}
         />
       </IonRouterOutlet>
     </IonReactRouter>

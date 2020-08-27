@@ -1,4 +1,4 @@
-#page-container.consultation-page-container {
+#page-container.consultation {
   padding: 0 0 0.425rem 0;
   display: flex;
   flex-direction: column;
@@ -11,7 +11,7 @@
 
   .project-meta {
     flex: none;
-    padding: 1rem;
+    padding: 1rem 1rem 0 1rem;
   }
 
   .messages-container {

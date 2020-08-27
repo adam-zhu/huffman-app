@@ -1,7 +1,7 @@
 import React, { useState, useLayoutEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouteMatch } from "react-router-dom";
-import { format, formatRelative } from "date-fns";
+import { format } from "date-fns";
 import "Styles/Consultation/Messages.scss";
 import {
   enter_message,
@@ -14,12 +14,14 @@ import {
   IonAlert,
   IonIcon,
   IonCard,
+  IonSkeletonText,
 } from "@ionic/react";
 import { cameraOutline, paperPlaneOutline } from "ionicons/icons";
 import { useScrollIonContentToBottom, usePhotos } from "Hooks";
 import ImagesModalWithGallery from "Components/Global/ImagesModalWithGallery";
 import HorizontalScrollThumbnailGallery from "Components/Global/HorizontalScrollThumbnailGallery";
 import ThumbnailGallery from "Components/Global/ThumbnailGallery";
+import AllConsultationsUsed from "Components/Global/AllConsultationsUsed";
 import {
   select_project_data,
   select_consultation_data,
@@ -52,14 +54,16 @@ const Messages = () => {
   useScrollIonContentToBottom({ trigger_condition: true });
 
   if (!consultation_data || !consultation_data?.messages) {
-    return null;
+    return <IonSkeletonText animated />;
   }
 
   return (
     <div id="consultation-messages">
       {messages.length === 0 && (
         <span className="no-messages">
-          Type a message below and press send to begin this consultation.
+          {consultation_data.is_open
+            ? "Type a message below and press send to begin this consultation."
+            : "No messages."}
         </span>
       )}
       {Object.entries(messages_by_day).map(([day, messages]) => {
@@ -79,7 +83,7 @@ const Messages = () => {
         );
       })}
       <MessageInputForm
-        no_messages={messages.length === 0}
+        project_data={project_data}
         consultation_data={consultation_data}
       />
     </div>
@@ -121,7 +125,7 @@ const MessageRow = ({ message }) => {
   );
 };
 
-const MessageInputForm = ({ no_messages, consultation_data }) => {
+const MessageInputForm = ({ project_data, consultation_data }) => {
   const [is_images_modal_open, set_is_images_modal_open] = useState(false);
   const { deletePhoto, photos, takePhoto, getPhotoFromFilesystem } = usePhotos({
     selector: (state) => state.consultation.message_images,

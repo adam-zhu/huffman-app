@@ -126,7 +126,10 @@ export default (state = initialState, action) => {
     case CONSULATION_CLOSED:
       return {
         ...state,
-        data: action.payload,
+        data: {
+          ...state.data,
+          ...action.payload,
+        },
       };
 
     default:

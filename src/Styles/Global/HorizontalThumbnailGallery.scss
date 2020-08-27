@@ -1,6 +1,8 @@
 .horizontal-thumbnail-gallery {
-  width: 100%;
-  max-width: 100%;
+  width: calc(100% + 1rem);
+  max-width: calc(100% + 1rem);
+  padding: 1rem;
+  margin-left: -1rem;
   overflow-x: scroll;
 
   .inner {
@@ -9,7 +11,7 @@
   }
 
   .thumb {
-    margin: 0 0.5rem 0 0;
+    margin: 0 1rem 0 0;
     flex: none;
 
     ion-thumbnail {

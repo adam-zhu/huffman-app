@@ -1,6 +1,6 @@
 import React, { useState, useRef, useLayoutEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import qs from "query-string";
 import {
   IonButton,
@@ -15,7 +15,14 @@ import {
   IonImg,
   IonIcon,
 } from "@ionic/react";
-import { cameraOutline, exitOutline } from "ionicons/icons";
+import {
+  cameraOutline,
+  exitOutline,
+  cropOutline,
+  eyeOutline,
+  imagesOutline,
+  sunnyOutline,
+} from "ionicons/icons";
 import { createGesture } from "@ionic/core";
 import {
   set_form_field_value,
@@ -34,7 +41,7 @@ const NewProjectForm = () => {
     set_is_images_upload_modal_open,
   ] = useState(false);
   const [is_textarea_focused, set_is_textarea_focused] = useState(false);
-  const { packages, new_project, App } = useSelector((state) => state);
+  const { products, new_project, App } = useSelector((state) => state);
   const { ion_content_ref } = App;
   const [is_tooltip_drawer_open, set_is_tooltip_drawer_open] = useState(false);
   const {
@@ -48,8 +55,8 @@ const NewProjectForm = () => {
   const location = useLocation();
   const { package_objectId } = qs.parse(location.search);
   const selected_package =
-    package_objectId && packages.data
-      ? packages.data.find((p) => p.objectId === package_objectId)
+    package_objectId && products.data
+      ? products.data.find((p) => p.objectId === package_objectId)
       : undefined;
   const { deletePhoto, photos, takePhoto, getPhotoFromFilesystem } = usePhotos({
     selector: (state) => state.new_project.project_images || [],
@@ -118,7 +125,7 @@ const NewProjectForm = () => {
   ]);
 
   return (
-    <>
+    <div className="new-project-form-container">
       <form className="new-project" onSubmit={submit_handler}>
         <h1 className="title">Create a new project</h1>
         <IonList lines="none">
@@ -170,7 +177,7 @@ const NewProjectForm = () => {
         is_open={is_tooltip_drawer_open}
         close_handler={(e) => set_is_tooltip_drawer_open(false)}
       />
-    </>
+    </div>
   );
 };
 
@@ -346,7 +353,11 @@ const PackageSelection = ({ photos, selected_package }) => {
           <br />
           <h2>Selected package</h2>
           <IonItem>
-            <PackagePreviewCard package_data={selected_package} />
+            <PackagePreviewCard
+              package_data={selected_package}
+              routerLink={`/packages?package_objectId=${selected_package.objectId}`}
+              button
+            />
           </IonItem>
           <IonItem
             routerLink={`/packages?package_objectId=${selected_package.objectId}`}
@@ -362,7 +373,7 @@ const PackageSelection = ({ photos, selected_package }) => {
 const ImageTips = ({ is_open, close_handler }) => {
   return (
     <BottomDrawer
-      cssClass="tooltip-drawer"
+      className="tooltip-drawer"
       is_open={is_open}
       close_handler={close_handler}
     >
@@ -372,72 +383,47 @@ const ImageTips = ({ is_open, close_handler }) => {
       <div className="tips">
         <div className="scroll-container">
           <div className="tip">
-            <div className="pic" />
+            <div className="pic">
+              <IonIcon icon={imagesOutline} size="large" />
+            </div>
             <br />
-            <strong>Frame the entire space</strong>
+            <strong>Upload at minimum 4 photos</strong>
             <p>
-              First of all, in photography, there are no rules, just guidelines
-              that you can follow until you discover your style. I love bright
-              and airy shots; others prefer dark and moody. But when you use my
-              tips, you will have a good start in interior photography.
+              Each picture should be taken from each corner of the room framing
+              the floor and ceiling of the opposite corner of the room.
             </p>
           </div>
           <div className="tip alt">
-            <div className="pic" />
+            <div className="pic">
+              <IonIcon icon={cropOutline} size="large" />
+            </div>
             <br />
-            <strong>Use natural light whenever possible!</strong>
+            <strong>Fully frame the space</strong>
             <p>
-              So turn all the lights off. I repeat OFF! Light bulbs cause
-              terrible shadows and color casts. As human beings, we are very
-              capable of interpreting the yellow color cast of incandescent
-              bulbs or the dull green of fluorescent lights as white light, but
-              the camera is a different story.
+              Each photo needs to include the floor to the ceiling in each
+              picture.
             </p>
           </div>
           <div className="tip">
-            <div className="pic" />
+            <div className="pic">
+              <IonIcon icon={sunnyOutline} size="large" />
+            </div>
             <br />
-            <strong>Use a tripod</strong>
+            <strong>Lighting</strong>
             <p>
-              The light conditions are rarely good enough to shoot handheld
-              indoors. So a tripod is a must! I prefer to keep my aperture
-              between F/9 and F/11 and my ISO as low as possible (100 yes!) to
-              create an overall sharp image. And with your camera mounted on a
-              tripod, the shutter speed is no longer an issue.
+              Natural lighting is best but please use flash if needed. The
+              brighter the picture the better.
             </p>
           </div>
           <div className="tip alt">
-            <div className="pic" />
+            <div className="pic">
+              <IonIcon icon={eyeOutline} size="large" />
+            </div>
             <br />
-            <strong>Keep your lines straight</strong>
+            <strong>Perspective</strong>
             <p>
-              Keep your verticals vertical and, when shooting a one-point
-              perspective, your horizontals horizontal too! Our brain is capable
-              of realizing that doors are vertical even if we see them from an
-              angled view, but the camera is not.
-            </p>
-          </div>
-          <div className="tip">
-            <div className="pic" />
-            <br />
-            <strong>Overcast days are the best</strong>
-            <p>
-              Every house in its surroundings looks better when the sun is
-              shining, and the sky is blue. But the sunlight creates a very
-              sharp difference between lights and darks indoors especially when
-              it is shining straight through the windows.
-            </p>
-          </div>
-          <div className="tip alt">
-            <div className="pic" />
-            <br />
-            <strong>Create space</strong>
-            <p>
-              The hardest part of interior photography (besides the light) is
-              the lack of space. So don’t be afraid to move furniture when it is
-              standing in the way of creating a beautiful shot. Or shoot from
-              the hallway into the room at the point where you won’t see the
-              doorposts in the viewfinder anymore.
+              Please keep the camera at a flat (straight up and down) angle to
+              the image. This helps give me a better perspective of the space.
             </p>
           </div>
         </div>

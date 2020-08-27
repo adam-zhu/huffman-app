@@ -58,6 +58,16 @@ const BackButton = () => {
       ];
     }
 
+    if (location.pathname.indexOf("/more_consultations") === 0) {
+      const project_data = select_project_data({ state, match });
+
+      return [
+        project_data?.name || "loading...",
+        `/projects/${match.params.project_objectId}`,
+        "back",
+      ];
+    }
+
     if (
       match.params.project_objectId !== undefined ||
       location.pathname === "/new"

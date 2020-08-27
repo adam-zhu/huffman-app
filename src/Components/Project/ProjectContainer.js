@@ -21,25 +21,42 @@ import { begin_new_consultation } from "Store/project/thinks";
 import { select_project_data } from "Store/projects/selectors";
 import { get_open_closed } from "Store/projects/utils";
 import ProjectDetails from "Components/Global/ProjectDetails";
+import AllConsultationsUsed from "Components/Global/AllConsultationsUsed";
 
 const ProjectContainer = () => {
-  const { projects } = useSelector((state) => state);
-  const { search } = useLocation();
-  const is_new_project = qs.parse(search).new_project;
+  const state = useSelector((state) => state);
+  const { projects } = state;
+  const match = useRouteMatch();
+  const project_data = select_project_data({ state, match });
 
   return (
-    <PageContainer className="project-page-container">
+    <PageContainer id="project" pageContainerClassName="project">
       {projects.data_loaded === false ? (
         <IonSkeletonText animated />
       ) : (
         <>
-          <ProjectDetails />
-          <br />
-          <ProjectConsultations />
+          <Toasts project_data={project_data} />
+          <ProjectDetails project_data={project_data} />
+          <ConsultationsCountAndCTA project_data={project_data} />
+          <ProjectConsultations project_data={project_data} />
         </>
       )}
+    </PageContainer>
+  );
+};
 
-      {is_new_project && (
+const Toasts = ({ project_data }) => {
+  const { search } = useLocation();
+  const url_query_params = qs.parse(search);
+  const most_recent_package_consultations_count =
+    project_data && project_data.packages && project_data.packages.length > 0
+      ? project_data.packages[project_data.packages.length - 1]
+          .included_consultations_count
+      : null;
+
+  return (
+    <>
+      {url_query_params.new_project && (
         <IonToast
           className="new-project-toast"
           isOpen={true}
@@ -55,76 +72,115 @@ const ProjectContainer = () => {
           ]}
         />
       )}
-    </PageContainer>
+      {url_query_params.more_consultations && (
+        <IonToast
+          className="more-consultations-toast"
+          isOpen={true}
+          header="Consultations added!"
+          message={`${most_recent_package_consultations_count} consultation${
+            most_recent_package_consultations_count > 1 ? "s" : ""
+          } have been added to your project.`}
+          duration={4000}
+          position="top"
+          buttons={[
+            {
+              text: "OK",
+              role: "cancel",
+            },
+          ]}
+        />
+      )}
+    </>
   );
 };
 
-const ProjectConsultations = () => {
+const ConsultationsCountAndCTA = ({ project_data }) => {
   const state = useSelector((state) => state);
   const { consultation_creation_busy } = state.project;
-  const match = useRouteMatch();
-  const project_data = select_project_data({ state, match });
-  const [open_consultations, closed_consultations] = get_open_closed(
-    project_data?.consultations
-  );
   const dispatch = useDispatch();
+  const match = useRouteMatch();
   const history = useHistory();
-  const { project_objectId } = match.params;
   const new_consultation_handler = () =>
-    dispatch(begin_new_consultation({ history, project_objectId }));
+    dispatch(
+      begin_new_consultation({
+        history,
+        project_objectId: match.params.project_objectId,
+      })
+    );
 
   if (project_data === undefined) {
     return <IonSkeletonText animated />;
   }
 
+  const included_consultations_count = project_data.packages
+    ? project_data.packages.reduce(
+        (acc, p) => acc + p.included_consultations_count,
+        0
+      )
+    : null;
+
+  return (
+    <IonGrid>
+      <IonRow>
+        <IonCol className="consultation-count">
+          <IonText>
+            <span className="count">
+              <strong>
+                <IonText
+                  color={
+                    project_data.consultations.length >=
+                    included_consultations_count
+                      ? "danger"
+                      : "dark"
+                  }
+                >
+                  {project_data.consultations.length}
+                </IonText>
+              </strong>{" "}
+              / {included_consultations_count}
+            </span>
+          </IonText>
+          <br />
+          <IonText color="medium">consultations used</IonText>
+        </IonCol>
+        <IonCol>
+          <IonButton
+            className="new-consultation"
+            size="small"
+            fill="outline"
+            onClick={new_consultation_handler}
+            disabled={
+              consultation_creation_busy ||
+              project_data.consultations.length >= included_consultations_count
+            }
+          >
+            Begin new consultation &rarr;
+          </IonButton>
+        </IonCol>
+      </IonRow>
+      {project_data.consultations.length >= included_consultations_count && (
+        <IonRow>
+          <AllConsultationsUsed project_data={project_data} />
+        </IonRow>
+      )}
+    </IonGrid>
+  );
+};
+
+const ProjectConsultations = ({ project_data }) => {
+  if (project_data === undefined) {
+    return <IonSkeletonText animated />;
+  }
+
+  const [open_consultations, closed_consultations] = get_open_closed(
+    project_data.consultations
+  );
+
   return (
     <>
-      <IonGrid>
-        <IonRow>
-          <IonCol className="consultation-count">
-            <IonText>
-              <span className="count">
-                <strong>
-                  <IonText
-                    color={
-                      project_data.consultations.length >=
-                      project_data.package.amount_of_included_consultations
-                        ? "danger"
-                        : "dark"
-                    }
-                  >
-                    {project_data.consultations.length}
-                  </IonText>
-                </strong>{" "}
-                / {project_data.package.amount_of_included_consultations}
-              </span>
-            </IonText>
-            <br />
-            <IonText color="medium">consultations used</IonText>
-          </IonCol>
-          <IonCol>
-            <IonButton
-              className="new-consultation"
-              size="small"
-              fill="outline"
-              onClick={new_consultation_handler}
-              disabled={
-                consultation_creation_busy ||
-                project_data.consultations.length >=
-                  project_data.package.amount_of_included_consultations
-              }
-            >
-              Begin new consultation &rarr;
-            </IonButton>
-          </IonCol>
-        </IonRow>
-        <IonRow>
-          <hr />
-        </IonRow>
-      </IonGrid>
       <IonList lines="inset">
         <IonListHeader className="open-consultations">
-          Open Consultations
+          Consultations
         </IonListHeader>
         {open_consultations.length > 0 ? (
           open_consultations.map((c) => (
@@ -132,7 +188,7 @@ const ProjectConsultations = () => {
           ))
         ) : (
           <IonItem>
-            <IonText>none</IonText>
+            <IonText className="empty-state">none</IonText>
           </IonItem>
         )}
       </IonList>
@@ -141,7 +197,7 @@ const ProjectConsultations = () => {
           <br />
           <IonList lines="inset">
             <IonListHeader className="closed-consultations">
-              Closed Consultations
+              Closed
             </IonListHeader>
             {closed_consultations.map((c) => (
               <ConsultationRow key={c.objectId} consultation={c} />

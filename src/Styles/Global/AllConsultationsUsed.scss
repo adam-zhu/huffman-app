@@ -1,0 +1,30 @@
+.all-consultations-used {
+  margin-left: 0;
+  margin-right: 0;
+  background: var(--alt-background-color);
+
+  .card-header {
+    padding: 1rem;
+
+    .flex-container {
+      display: flex;
+      align-items: center;
+
+      .icon-container {
+        padding: 0.5rem 0.5rem 0.25rem 0.5rem;
+        background: var(--ion-color-tertiary);
+        border-radius: 0.625rem;
+        margin-right: 1rem;
+
+        ion-icon {
+          font-size: 1.5rem;
+          color: var(--ion-color-primary);
+        }
+      }
+    }
+  }
+
+  .card-content {
+    text-align: center;
+  }
+}

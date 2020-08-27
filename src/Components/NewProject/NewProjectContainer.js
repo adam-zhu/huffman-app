@@ -11,7 +11,7 @@ const NewProjectContainer = () => {
   const { cancelled } = qs.parse(location.search);
 
   return (
-    <PageContainer className="new-project-page-container">
+    <PageContainer id="new-project" pageContainerClassName="new-project">
       <NewProjectForm />
       {cancelled && (
         <IonToast

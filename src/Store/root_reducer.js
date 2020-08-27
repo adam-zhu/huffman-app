@@ -6,8 +6,9 @@ import projects from "./projects/reducer";
 import new_project from "./new_project/reducer";
 import project from "./project/reducer";
 import consultation from "./consultation/reducer";
-import packages from "./packages/reducer";
+import products from "./products/reducer";
 import questionnaire from "./questionnaire/reducer";
+import more_consultations from "./more_consultations/reducer";
 
 export default combineReducers({
   App,
@@ -17,6 +18,7 @@ export default combineReducers({
   new_project,
   project,
   consultation,
-  packages,
+  products,
   questionnaire,
+  more_consultations,
 });

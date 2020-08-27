@@ -1,6 +1,4 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { useRouteMatch } from "react-router-dom";
 import {
   IonGrid,
   IonRow,
@@ -12,13 +10,13 @@ import {
 } from "@ionic/react";
 import "Styles/Global/ProjectDetails.scss";
 import { inches_to_feet } from "Utils";
-import { select_project_data } from "Store/projects/selectors";
 import HorizontalScrollThumbnailGallery from "Components/Global/HorizontalScrollThumbnailGallery";
 
-const ProjectDetails = ({ hide_title }) => {
-  const state = useSelector((state) => state);
-  const match = useRouteMatch();
-  const project_data = select_project_data({ state, match });
+const ProjectDetails = ({ project_data, hide_title }) => {
+  if (project_data === undefined) {
+    return <IonSkeletonText animated />;
+  }
+
   const {
     name,
     description,
@@ -26,11 +24,7 @@ const ProjectDetails = ({ hide_title }) => {
     room_length,
     room_height,
     project_images,
-  } = project_data || {};
-
-  if (project_data === undefined) {
-    return <IonSkeletonText animated />;
-  }
+  } = project_data;
 
   return (
     <>
@@ -66,7 +60,6 @@ const ProjectDetails = ({ hide_title }) => {
         </IonRow>
         {project_images?.length > 0 && (
           <>
-            <br />
             <HorizontalScrollThumbnailGallery images={project_images} />
           </>
         )}

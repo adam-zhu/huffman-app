@@ -14,17 +14,18 @@ import ProjectDetails from "Components/Global/ProjectDetails";
 const ConsultationContainer = () => {
   const state = useSelector((state) => state);
   const match = useRouteMatch();
+  const project_data = select_project_data({ state, match });
   const consultation_data = select_consultation_data({ state, match });
 
   return (
     <>
-      <PageContainer className="consultation-page-container">
-        {consultation_data === undefined ? (
+      <PageContainer id="consultation" pageContainerClassName="consultation">
+        {project_data === undefined || consultation_data === undefined ? (
           <IonSkeletonText animated />
         ) : (
           <>
             <div className="project-meta">
-              <ProjectDetails hide_title />
+              <ProjectDetails project_data={project_data} hide_title />
             </div>
             <ConsultationMessages />
           </>

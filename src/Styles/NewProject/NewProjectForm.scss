@@ -1,7 +1,4 @@
-#page-container.new-project-page-container {
-  padding-left: 0;
-  padding-right: 0;
-
+.new-project-form-container {
   form.new-project {
     h1,
     h2 {
@@ -169,6 +166,16 @@
           height: 4rem;
           border-radius: 0.625rem;
           background: var(--ion-color-primary);
+          position: relative;
+
+          ion-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            --size: 2rem;
+          }
         }
 
         &.alt {

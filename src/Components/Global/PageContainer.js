@@ -12,7 +12,15 @@ import Header from "Components/Global/Header";
 import "Styles/Global/PageContainer.scss";
 import { ion_content_mounted, ion_content_unmounted } from "Store/App/thinks";
 
-const PageContainer = ({ className, children, header, footer }) => {
+const PageContainer = ({
+  id,
+  className,
+  ionContentClassName,
+  pageContainerClassName,
+  children,
+  header,
+  footer,
+}) => {
   const { data } = useSelector((state) => state.user);
   const match = useRouteMatch();
   const location = useLocation();
@@ -47,11 +55,15 @@ const PageContainer = ({ className, children, header, footer }) => {
   }
 
   return (
-    <IonPage id={className} className="ion-page">
+    <IonPage id={id} className={`ion-page ${className || ""}`}>
       {header_element}
-      <IonContent fullscreen ref={ion_content_ref}>
+      <IonContent
+        fullscreen
+        ref={ion_content_ref}
+        className={ionContentClassName}
+      >
         <ErrorAlerter />
-        <div id="page-container" className={className}>
+        <div id="page-container" className={pageContainerClassName}>
           {children}
         </div>
       </IonContent>

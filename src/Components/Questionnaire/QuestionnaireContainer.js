@@ -36,7 +36,7 @@ const QuestionnaireContainer = () => {
   }, [match.params.project_objectId]);
 
   return (
-    <PageContainer className="questionnaire-page-container">
+    <PageContainer id="questionnaire" pageContainerClassName="questionnaire">
       <QuestionnaireForm is_new_project={is_new_project} />
       {is_new_project && (
         <IonToast

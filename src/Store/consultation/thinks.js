@@ -95,8 +95,7 @@ const create_and_attach_project_images = ({
   });
 
   try {
-    const result = await Promise.all(ProjectImageObjects.map((o) => o.save()));
-    const project_images_data = result.map((r) => r.toJSON());
+    await Promise.all(ProjectImageObjects.map((o) => o.save()));
 
     dispatch({
       type: SEND_MESSAGE_REQUEST_END,
@@ -132,10 +131,7 @@ export const close_consultation = (consultation_objectId) => async (
 
     dispatch({
       type: CONSULTATION_CLOSE_REQUEST_END,
-      payload: {
-        ...updated_consultation_object.toJSON(),
-        messages: [],
-      },
+      payload: updated_consultation_object.toJSON(),
     });
   } catch (e) {
     dispatch({

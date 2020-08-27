@@ -3,9 +3,9 @@ import qs from "query-string";
 import { useLocation, useHistory } from "react-router-dom";
 import PageContainer from "Components/Global/PageContainer";
 import { IonLoading } from "@ionic/react";
-import "Styles/StripeCallback/SuccessContainer.scss";
+import "Styles/StripeCallback/NewProject/NewProjectSuccessContainer.scss";
 
-const SuccessContainer = () => {
+const NewProjectSuccessContainer = () => {
   const location = useLocation();
   const { project_objectId } = qs.parse(location.search);
   const history = useHistory();
@@ -18,7 +18,10 @@ const SuccessContainer = () => {
   }, []);
 
   return (
-    <PageContainer>
+    <PageContainer
+      id={"stripe-success-new-project"}
+      pageContainerClassName="stripe-success-new-project"
+    >
       <IonLoading
         cssClass="stripe-redirect-loading"
         isOpen={true}
@@ -29,4 +32,4 @@ const SuccessContainer = () => {
   );
 };
 
-export default SuccessContainer;
+export default NewProjectSuccessContainer;
