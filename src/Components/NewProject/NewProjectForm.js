@@ -159,7 +159,12 @@ const NewProjectForm = () => {
           />
         </IonList>
         {selected_package && (
-          <IonButton className="submit-button" expand="block" type="submit">
+          <IonButton
+            className="submit-button"
+            expand="block"
+            type="submit"
+            disabled={busy}
+          >
             Checkout <IonIcon slot="end" icon={exitOutline}></IonIcon>
           </IonButton>
         )}
