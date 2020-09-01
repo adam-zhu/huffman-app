@@ -41,7 +41,7 @@ export const message_viewed = (message) => async (
       new Date()
     );
 
-    const result = await message.save();
+    const result = await message_object.save();
 
     dispatch({
       type: MESSAGE_VIEWED_REQUEST_END,
