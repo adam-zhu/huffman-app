@@ -6,6 +6,7 @@ const initialState = {
   message_input_value: "",
   message_images: [],
   is_message_sending: false,
+  message_viewed_request_busy: false,
 };
 
 export const NEW_CONSULTATION_START_SUCCESS =
@@ -30,6 +31,10 @@ export const CONSULTATION_SUBSCRIBED = "consultation/CONSULTATION_SUBSCRIBED";
 export const CONSULTATION_UNSUBSCRIBED =
   "consultation/CONSULTATION_UNSUBSCRIBED";
 export const CONSULATION_CLOSED = "consultation/CONSULATION_CLOSED";
+export const MESSAGE_VIEWED_REQUEST_START =
+  "consultation/MESSAGE_VIEWED_REQUEST_START";
+export const MESSAGE_VIEWED_REQUEST_END =
+  "consultation/MESSAGE_VIEWED_REQUEST_END";
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -130,6 +135,18 @@ export default (state = initialState, action) => {
           ...state.data,
           ...action.payload,
         },
+      };
+
+    case MESSAGE_VIEWED_REQUEST_START:
+      return {
+        ...state,
+        message_viewed_request_busy: true,
+      };
+
+    case MESSAGE_VIEWED_REQUEST_END:
+      return {
+        ...state,
+        message_viewed_request_busy: false,
       };
 
     default:

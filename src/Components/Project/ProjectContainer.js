@@ -13,7 +13,9 @@ import {
   IonListHeader,
   IonItem,
   IonToast,
+  IonIcon,
 } from "@ionic/react";
+import { ellipse } from "ionicons/icons";
 import { formatRelative } from "date-fns";
 import PageContainer from "Components/Global/PageContainer";
 import "Styles/Project/ProjectContainer.scss";
@@ -210,6 +212,10 @@ const ProjectConsultations = ({ project_data }) => {
 };
 
 const ConsultationRow = ({ consultation }) => {
+  const has_new_messages = (consultation.messages || []).find(
+    ({ user_viewed }) => !user_viewed
+  );
+
   return (
     <IonItem
       button
@@ -218,12 +224,27 @@ const ConsultationRow = ({ consultation }) => {
         state: consultation,
       }}
     >
-      <IonText>
-        last active:
-        <strong className="time">
-          {formatRelative(new Date(consultation.last_active_date), new Date())}
-        </strong>
-      </IonText>
+      {has_new_messages && (
+        <IonIcon icon={ellipse} size="small" className="new-indicator" />
+      )}
+      {consultation.messages && consultation.messages.length ? (
+        <IonText className={has_new_messages ? "new" : "not-new"}>
+          <IonText color="secondary">last message:</IonText>
+          <strong className="time">
+            {formatRelative(
+              new Date(consultation.last_active_date),
+              new Date()
+            )}
+          </strong>
+        </IonText>
+      ) : (
+        <IonText className={has_new_messages ? "new" : "not-new"}>
+          <IonText color="secondary">opened:</IonText>
+          <strong className="time">
+            {formatRelative(new Date(consultation.createdAt), new Date())}
+          </strong>
+        </IonText>
+      )}
     </IonItem>
   );
 };

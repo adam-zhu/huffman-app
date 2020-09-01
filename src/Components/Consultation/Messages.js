@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect, useRef } from "react";
+import React, { useState, useLayoutEffect, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouteMatch } from "react-router-dom";
 import { format } from "date-fns";
@@ -21,12 +21,11 @@ import { useScrollIonContentToBottom, usePhotos } from "Hooks";
 import ImagesModalWithGallery from "Components/Global/ImagesModalWithGallery";
 import HorizontalScrollThumbnailGallery from "Components/Global/HorizontalScrollThumbnailGallery";
 import ThumbnailGallery from "Components/Global/ThumbnailGallery";
-import AllConsultationsUsed from "Components/Global/AllConsultationsUsed";
 import {
   select_project_data,
   select_consultation_data,
 } from "Store/projects/selectors";
-import { close_consultation } from "Store/consultation/thinks";
+import { close_consultation, message_viewed } from "Store/consultation/thinks";
 
 const Messages = () => {
   const state = useSelector((state) => state);
@@ -95,6 +94,18 @@ const MessageRow = ({ message }) => {
   const { user } = state;
   const is_author_current_user =
     message.author.objectId === user.data?.objectId;
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (
+      (message.author.objectId === user.data.objectId &&
+        !user.data.is_admin &&
+        !message.user_viewed) ||
+      (user.data.is_admin && !message.admin_viewed)
+    ) {
+      dispatch(message_viewed(message));
+    }
+  }, [message, user.data, dispatch]);
 
   return (
     <div

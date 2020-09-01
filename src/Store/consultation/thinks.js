@@ -5,6 +5,8 @@ import {
   SEND_MESSAGE_REQUEST_END,
   CONSULTATION_CLOSE_REQUEST_START,
   CONSULTATION_CLOSE_REQUEST_END,
+  MESSAGE_VIEWED_REQUEST_START,
+  MESSAGE_VIEWED_REQUEST_END,
 } from "./reducer";
 import { add_app_error } from "Store/errors/thinks";
 
@@ -17,6 +19,42 @@ export const change_message_images = (payload) => ({
   type: MESSAGE_IMAGES_CHANGED,
   payload,
 });
+
+export const message_viewed = (message) => async (
+  dispatch,
+  getState,
+  { Parse, StripePromise }
+) => {
+  const { user } = getState();
+  const query = new Parse.Query("message");
+
+  dispatch({
+    type: MESSAGE_VIEWED_REQUEST_START,
+    payload: message.objectId,
+  });
+
+  try {
+    const message_object = await query.get(message.objectId);
+
+    message_object.set(
+      user.data.is_admin ? "admin_viewed" : "user_viewed",
+      new Date()
+    );
+
+    const result = await message.save();
+
+    dispatch({
+      type: MESSAGE_VIEWED_REQUEST_END,
+      payload: message.objectId,
+    });
+  } catch (e) {
+    dispatch({
+      type: MESSAGE_VIEWED_REQUEST_END,
+    });
+
+    dispatch(add_app_error(e.message));
+  }
+};
 
 export const send_message = ({
   project_objectId,

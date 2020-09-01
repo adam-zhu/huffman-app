@@ -40,6 +40,12 @@
 
   ion-item {
     font-size: 0.825rem;
+
+    ion-text {
+      &.not-new {
+        padding-left: 1rem;
+      }
+    }
   }
 
   ion-list {
@@ -84,4 +90,9 @@
 ion-toast.new-project-toast {
   --color: var(--ion-color-primary);
   --background: var(--ion-color-tertiary);
+}
+
+ion-icon.new-indicator {
+  transform: scale(0.5);
+  color: #5fc9f8;
 }

@@ -1,5 +1,5 @@
 const initialState = {
-  consutlation_creation_busy: false,
+  consultation_creation_busy: false,
 };
 
 export const CONSULTATION_CREATE_REQUEST_START =
@@ -12,13 +12,13 @@ export default (state = initialState, action) => {
     case CONSULTATION_CREATE_REQUEST_START:
       return {
         ...state,
-        consutlation_creation_busy: true,
+        consultation_creation_busy: true,
       };
 
     case CONSULTATION_CREATE_REQUEST_END:
       return {
         ...state,
-        consutlation_creation_busy: false,
+        consultation_creation_busy: false,
       };
 
     default:

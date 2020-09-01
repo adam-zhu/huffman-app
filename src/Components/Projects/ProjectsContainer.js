@@ -10,7 +10,9 @@ import {
   IonSkeletonText,
   IonThumbnail,
   IonImg,
+  IonIcon,
 } from "@ionic/react";
+import { ellipse } from "ionicons/icons";
 import "Styles/Projects/ProjectsContainer.scss";
 
 const ProjectsContainer = () => {
@@ -91,6 +93,9 @@ const RegularProjectsList = () => {
 
 const AdminProjectCard = ({ project }) => {
   const project_images = project.project_images || [];
+  const has_new_messages = (project.consultations || [])
+    .flatMap(({ messages }) => messages || [])
+    .find(({ admin_viewed }) => !admin_viewed);
 
   return (
     <IonCard
@@ -98,6 +103,9 @@ const AdminProjectCard = ({ project }) => {
       routerLink={`/projects/${project.objectId}`}
       className="admin-project-card"
     >
+      {has_new_messages && (
+        <IonIcon icon={ellipse} size="small" className="new-indicator" />
+      )}
       <IonCardHeader>
         <IonCardSubtitle>{project.created_by.username}</IonCardSubtitle>
         <IonCardTitle>{project.name}</IonCardTitle>
@@ -120,6 +128,9 @@ const AdminProjectCard = ({ project }) => {
 
 const ProjectPreviewCard = ({ project }) => {
   const project_images = project.project_images || [];
+  const has_new_messages = (project.consultations || [])
+    .flatMap(({ messages }) => messages || [])
+    .find(({ user_viewed }) => !user_viewed);
 
   return (
     <IonCard
@@ -128,6 +139,11 @@ const ProjectPreviewCard = ({ project }) => {
       className="project-preview-card"
     >
       <div className="inner">
+        {has_new_messages && (
+          <div className="new">
+            <IonIcon icon={ellipse} size="small" className="new-indicator" />
+          </div>
+        )}
         {project_images.length >= 1 && (
           <div className="image">
             <IonThumbnail className="thumb">
