@@ -33,7 +33,12 @@ const ProjectsContainer = () => {
         <div className="top">
           {!projects.data?.length && <br />}
           <h1 className="page-title">
-            {!projects.data?.length && <span>Hi {user.data?.first_name}</span>}
+            {!projects.data?.length && (
+              <>
+                <span>Hi {user.data?.first_name}</span>
+                <br />
+              </>
+            )}
             Let's decorate
           </h1>
           {!projects.data?.length && <br />}

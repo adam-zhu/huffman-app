@@ -18,7 +18,6 @@ export const set_form_field_value = (payload) => ({
 export const create_new_project_and_check_out = ({
   selected_package,
 }) => async (dispatch, getState, { Parse, StripePromise }) => {
-  console.log({ selected_package });
   const createProject = async () => {
     const { new_project } = getState();
     const Project = Parse.Object.extend("project");

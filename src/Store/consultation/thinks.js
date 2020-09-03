@@ -38,7 +38,7 @@ export const message_viewed = (message) => async (
 
     message_object.set(
       user.data.is_admin ? "admin_viewed" : "user_viewed",
-      new Date()
+      true
     );
 
     const result = await message_object.save();
