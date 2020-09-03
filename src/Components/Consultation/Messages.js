@@ -108,7 +108,7 @@ const MessageRow = ({ message }) => {
     if (
       ((isProjectOwner && !message.user_viewed) ||
         (isAdmin && !message.admin_viewed)) &&
-      isBusy
+      !isBusy
     ) {
       dispatch(message_viewed(message));
     }
