@@ -91,17 +91,24 @@ const Messages = () => {
 
 const MessageRow = ({ message }) => {
   const state = useSelector((state) => state);
-  const { user } = state;
+  const { user, consultation } = state;
+  const { message_viewed_request_busy } = consultation;
+  const match = useRouteMatch();
+  const project_data = select_project_data({ state, match });
   const is_author_current_user =
     message.author.objectId === user.data?.objectId;
   const dispatch = useDispatch();
 
   useEffect(() => {
+    const isProjectOwner =
+      project_data.created_by.objectId === user.data.objectId;
+    const isAdmin = user.data.is_admin;
+    const isBusy = message_viewed_request_busy[message.objectId];
+
     if (
-      (message.author.objectId === user.data.objectId &&
-        !user.data.is_admin &&
-        !message.user_viewed) ||
-      (user.data.is_admin && !message.admin_viewed)
+      ((isProjectOwner && !message.user_viewed) ||
+        (isAdmin && !message.admin_viewed)) &&
+      isBusy
     ) {
       dispatch(message_viewed(message));
     }

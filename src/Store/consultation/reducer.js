@@ -6,7 +6,7 @@ const initialState = {
   message_input_value: "",
   message_images: [],
   is_message_sending: false,
-  message_viewed_request_busy: false,
+  message_viewed_request_busy: {},
 };
 
 export const NEW_CONSULTATION_START_SUCCESS =
@@ -140,7 +140,10 @@ export default (state = initialState, action) => {
     case MESSAGE_VIEWED_REQUEST_START:
       return {
         ...state,
-        message_viewed_request_busy: true,
+        message_viewed_request_busy: {
+          ...state.message_viewed_request_busy,
+          [action.payload]: true,
+        },
       };
 
     case MESSAGE_VIEWED_REQUEST_END:
