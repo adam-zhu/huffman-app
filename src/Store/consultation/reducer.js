@@ -149,7 +149,10 @@ export default (state = initialState, action) => {
     case MESSAGE_VIEWED_REQUEST_END:
       return {
         ...state,
-        message_viewed_request_busy: false,
+        message_viewed_request_busy: {
+          ...state.message_viewed_request_busy,
+          [action.payload]: false,
+        },
       };
 
     default:

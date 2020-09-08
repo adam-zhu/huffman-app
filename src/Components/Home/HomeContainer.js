@@ -330,6 +330,10 @@ const RegistrationForm = ({
               disabled={is_form_busy}
               required
             />
+            <IonText className="pw-tooltip" color="secondary">
+              Minimum of eight characters in length with at least one uppercase
+              letter, lowercase letter, and digit.
+            </IonText>
           </IonItem>
         </IonList>
         <br />
