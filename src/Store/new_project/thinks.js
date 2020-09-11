@@ -43,18 +43,29 @@ export const create_new_project_and_check_out = ({
     }
   };
   const createImagesAndPackage = async (new_project_data) => {
-    try {
-      await Promise.all([
-        dispatch(create_project_images({ new_project_data })),
-        dispatch(create_package({ new_project_data, selected_package })),
-      ]);
-    } catch (e) {
-      dispatch({
-        type: NEW_PROJECT_CREATE_REQUEST_END,
-      });
-      dispatch(add_app_error(e.message));
+    const [project_images_error, packages_error] = await Promise.all([
+      dispatch(create_project_images({ new_project_data })),
+      dispatch(create_package({ new_project_data, selected_package })),
+    ]);
+    const is_success = project_images_error === null && packages_error === null;
+
+    dispatch({
+      type: NEW_PROJECT_CREATE_REQUEST_END,
+    });
+
+    if (!is_success) {
+      if (project_images_error) {
+        dispatch(add_app_error(project_images_error.message));
+      }
+
+      if (packages_error) {
+        dispatch(add_app_error(packages_error.message));
+      }
+
       dispatch(delete_project(new_project_data.objectId));
     }
+
+    return is_success;
   };
 
   dispatch({
@@ -62,19 +73,23 @@ export const create_new_project_and_check_out = ({
   });
 
   const new_project_data = await createProject();
-
-  await createImagesAndPackage(new_project_data);
+  const project_materials_creation_success = await createImagesAndPackage(
+    new_project_data
+  );
 
   dispatch({
     type: NEW_PROJECT_CREATE_REQUEST_END,
   });
-  dispatch(
-    redirect_to_stripe_checkout({
-      new_project_data,
-      selected_package,
-      StripePromise,
-    })
-  );
+
+  if (project_materials_creation_success) {
+    dispatch(
+      redirect_to_stripe_checkout({
+        new_project_data,
+        selected_package,
+        StripePromise,
+      })
+    );
+  }
 };
 
 const create_project_images = ({ new_project_data }) => async (
@@ -99,7 +114,13 @@ const create_project_images = ({ new_project_data }) => async (
     return ProjectImageObject;
   });
 
-  await Promise.all(ProjectImageObjects.map((o) => o.save()));
+  try {
+    await Promise.all(ProjectImageObjects.map((o) => o.save()));
+
+    return null;
+  } catch (e) {
+    return e;
+  }
 };
 
 const create_package = ({ new_project_data, selected_package }) => async (
@@ -125,7 +146,13 @@ const create_package = ({ new_project_data, selected_package }) => async (
   NewPackageObject.set("price_cents", selected_package.price_cents);
   NewPackageObject.set("image_url", selected_package.image.url);
 
-  await NewPackageObject.save();
+  try {
+    await NewPackageObject.save();
+
+    return null;
+  } catch (e) {
+    return e;
+  }
 };
 
 const delete_project = (project_objectId) => async (

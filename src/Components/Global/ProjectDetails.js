@@ -36,6 +36,7 @@ const ProjectDetails = ({ project_data, hide_title }) => {
               className="questionnaire"
               size="small"
               fill="outline"
+              color="dark"
               routerLink={`/questionnaire/${project_data.objectId}`}
             >
               Questionnaire &rarr;

@@ -236,8 +236,8 @@ const LoginForm = ({
       <IonButton
         expand="full"
         fill="clear"
-        size="small"
-        color="dark"
+        color="primary"
+        size="large"
         onClick={toggle_mode}
       >
         Create an account
@@ -352,8 +352,8 @@ const RegistrationForm = ({
       <IonButton
         expand="full"
         fill="clear"
-        size="small"
-        color="dark"
+        size="large"
+        color="primary"
         onClick={toggle_mode}
       >
         Already have an account?

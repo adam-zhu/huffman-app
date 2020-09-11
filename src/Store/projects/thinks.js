@@ -188,7 +188,7 @@ const get_and_attach_messages = () => async (
   const consultations_data = projects.data.flatMap((p) => p.consultations);
   const messages_query = new Parse.Query("message");
 
-  messages_query.include("created_by");
+  messages_query.include("author");
   messages_query.include("consultation");
   messages_query.ascending("createdAt");
   messages_query.containedIn(
