@@ -10,7 +10,7 @@
     {
       "src": "assets/icon/icon.png",
       "type": "image/png",
-      "sizes": "192x192",
+      "sizes": "150x150",
       "purpose": "maskable"
     }
   ],
