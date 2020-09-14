@@ -12,6 +12,16 @@
       "type": "image/png",
       "sizes": "150x150",
       "purpose": "maskable"
+    },
+    {
+      "src": "assets/icon/apple-touch-icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "assets/icon/apple-touch-icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
     }
   ],
   "start_url": "https://letsdecorateapp.com",
