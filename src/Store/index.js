@@ -1,5 +1,4 @@
 import { createStore, applyMiddleware } from "redux";
-import { composeWithDevTools } from "redux-devtools-extension/developmentOnly";
 import Parse from "parse";
 import { loadStripe } from "@stripe/stripe-js";
 import thunkMiddleware from "redux-thunk";
