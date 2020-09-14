@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import qs from "query-string";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory, useRouteMatch, useLocation } from "react-router-dom";
 import { IonHeader, IonToolbar, IonButtons, IonButton } from "@ionic/react";
 import { log_user_out } from "Store/user/thinks";
 import { select_project_data } from "Store/projects/selectors";
+import "Styles/Global/Header.scss";
 
 const Header = () => {
   const { user } = useSelector((state) => state);
@@ -17,6 +18,7 @@ const Header = () => {
       <IonToolbar>
         <IonButtons slot="start">
           <BackButton />
+          <InstallButton />
         </IonButtons>
         <IonButtons slot="end">
           {user.data && (
@@ -85,6 +87,36 @@ const BackButton = () => {
   return (
     <IonButton routerLink={href} routerDirection={routerDirection}>
       &larr;&nbsp;{text}
+    </IonButton>
+  );
+};
+
+const InstallButton = () => {
+  const [is_visible, set_is_visible] = useState(false);
+  const click_handler = (e) => {
+    set_is_visible(false);
+    window.deferredPrompt.prompt();
+
+    window.deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome !== "accepted") {
+        set_is_visible(true);
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (window.deferredPrompt) {
+      alert("ass");
+    }
+  }, []);
+
+  if (!is_visible) {
+    return null;
+  }
+
+  return (
+    <IonButton id="install-button" onClick={click_handler}>
+      Add to Home Screen
     </IonButton>
   );
 };

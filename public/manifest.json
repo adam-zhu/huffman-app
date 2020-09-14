@@ -3,12 +3,18 @@
   "name": "Let's Decorate - Your Decorator On Demand",
   "icons": [
     {
-      "src": "assets/icon/app-icon.png",
+      "src": "assets/icon/favicon.png",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "assets/icon/icon.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "maskable"
     }
   ],
-  "start_url": "https://letsdecorateapp.com",
+  "start_url": "https://letsdecoratapp.com",
   "display": "standalone",
   "theme_color": "#ffffff",
   "background_color": "#ffffff"

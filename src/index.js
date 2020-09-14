@@ -12,3 +12,10 @@ defineCustomElements(window);
 // unregister() to register() below.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.register();
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  // Prevent the mini-infobar from appearing on mobile
+  e.preventDefault();
+  // Stash the event so it can be triggered later.
+  window.deferredPrompt = e;
+});
