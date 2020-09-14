@@ -24,7 +24,7 @@
       "sizes": "192x192"
     }
   ],
-  "start_url": "https://letsdecorateapp.com",
+  "start_url": "/",
   "display": "standalone",
   "theme_color": "#ffffff",
   "background_color": "#ffffff"
