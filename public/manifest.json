@@ -24,7 +24,7 @@
       "sizes": "192x192"
     }
   ],
-  "start_url": "index.html",
+  "start_url": "/projects",
   "scope": "/",
   "display": "standalone",
   "theme_color": "#ffffff",
