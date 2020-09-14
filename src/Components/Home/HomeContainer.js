@@ -335,9 +335,21 @@ const RegistrationForm = ({
               letter, lowercase letter, and digit.
             </IonText>
           </IonItem>
+          <br />
+          <IonItem>
+            <IonText className="terms" color="secondary">
+              By creating an account, you agree to the
+              <br />
+              <a
+                href="https://www.websitepolicies.com/policies/view/491ry5CQ"
+                target="_blank"
+              >
+                Let's Decorate terms and conditions
+              </a>
+              .
+            </IonText>
+          </IonItem>
         </IonList>
-        <br />
-        <br />
         <IonButton
           expand="block"
           disabled={is_form_busy}

@@ -77,6 +77,16 @@
       }
     }
 
+    .terms {
+      width: 100%;
+      text-align: center;
+      font-size: 0.666em;
+
+      a {
+        display: inline-block;
+      }
+    }
+
     .back-button {
       display: block;
       flex: none;
