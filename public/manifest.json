@@ -24,8 +24,8 @@
       "sizes": "192x192"
     }
   ],
-  "start_url": "/projects",
-  "scope": "/",
+  "start_url": "https://letsdecorateapp.com/projects",
+  "scope": "https://letsdecorateapp.com",
   "display": "standalone",
   "theme_color": "#ffffff",
   "background_color": "#ffffff"
