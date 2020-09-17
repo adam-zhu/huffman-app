@@ -14,6 +14,8 @@ const Header = () => {
   const location = useLocation();
   const log_out_handler = () => dispatch(log_user_out(history));
 
+  console.log(location);
+
   return (
     <IonHeader>
       <IonToolbar>
