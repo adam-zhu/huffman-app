@@ -11,14 +11,18 @@ const Header = () => {
   const { user } = useSelector((state) => state);
   const dispatch = useDispatch();
   const history = useHistory();
+  const location = useLocation();
   const log_out_handler = () => dispatch(log_user_out(history));
 
   return (
     <IonHeader>
       <IonToolbar>
         <IonButtons slot="start">
-          <BackButton />
-          <InstallButton />
+          {location.pathname === "/" || location.pathname === "/projects" ? (
+            <InstallButton />
+          ) : (
+            <BackButton />
+          )}
         </IonButtons>
         <IonButtons slot="end">
           {user.data && (
