@@ -1,5 +1,9 @@
-@media (display-mode: standalone) {
+#install-button {
+  display: none;
+}
+
+@media (display-mode: browser) {
   #install-button {
-    display: none;
+    display: block;
   }
 }
