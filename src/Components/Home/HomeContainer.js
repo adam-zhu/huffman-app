@@ -170,15 +170,26 @@ const LoginForm = ({
   return (
     <div className="form">
       <form onSubmit={submit_handler} className="login">
-        <IonList lines="none">
-          <IonListHeader>
-            <h1 className="title">
-              <span className="lead">Welcome to</span>
-              <br />
-              Let's Decorate
-            </h1>
-          </IonListHeader>
+        <h1 className="title">
+          <span className="lead">Welcome to</span>
           <br />
+          Let's Decorate
+        </h1>
+        <br />
+        <div style={{ textAlign: "center" }}>
+          <IonButton
+            className="create-an-account-button"
+            expand="block"
+            size="small"
+            fill="outline"
+            color="primary"
+            onClick={toggle_mode}
+          >
+            Create an account
+          </IonButton>
+        </div>
+        <br />
+        <IonList lines="none">
           <IonItem>
             <IonLabel position="floating">
               Email<IonText color="primary">*</IonText>
@@ -232,16 +243,6 @@ const LoginForm = ({
           Log In
         </IonButton>
       </form>
-      <br />
-      <IonButton
-        expand="full"
-        fill="clear"
-        color="primary"
-        size="large"
-        onClick={toggle_mode}
-      >
-        Create an account
-      </IonButton>
     </div>
   );
 };
