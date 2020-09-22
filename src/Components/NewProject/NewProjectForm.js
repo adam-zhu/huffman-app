@@ -14,6 +14,7 @@ import {
   IonThumbnail,
   IonImg,
   IonIcon,
+  IonLoading,
 } from "@ionic/react";
 import {
   cameraOutline,
@@ -126,6 +127,12 @@ const NewProjectForm = () => {
 
   return (
     <div className="new-project-form-container">
+      <IonLoading
+        isOpen={busy}
+        message={
+          "Please wait while your project is being created. You will be redirected to checkout momentarily..."
+        }
+      />
       <form className="new-project" onSubmit={submit_handler}>
         <h1 className="title">Create a new project</h1>
         <IonList lines="none">

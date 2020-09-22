@@ -86,7 +86,6 @@ export const create_new_project_and_check_out = ({
       redirect_to_stripe_checkout({
         new_project_data,
         selected_package,
-        StripePromise,
       })
     );
   }
@@ -194,24 +193,37 @@ const delete_project = (project_objectId) => async (
   }
 };
 
+const create_stripe_session = ({
+  new_project_data,
+  selected_package,
+}) => async (dispatch, getState, { Parse, StripePromise }) => {
+  const { user } = getState();
+  const appUrlBase =
+    process.env.NODE_ENV === "production" ? PUBLIC_URL : DEV_URL;
+  const success_url = `${appUrlBase}/stripe_callback/new_project/success?project_objectId=${new_project_data.objectId}`;
+  const cancel_url = `${appUrlBase}/stripe_callback/new_project/cancelled?project_objectId=${new_project_data.objectId}`;
+  const price_id = selected_package.price.id;
+  const customer_email = user.data.email;
+  const session_id = await Parse.Cloud.run("create_stripe_checkout_session", {
+    success_url,
+    cancel_url,
+    price_id,
+    customer_email,
+  });
+
+  return session_id;
+};
+
 const redirect_to_stripe_checkout = ({
   new_project_data,
   selected_package,
-  StripePromise,
 }) => async (dispatch, getState, { Parse, StripePromise }) => {
-  const appUrlBase =
-    process.env.NODE_ENV === "production" ? PUBLIC_URL : DEV_URL;
-  const Stripe = await StripePromise;
+  const [Stripe, sessionId] = await Promise.all([
+    StripePromise,
+    dispatch(create_stripe_session({ new_project_data, selected_package })),
+  ]);
   const { error } = await Stripe.redirectToCheckout({
-    lineItems: [
-      {
-        price: selected_package.price.id, // Replace with the ID of your price
-        quantity: 1,
-      },
-    ],
-    mode: "payment",
-    successUrl: `${appUrlBase}/stripe_callback/new_project/success?project_objectId=${new_project_data.objectId}`,
-    cancelUrl: `${appUrlBase}/stripe_callback/new_project/cancelled?project_objectId=${new_project_data.objectId}`,
+    sessionId,
   });
 
   if (error) {
