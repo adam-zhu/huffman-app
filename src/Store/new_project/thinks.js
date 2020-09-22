@@ -4,7 +4,6 @@ import {
   NEW_PROJECT_CREATE_REQUEST_END,
   NEW_PROJECT_CANCELLATION_REQUEST_START,
   NEW_PROJECT_CANCELLATION_REQUEST_END,
-  RESET_REDUCER_STATE,
 } from "./reducer";
 import { add_app_error } from "Store/errors/thinks";
 import { get_data_and_listen_for_changes } from "Store/projects/thinks";
@@ -29,6 +28,7 @@ export const create_new_project_and_check_out = ({
     NewProjectObject.set("room_length", new_project.room_length);
     NewProjectObject.set("room_height", new_project.room_height);
     NewProjectObject.set("created_by", Parse.User.current());
+    NewProjectObject.set("paid", false);
 
     try {
       const result = await NewProjectObject.save();
@@ -247,5 +247,27 @@ export const new_project_payment_cancelled = ({
   if (is_success) {
     dispatch(get_data_and_listen_for_changes());
     history.replace("/new?cancelled=true");
+  }
+};
+
+export const mark_project_paid = (project_objectId) => async (
+  dispatch,
+  getState,
+  { Parse, StripePromise }
+) => {
+  const project_query = new Parse.Query("project");
+
+  try {
+    const project = project_query.get(project_objectId);
+
+    project.set("paid", true);
+
+    await project.save();
+
+    return { is_success: true };
+  } catch (e) {
+    dispatch(add_app_error(e.message));
+
+    return { is_success: false };
   }
 };

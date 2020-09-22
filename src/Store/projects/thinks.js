@@ -45,6 +45,7 @@ export const get_data_and_listen_for_changes = () => async (
 
   projects_query.include("created_by");
   projects_query.descending("createdAt");
+  projects_query.equalTo("paid", true);
 
   try {
     const [project_results, packages_product_data] = await Promise.all([
