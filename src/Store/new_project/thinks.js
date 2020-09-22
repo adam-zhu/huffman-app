@@ -258,7 +258,7 @@ export const mark_project_paid = (project_objectId) => async (
   const project_query = new Parse.Query("project");
 
   try {
-    const project = project_query.get(project_objectId);
+    const project = await project_query.get(project_objectId);
 
     project.set("paid", true);
 
