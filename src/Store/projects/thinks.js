@@ -64,9 +64,8 @@ export const get_data_and_listen_for_changes = () => async (
       payload: packages_product_data,
     });
 
-    dispatch(
-      get_and_attach_project_images_packages_and_consultations(projects_data)
-    );
+    dispatch(get_and_attach_project_images_and_packages());
+    dispatch(get_and_attach_consultations());
   } catch (e) {
     dispatch({
       type: PROJECTS_GET_REQUEST_END,
@@ -80,7 +79,7 @@ export const get_data_and_listen_for_changes = () => async (
   }
 };
 
-const get_and_attach_project_images_packages_and_consultations = () => async (
+const get_and_attach_project_images_and_packages = () => async (
   dispatch,
   getState,
   { Parse, StripePromise }
@@ -95,13 +94,8 @@ const get_and_attach_project_images_packages_and_consultations = () => async (
     type: PACKAGES_GET_REQUEST_START,
   });
 
-  dispatch({
-    type: CONSULTATIONS_GET_REQUEST_START,
-  });
-
   const project_images_query = new Parse.Query("project_image");
   const packages_query = new Parse.Query("package");
-  const consultations_query = new Parse.Query("consultation");
 
   project_images_query.include("created_by");
   project_images_query.include("project");
@@ -123,6 +117,49 @@ const get_and_attach_project_images_packages_and_consultations = () => async (
     )
   );
 
+  try {
+    const [project_images_results, packages_results] = await Promise.all([
+      project_images_query.find(),
+      packages_query.find(),
+    ]);
+    const project_images_data = project_images_results.map((r) => r.toJSON());
+    const packages_data = packages_results.map((r) => r.toJSON());
+
+    dispatch({
+      type: PROJECT_IMAGES_GET_REQUEST_END,
+      payload: project_images_data,
+    });
+
+    dispatch({
+      type: PACKAGES_GET_REQUEST_END,
+      payload: packages_data,
+    });
+  } catch (e) {
+    dispatch({
+      type: PROJECT_IMAGES_GET_REQUEST_END,
+    });
+
+    dispatch({
+      type: PACKAGES_GET_REQUEST_END,
+    });
+
+    dispatch(add_app_error(e.message));
+  }
+};
+
+const get_and_attach_consultations = () => async (
+  dispatch,
+  getState,
+  { Parse, StripePromise }
+) => {
+  const { projects } = getState();
+
+  dispatch({
+    type: CONSULTATIONS_GET_REQUEST_START,
+  });
+
+  const consultations_query = new Parse.Query("consultation");
+
   consultations_query.include("created_by");
   consultations_query.include("project");
   consultations_query.ascending("createdAt");
@@ -134,28 +171,8 @@ const get_and_attach_project_images_packages_and_consultations = () => async (
   );
 
   try {
-    const [
-      project_images_results,
-      packages_results,
-      consultations_results,
-    ] = await Promise.all([
-      project_images_query.find(),
-      packages_query.find(),
-      consultations_query.find(),
-    ]);
-    const project_images_data = project_images_results.map((r) => r.toJSON());
-    const packages_data = packages_results.map((r) => r.toJSON());
+    const consultations_results = await consultations_query.find();
     const consultations_data = consultations_results.map((r) => r.toJSON());
-
-    dispatch({
-      type: PROJECT_IMAGES_GET_REQUEST_END,
-      payload: project_images_data,
-    });
-
-    dispatch({
-      type: PACKAGES_GET_REQUEST_END,
-      payload: packages_data,
-    });
 
     dispatch({
       type: CONSULTATIONS_GET_REQUEST_END,
@@ -164,14 +181,6 @@ const get_and_attach_project_images_packages_and_consultations = () => async (
 
     dispatch(get_and_attach_messages());
   } catch (e) {
-    dispatch({
-      type: PROJECT_IMAGES_GET_REQUEST_END,
-    });
-
-    dispatch({
-      type: PACKAGES_GET_REQUEST_END,
-    });
-
     dispatch({
       type: CONSULTATIONS_GET_REQUEST_END,
     });
@@ -264,11 +273,19 @@ const listen_for_changes = () => async (
   messages_query.include("consultation");
   messages_query.containedIn("consultation", consultation_pointers);
 
-  const projects_subscription = await projects_query.subscribe();
-  const packages_subscription = await packages_query.subscribe();
-  const project_images_subscription = await project_images_query.subscribe();
-  const consultations_subscription = await consultations_query.subscribe();
-  const messages_subscription = await messages_query.subscribe();
+  const [
+    projects_subscription,
+    packages_subscription,
+    project_images_subscription,
+    consultations_subscription,
+    messages_subscription,
+  ] = await Promise.all([
+    projects_query.subscribe(),
+    packages_query.subscribe(),
+    project_images_query.subscribe(),
+    consultations_query.subscribe(),
+    messages_query.subscribe(),
+  ]);
   const subscriptions = {
     project: projects_subscription,
     project_image: project_images_subscription,
@@ -286,7 +303,9 @@ const listen_for_changes = () => async (
   const handler = (event_type) => (data_type) => async (data) => {
     if (
       event_type === "create" &&
-      (data_type === "project" || data_type === "consultation")
+      (data_type === "project" ||
+        data_type === "consultation" ||
+        data_type === "package")
     ) {
       await dispatch(stop_listening_for_changes());
       await dispatch(get_data_and_listen_for_changes());

@@ -16,14 +16,13 @@ const NewProjectSuccessContainer = () => {
   const project_url = `/questionnaire/${project_objectId}?new_project=true`;
 
   useEffect(() => {
-    if (is_success === true) {
-      history.replace(project_url);
-    } else {
-      dispatch(mark_project_paid(project_objectId)).then(({ is_success }) =>
-        set_is_success(is_success)
-      );
-    }
-  }, [is_success, project_objectId, history, dispatch, project_url]);
+    dispatch(mark_project_paid(project_objectId)).then((result) => {
+      set_is_success(result.is_success);
+      if (result.is_success) {
+        history.replace(project_url);
+      }
+    });
+  }, []);
 
   return (
     <PageContainer
@@ -32,7 +31,7 @@ const NewProjectSuccessContainer = () => {
     >
       <IonLoading
         cssClass="stripe-redirect-loading"
-        isOpen={true}
+        isOpen={is_success === null}
         message="Payment success! Please wait while we redirect you to your project..."
       />
     </PageContainer>

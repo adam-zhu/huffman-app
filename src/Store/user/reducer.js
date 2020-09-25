@@ -7,6 +7,7 @@ const initialState = {
   is_registration_request_busy: false,
   is_signin_request_busy: false,
   is_signout_request_busy: false,
+  is_set_has_active_connection_request_busy: false,
 };
 
 export const FIRST_NAME_INPUT_VALUE_CHANGE =
@@ -24,6 +25,11 @@ export const SIGNIN_REQUEST_END = "user/SIGNIN_REQUEST_END";
 export const SIGNOUT_REQUEST_START = "user/SIGNOUT_REQUEST_START";
 export const SIGNOUT_REQUEST_END = "user/SIGNOUT_REQUEST_END";
 export const RESTORE_USER_SESSION = "user/RESTORE_USER_SESSION";
+export const SET_HAS_ACTIVE_CONNECTION_REQUEST_START =
+  "user/SET_HAS_ACTIVE_CONNECTION_REQUEST_START";
+export const SET_HAS_ACTIVE_CONNECTION_REQUEST_END =
+  "user/SET_HAS_ACTIVE_CONNECTION_REQUEST_END";
+export const SET_USER_DATA = "user/SET_USER_DATA";
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -82,7 +88,6 @@ export default (state = initialState, action) => {
     case SIGNIN_REQUEST_END:
       return {
         ...state,
-        data: action.payload,
         is_signin_request_busy: false,
       };
 
@@ -95,11 +100,23 @@ export default (state = initialState, action) => {
     case SIGNOUT_REQUEST_END:
       return {
         ...state,
-        data: undefined,
         is_signout_request_busy: false,
+        data: undefined,
       };
 
-    case RESTORE_USER_SESSION:
+    case SET_HAS_ACTIVE_CONNECTION_REQUEST_START:
+      return {
+        ...state,
+        is_set_has_active_connection_request_busy: true,
+      };
+
+    case SET_HAS_ACTIVE_CONNECTION_REQUEST_END:
+      return {
+        ...state,
+        is_set_has_active_connection_request_busy: false,
+      };
+
+    case SET_USER_DATA:
       return {
         ...state,
         data: action.payload,

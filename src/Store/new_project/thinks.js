@@ -4,6 +4,8 @@ import {
   NEW_PROJECT_CREATE_REQUEST_END,
   NEW_PROJECT_CANCELLATION_REQUEST_START,
   NEW_PROJECT_CANCELLATION_REQUEST_END,
+  MARK_PACKAGE_PAID_REQUEST_START,
+  MARK_PACKAGE_PAID_REQUEST_END,
 } from "./reducer";
 import { add_app_error } from "Store/errors/thinks";
 import { get_data_and_listen_for_changes } from "Store/projects/thinks";
@@ -250,19 +252,55 @@ export const new_project_payment_cancelled = ({
   }
 };
 
+export const mark_package_paid = (package_objectId) => async (
+  dispatch,
+  getState,
+  { Parse, StripePromise }
+) => {
+  const package_query = new Parse.Query("package");
+
+  try {
+    const package_object = await package_query.get(package_objectId);
+
+    package_object.set("paid", true);
+
+    await package_object.save();
+
+    return { is_success: true };
+  } catch (e) {
+    dispatch(add_app_error(e.message));
+
+    return { is_success: false };
+  }
+};
+
 export const mark_project_paid = (project_objectId) => async (
   dispatch,
   getState,
   { Parse, StripePromise }
 ) => {
   const project_query = new Parse.Query("project");
+  const package_query = new Parse.Query("package");
+
+  package_query.equalTo(
+    "project",
+    Parse.Object.extend("project").createWithoutData(project_objectId)
+  );
 
   try {
-    const project = await project_query.get(project_objectId);
+    const [project_object, package_objects] = await Promise.all([
+      project_query.get(project_objectId),
+      package_query.find(),
+    ]);
 
-    project.set("paid", true);
+    project_object.set("paid", true);
 
-    await project.save();
+    await Promise.all([
+      project_object.save(),
+      ...package_objects.map((p) =>
+        dispatch(mark_package_paid(p.get("objectId")))
+      ),
+    ]);
 
     return { is_success: true };
   } catch (e) {

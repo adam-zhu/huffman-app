@@ -52,8 +52,7 @@ const Toasts = ({ project_data }) => {
   const url_query_params = qs.parse(search);
   const most_recent_package_consultations_count =
     project_data && project_data.packages && project_data.packages.length > 0
-      ? project_data.packages[project_data.packages.length - 1]
-          .included_consultations_count
+      ? project_data.packages.find((p) => p.paid)?.included_consultations_count
       : null;
 
   return (
@@ -115,10 +114,9 @@ const ConsultationsCountAndCTA = ({ project_data }) => {
   }
 
   const included_consultations_count = project_data.packages
-    ? project_data.packages.reduce(
-        (acc, p) => acc + p.included_consultations_count,
-        0
-      )
+    ? project_data.packages
+        .filter((p) => p.paid)
+        .reduce((acc, p) => acc + p.included_consultations_count, 0)
     : null;
 
   return (

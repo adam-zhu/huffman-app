@@ -35,7 +35,6 @@ export const create_and_attach_package = ({
 
   try {
     const result = await NewPackageObject.save();
-    const created_package = result.toJSON();
 
     dispatch({
       type: ADD_PACKAGE_REQUEST_END,
@@ -44,8 +43,7 @@ export const create_and_attach_package = ({
     dispatch(
       redirect_to_stripe_checkout({
         project_data,
-        package_data: created_package,
-        StripePromise,
+        package_data: result.toJSON(),
       })
     );
   } catch (e) {
@@ -57,33 +55,43 @@ export const create_and_attach_package = ({
   }
 };
 
-const redirect_to_stripe_checkout = ({
-  project_data,
-  package_data,
-  StripePromise,
-}) => async (dispatch, getState, { Parse, StripePromise }) => {
-  try {
-    const appUrlBase =
-      process.env.NODE_ENV === "production" ? PUBLIC_URL : DEV_URL;
-    const Stripe = await StripePromise;
-    const { error } = await Stripe.redirectToCheckout({
-      lineItems: [
-        {
-          price: package_data.stripe_price_id,
-          quantity: 1,
-        },
-      ],
-      mode: "payment",
-      successUrl: `${appUrlBase}/stripe_callback/more_consultations/success?project_objectId=${project_data.objectId}&=true`,
-      cancelUrl: `${appUrlBase}/stripe_callback/more_consultations/cancelled?project_objectId=${project_data.objectId}&package_objectId=${package_data.objectId}`,
-    });
+const create_stripe_session = ({ project_data, package_data }) => async (
+  dispatch,
+  getState,
+  { Parse, StripePromise }
+) => {
+  const { user } = getState();
+  const appUrlBase =
+    process.env.NODE_ENV === "production" ? PUBLIC_URL : DEV_URL;
+  const success_url = `${appUrlBase}/stripe_callback/more_consultations/success?project_objectId=${project_data.objectId}&=true`;
+  const cancel_url = `${appUrlBase}/stripe_callback/more_consultations/cancelled?project_objectId=${project_data.objectId}&package_objectId=${package_data.objectId}`;
+  const price_id = package_data.stripe_price_id;
+  const customer_email = user.data.email;
+  const session_id = await Parse.Cloud.run("create_stripe_checkout_session", {
+    success_url,
+    cancel_url,
+    price_id,
+    customer_email,
+  });
 
-    if (error) {
-      dispatch(add_app_error(error.message));
-      dispatch(delete_package(package_data.objectId));
-    }
-  } catch (e) {
-    dispatch(add_app_error(e.message));
+  return session_id;
+};
+
+const redirect_to_stripe_checkout = ({ project_data, package_data }) => async (
+  dispatch,
+  getState,
+  { Parse, StripePromise }
+) => {
+  const [Stripe, sessionId] = await Promise.all([
+    StripePromise,
+    dispatch(create_stripe_session({ project_data, package_data })),
+  ]);
+  const { error } = await Stripe.redirectToCheckout({
+    sessionId,
+  });
+
+  if (error) {
+    dispatch(add_app_error(error.message));
     dispatch(delete_package(package_data.objectId));
   }
 };

@@ -10,7 +10,9 @@ import {
   SIGNIN_REQUEST_END,
   SIGNOUT_REQUEST_START,
   SIGNOUT_REQUEST_END,
-  RESTORE_USER_SESSION,
+  SET_HAS_ACTIVE_CONNECTION_REQUEST_START,
+  SET_HAS_ACTIVE_CONNECTION_REQUEST_END,
+  SET_USER_DATA,
 } from "./reducer";
 import { add_app_error } from "Store/errors/thinks";
 
@@ -27,13 +29,18 @@ export const check_for_current_session = () => async (
 
     try {
       const user_data = await query.get(cached_user_data.objectId);
+      const data = user_data.toJSON();
 
-      return dispatch({
-        type: RESTORE_USER_SESSION,
-        payload: user_data.toJSON(),
-      });
+      dispatch(
+        data.emailVerified
+          ? establish_user(data)
+          : {
+              type: SET_USER_DATA,
+              payload: data,
+            }
+      );
     } catch (e) {
-      return dispatch(add_app_error(e.message));
+      dispatch(add_app_error(e.message));
     }
   }
 };
@@ -94,11 +101,16 @@ export const register_user = () => async (
     new_user.set("username", email_input_value);
     new_user.set("email", email_input_value);
     new_user.set("password", password_input_value);
+    new_user.set("has_active_connection", true);
 
     const created_user = await new_user.signUp();
 
     dispatch({
       type: USER_REGISTRATION_REQUEST_END,
+    });
+
+    dispatch({
+      type: SET_USER_DATA,
       payload: created_user.toJSON(),
     });
   } catch (e) {
@@ -155,8 +167,9 @@ export const log_user_in = () => async (
 
     dispatch({
       type: SIGNIN_REQUEST_END,
-      payload: logged_in_user.toJSON(),
     });
+
+    dispatch(establish_user(logged_in_user.toJSON()));
   } catch (e) {
     dispatch({
       type: SIGNIN_REQUEST_END,
@@ -246,4 +259,75 @@ export const resend_verification_email = ({
   } catch (e) {
     on_failure(e.message);
   }
+};
+
+const set_has_active_connection = (has_active_connection) => async (
+  dispatch,
+  getState,
+  { Parse, StripePromise }
+) => {
+  const { user } = getState();
+  const User = new Parse.User();
+  const query = new Parse.Query(User);
+
+  dispatch({
+    type: SET_HAS_ACTIVE_CONNECTION_REQUEST_START,
+    payload: has_active_connection,
+  });
+
+  try {
+    const user_data = await query.get(user.data.objectId);
+
+    user_data.set("has_active_connection", has_active_connection);
+
+    await user_data.save();
+
+    dispatch({
+      type: SET_HAS_ACTIVE_CONNECTION_REQUEST_END,
+      payload: has_active_connection,
+    });
+  } catch (e) {
+    dispatch(add_app_error(e.message));
+
+    dispatch({
+      type: SET_HAS_ACTIVE_CONNECTION_REQUEST_END,
+      payload: has_active_connection,
+    });
+  }
+};
+
+const establish_user = (user_data) => (dispatch, getState) => {
+  var vis = (function () {
+    var stateKey,
+      eventKey,
+      keys = {
+        hidden: "visibilitychange",
+        webkitHidden: "webkitvisibilitychange",
+        mozHidden: "mozvisibilitychange",
+        msHidden: "msvisibilitychange",
+      };
+
+    for (stateKey in keys) {
+      if (stateKey in document) {
+        eventKey = keys[stateKey];
+        break;
+      }
+    }
+
+    return function (c) {
+      if (c) document.addEventListener(eventKey, c);
+      return !document[stateKey];
+    };
+  })();
+  const connect_user = () => dispatch(set_has_active_connection(true));
+  const disconnect_user = () => dispatch(set_has_active_connection(false));
+
+  dispatch({
+    type: SET_USER_DATA,
+    payload: user_data,
+  });
+
+  connect_user();
+
+  vis(() => (vis() === true ? connect_user() : disconnect_user()));
 };

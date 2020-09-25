@@ -60,7 +60,7 @@ export const send_message = ({
   project_objectId,
   consultation_objectId,
 }) => async (dispatch, getState, { Parse, StripePromise }) => {
-  const { projects, consultation } = getState();
+  const { user, projects, consultation } = getState();
   const { message_input_value, message_images } = consultation;
   const project_data = projects.data.find(
     (p) => p.objectId === project_objectId
@@ -88,10 +88,19 @@ export const send_message = ({
     const new_message_data = await new_message.save();
 
     if (message_images.length > 0) {
-      return dispatch(
+      await dispatch(
         create_and_attach_project_images({
           message_data: new_message_data.toJSON(),
           project_objectId,
+        })
+      );
+    }
+
+    if (user.data.is_admin) {
+      dispatch(
+        send_notification({
+          user: project_data.created_by,
+          message: `You have a new message on Let's Decorate: https://letsdecorateapp.com/${project_objectId}/${consultation_objectId}`,
         })
       );
     }
@@ -106,6 +115,29 @@ export const send_message = ({
 
     dispatch(add_app_error(e.message));
   }
+};
+
+const send_notification = ({ user, message }) => async (
+  dispatch,
+  getState,
+  { Parse }
+) => {
+  // const user_query = new Parse.Query('User');
+  // const user_object = await user_query.get(user.objectId);
+  // if (user_object.get('has_active_connection') === false) {
+  //   const message_data = {
+  //     to: user.phone,
+  //     from: '+12512765994',
+  //     body: message,
+  //   };
+  //   const notification_result = await Parse.Cloud.run(
+  //     'send_sms_notification',
+  //     message_data
+  //   );
+  //   if (notification_result.error_message) {
+  //     dispatch(add_app_error(notification_result.error_message));
+  //   }
+  // }
 };
 
 const create_and_attach_project_images = ({
@@ -179,3 +211,5 @@ export const close_consultation = (consultation_objectId) => async (
     dispatch(add_app_error(e.message));
   }
 };
+
+const handle_notification = () => (dispatch, getState) => {};

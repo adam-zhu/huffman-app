@@ -1,20 +1,29 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import qs from "query-string";
+import { useDispatch } from "react-redux";
 import { useLocation, useHistory } from "react-router-dom";
 import PageContainer from "Components/Global/PageContainer";
 import { IonLoading } from "@ionic/react";
+import { mark_package_paid } from "Store/new_project/thinks";
 import "Styles/StripeCallback/MoreConsultations/MoreConsultationsSuccessContainer.scss";
 
 const MoreConsultationsSuccessContainer = () => {
+  const [is_marked_paid, set_is_marked_paid] = useState(null);
   const location = useLocation();
-  const { project_objectId } = qs.parse(location.search);
   const history = useHistory();
-  const project_url = `/projects/${project_objectId}?more_consultations=true`;
-  const redirect = () => history.replace(project_url);
-  const wait_duration = 2000;
+  const dispatch = useDispatch();
+  const { project_objectId, package_objectId } = qs.parse(location.search);
 
   useEffect(() => {
-    setTimeout(redirect, wait_duration);
+    dispatch(mark_package_paid(package_objectId)).then(({ is_success }) => {
+      set_is_marked_paid(is_success);
+
+      if (is_success) {
+        history.replace(
+          `/projects/${project_objectId}?more_consultations=true`
+        );
+      }
+    });
   }, []);
 
   return (
@@ -24,9 +33,8 @@ const MoreConsultationsSuccessContainer = () => {
     >
       <IonLoading
         cssClass="stripe-redirect-loading"
-        isOpen={true}
+        isOpen={is_marked_paid === null}
         message="Payment success! Please wait while we configure your project..."
-        duration={wait_duration}
       />
     </PageContainer>
   );
