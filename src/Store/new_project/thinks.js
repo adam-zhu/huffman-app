@@ -259,6 +259,11 @@ export const mark_package_paid = (package_objectId) => async (
 ) => {
   const package_query = new Parse.Query("package");
 
+  dispatch({
+    type: MARK_PACKAGE_PAID_REQUEST_START,
+    payload: package_objectId,
+  });
+
   try {
     const package_object = await package_query.get(package_objectId);
 
@@ -266,9 +271,19 @@ export const mark_package_paid = (package_objectId) => async (
 
     await package_object.save();
 
+    dispatch({
+      type: MARK_PACKAGE_PAID_REQUEST_END,
+      payload: package_objectId,
+    });
+
     return { is_success: true };
   } catch (e) {
     dispatch(add_app_error(e.message));
+
+    dispatch({
+      type: MARK_PACKAGE_PAID_REQUEST_END,
+      payload: package_objectId,
+    });
 
     return { is_success: false };
   }
@@ -281,6 +296,11 @@ export const mark_project_paid = (project_objectId) => async (
 ) => {
   const project_query = new Parse.Query("project");
   const package_query = new Parse.Query("package");
+
+  dispatch({
+    type: "new_project/MARK_PROJECT_PAID_START",
+    payload: project_objectId,
+  });
 
   package_query.equalTo(
     "project",
@@ -298,13 +318,23 @@ export const mark_project_paid = (project_objectId) => async (
     await Promise.all([
       project_object.save(),
       ...package_objects.map((p) =>
-        dispatch(mark_package_paid(p.get("objectId")))
+        dispatch(mark_package_paid(p.toJSON().objectId))
       ),
     ]);
+
+    dispatch({
+      type: "new_project/MARK_PROJECT_PAID_END",
+      payload: project_objectId,
+    });
 
     return { is_success: true };
   } catch (e) {
     dispatch(add_app_error(e.message));
+
+    dispatch({
+      type: "new_project/MARK_PROJECT_PAID_END",
+      payload: project_objectId,
+    });
 
     return { is_success: false };
   }
