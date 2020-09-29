@@ -46,6 +46,7 @@ export const get_data_and_listen_for_changes = () => async (
   projects_query.include("created_by");
   projects_query.descending("createdAt");
   projects_query.equalTo("paid", true);
+  projects_query.limit(99999999999);
 
   try {
     const [project_results, packages_product_data] = await Promise.all([
@@ -107,6 +108,7 @@ const get_and_attach_project_images_and_packages = () => async (
       Parse.Object.extend("project").createWithoutData(p.objectId)
     )
   );
+  project_images_query.limit(99999999999);
 
   packages_query.include("project");
   packages_query.ascending("createdAt");
@@ -116,6 +118,7 @@ const get_and_attach_project_images_and_packages = () => async (
       Parse.Object.extend("project").createWithoutData(p.objectId)
     )
   );
+  packages_query.limit(99999999999);
 
   try {
     const [project_images_results, packages_results] = await Promise.all([
@@ -169,6 +172,7 @@ const get_and_attach_consultations = () => async (
       Parse.Object.extend("project").createWithoutData(p.objectId)
     )
   );
+  consultations_query.limit(99999999999);
 
   try {
     const consultations_results = await consultations_query.find();
@@ -207,6 +211,7 @@ const get_and_attach_messages = () => async (
       Parse.Object.extend("consultation").createWithoutData(c.objectId)
     )
   );
+  messages_query.limit(99999999999);
 
   dispatch({
     type: MESSAGES_GET_REQUEST_START,
@@ -263,15 +268,19 @@ const listen_for_changes = () => async (
   project_images_query.include("message");
   project_images_query.include("project");
   project_images_query.containedIn("project", project_pointers);
+  project_images_query.limit(99999999999);
 
   packages_query.include("project");
   packages_query.containedIn("project", project_pointers);
+  packages_query.limit(99999999999);
 
   consultations_query.include("project");
   consultations_query.containedIn("project", project_pointers);
+  consultations_query.limit(99999999999);
 
   messages_query.include("consultation");
   messages_query.containedIn("consultation", consultation_pointers);
+  messages_query.limit(99999999999);
 
   const [
     projects_subscription,

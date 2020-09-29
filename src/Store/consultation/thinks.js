@@ -97,12 +97,12 @@ export const send_message = ({
     }
 
     if (user.data.is_admin) {
-      dispatch(
-        send_notification({
-          user: project_data.created_by,
-          message: `You have a new message on Let's Decorate: https://letsdecorateapp.com/${project_objectId}/${consultation_objectId}`,
-        })
-      );
+      // dispatch(
+      //   send_notification({
+      //     user: project_data.created_by,
+      //     message: `You have a new message on Let's Decorate: https://letsdecorateapp.com/${project_objectId}/${consultation_objectId}`,
+      //   })
+      // );
     }
 
     dispatch({
@@ -122,22 +122,32 @@ const send_notification = ({ user, message }) => async (
   getState,
   { Parse }
 ) => {
-  // const user_query = new Parse.Query('User');
-  // const user_object = await user_query.get(user.objectId);
-  // if (user_object.get('has_active_connection') === false) {
-  //   const message_data = {
-  //     to: user.phone,
-  //     from: '+12512765994',
-  //     body: message,
-  //   };
-  //   const notification_result = await Parse.Cloud.run(
-  //     'send_sms_notification',
-  //     message_data
-  //   );
-  //   if (notification_result.error_message) {
-  //     dispatch(add_app_error(notification_result.error_message));
-  //   }
-  // }
+  const user_query = new Parse.Query("User");
+  const user_object = await user_query.get(user.objectId);
+
+  if (user_object.get("has_active_connection") === false) {
+    const message_data = {
+      to: user.phone,
+      from: "+12512765994",
+      body: message,
+    };
+
+    dispatch({ type: "consultation/NOTIFICATION_SEND", payload: message_data });
+
+    const notification_result = await Parse.Cloud.run(
+      "send_sms_notification",
+      message_data
+    );
+
+    dispatch({
+      type: "consultation/NOTIFICATION_RESULT",
+      payload: notification_result,
+    });
+
+    if (notification_result.error_message) {
+      dispatch(add_app_error(notification_result.error_message));
+    }
+  }
 };
 
 const create_and_attach_project_images = ({
