@@ -8,6 +8,7 @@ const initialState = {
   is_signin_request_busy: false,
   is_signout_request_busy: false,
   is_set_has_active_connection_request_busy: false,
+  is_phone_submission_request_busy: false,
 };
 
 export const FIRST_NAME_INPUT_VALUE_CHANGE =
@@ -30,6 +31,8 @@ export const SET_HAS_ACTIVE_CONNECTION_REQUEST_START =
 export const SET_HAS_ACTIVE_CONNECTION_REQUEST_END =
   "user/SET_HAS_ACTIVE_CONNECTION_REQUEST_END";
 export const SET_USER_DATA = "user/SET_USER_DATA";
+export const PHONE_SUBMIT_REQUEST_START = "user/PHONE_SUBMIT_REQUEST_START";
+export const PHONE_SUBMIT_REQUEST_END = "user/PHONE_SUBMIT_REQUEST_END";
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -120,6 +123,18 @@ export default (state = initialState, action) => {
       return {
         ...state,
         data: action.payload,
+      };
+
+    case PHONE_SUBMIT_REQUEST_START:
+      return {
+        ...state,
+        is_phone_submission_request_busy: true,
+      };
+
+    case PHONE_SUBMIT_REQUEST_END:
+      return {
+        ...state,
+        is_phone_submission_request_busy: false,
       };
 
     default:

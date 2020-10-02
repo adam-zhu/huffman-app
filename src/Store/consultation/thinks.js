@@ -97,12 +97,12 @@ export const send_message = ({
     }
 
     if (user.data.is_admin) {
-      // dispatch(
-      //   send_notification({
-      //     user: project_data.created_by,
-      //     message: `You have a new message on Let's Decorate: https://letsdecorateapp.com/${project_objectId}/${consultation_objectId}`,
-      //   })
-      // );
+      dispatch(
+        send_notification({
+          user: project_data.created_by,
+          message: `You have a new message on Let's Decorate: https://letsdecorateapp.com/${project_objectId}/${consultation_objectId}`,
+        })
+      );
     }
 
     dispatch({
@@ -125,7 +125,7 @@ const send_notification = ({ user, message }) => async (
   const user_query = new Parse.Query("User");
   const user_object = await user_query.get(user.objectId);
 
-  if (user_object.get("has_active_connection") === false) {
+  if (user_object.get("has_active_connection") === false && user.phone) {
     const message_data = {
       to: user.phone,
       from: "+12512765994",
@@ -134,10 +134,10 @@ const send_notification = ({ user, message }) => async (
 
     dispatch({ type: "consultation/NOTIFICATION_SEND", payload: message_data });
 
-    const notification_result = await Parse.Cloud.run(
-      "send_sms_notification",
-      message_data
-    );
+    const notification_result = await Promise.race([
+      Parse.Cloud.run("send_sms_notification", message_data),
+      new Promise((resolve, reject) => setTimeout(reject("timed out"), 5000)),
+    ]);
 
     dispatch({
       type: "consultation/NOTIFICATION_RESULT",
@@ -221,5 +221,3 @@ export const close_consultation = (consultation_objectId) => async (
     dispatch(add_app_error(e.message));
   }
 };
-
-const handle_notification = () => (dispatch, getState) => {};

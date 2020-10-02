@@ -13,6 +13,8 @@ import {
   SET_HAS_ACTIVE_CONNECTION_REQUEST_START,
   SET_HAS_ACTIVE_CONNECTION_REQUEST_END,
   SET_USER_DATA,
+  PHONE_SUBMIT_REQUEST_START,
+  PHONE_SUBMIT_REQUEST_END,
 } from "./reducer";
 import { add_app_error } from "Store/errors/thinks";
 
@@ -330,4 +332,39 @@ const establish_user = (user_data) => (dispatch, getState) => {
   connect_user();
 
   vis(() => (vis() === true ? connect_user() : disconnect_user()));
+};
+
+export const submit_phone = (phone) => async (
+  dispatch,
+  getState,
+  { Parse, StripePromise }
+) => {
+  const { user } = getState();
+  const User = new Parse.User();
+  const query = new Parse.Query(User);
+
+  dispatch({
+    type: PHONE_SUBMIT_REQUEST_START,
+    payload: phone,
+  });
+
+  try {
+    const user_data = await query.get(user.data.objectId);
+
+    user_data.set("phone", phone);
+
+    await user_data.save();
+
+    dispatch({
+      type: PHONE_SUBMIT_REQUEST_END,
+      payload: phone,
+    });
+  } catch (e) {
+    dispatch(add_app_error(e.message));
+
+    dispatch({
+      type: PHONE_SUBMIT_REQUEST_END,
+      payload: phone,
+    });
+  }
 };

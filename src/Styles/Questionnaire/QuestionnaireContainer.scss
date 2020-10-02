@@ -2,6 +2,13 @@
   .field {
     font-size: 0.825rem;
   }
+
+  .phone-field {
+    .format-tooltip {
+      font-size: 0.666em;
+      --color: var(--alt-text-color);
+    }
+  }
 }
 
 ion-toast.questionnaire-toast {

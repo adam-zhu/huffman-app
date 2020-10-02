@@ -6,6 +6,7 @@ import {
   QUESTION_ANSWER_VALUE_CHANGED,
   ANSWER_SUBMISSION_REQUEST_START,
   ANSWER_SUBMISSION_REQUEST_END,
+  PHONE_NUMBER_CHANGE,
 } from "./reducer";
 import { add_app_error } from "Store/errors/thinks";
 

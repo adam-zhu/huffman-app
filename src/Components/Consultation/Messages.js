@@ -35,7 +35,7 @@ const Messages = () => {
   const messages = Array.isArray(consultation_data.messages)
     ? consultation_data.messages.map((m) => ({
         ...m,
-        project_images: project_data.project_images.filter(
+        project_images: (project_data?.project_images || []).filter(
           (i) => i.message?.objectId === m.objectId
         ),
       }))

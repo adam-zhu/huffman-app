@@ -1,6 +1,7 @@
 const initialState = {
   questions: [],
   answers: [],
+  phone: "",
   questions_loading: false,
   answers_loading: false,
   answer_submission_busy: false,
