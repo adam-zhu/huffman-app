@@ -144,13 +144,11 @@ const QuestionnaireForm = ({ is_new_project }) => {
               />
             );
           })}
-          {
-            // <PhoneField
-            //   value={inputted_phone_value}
-            //   change_handler={phone_change_handler}
-            //   busy={is_phone_submission_request_busy}
-            // />
-          }
+          <PhoneField
+            value={inputted_phone_value}
+            change_handler={phone_change_handler}
+            busy={is_phone_submission_request_busy}
+          />
         </IonList>
         <br />
         <IonButton
