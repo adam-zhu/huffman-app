@@ -136,7 +136,9 @@ const send_notification = ({ user, message }) => async (
 
     const notification_result = await Promise.race([
       Parse.Cloud.run("send_sms_notification", message_data),
-      new Promise((resolve, reject) => setTimeout(reject("timed out"), 5000)),
+      new Promise((resolve, reject) =>
+        setTimeout(() => resolve("timed out on client"), 5000)
+      ),
     ]);
 
     dispatch({
@@ -144,7 +146,7 @@ const send_notification = ({ user, message }) => async (
       payload: notification_result,
     });
 
-    if (notification_result.error_message) {
+    if (notification_result?.error_message) {
       dispatch(add_app_error(notification_result.error_message));
     }
   }
