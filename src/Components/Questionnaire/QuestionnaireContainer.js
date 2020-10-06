@@ -22,6 +22,7 @@ import {
   submit_answers,
 } from "Store/questionnaire/thinks";
 import { submit_phone } from "Store/user/thinks";
+import { select_project_data } from "Store/projects/selectors";
 import { resolve_input_element_value } from "Utils";
 
 const QuestionnaireContainer = () => {
@@ -77,7 +78,11 @@ const QuestionnaireContainer = () => {
 };
 
 const QuestionnaireForm = ({ is_new_project }) => {
-  const { questionnaire, user } = useSelector((state) => state);
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const match = useRouteMatch();
+  const state = useSelector((state) => state);
+  const { questionnaire, user } = state;
   const {
     questions,
     answers,
@@ -85,13 +90,11 @@ const QuestionnaireForm = ({ is_new_project }) => {
     answers_loading,
     answer_submission_busy,
   } = questionnaire;
-  const { is_phone_submission_request_busy } = user;
-  const { phone } = user.data;
-  const [inputted_phone_value, set_inputted_phone_value] = useState(phone);
-  const dispatch = useDispatch();
-  const history = useHistory();
-  const match = useRouteMatch();
+  const project_data = select_project_data({ state, match });
   const { project_objectId } = match.params;
+  const { is_phone_submission_request_busy } = user;
+  const { phone } = user.data.is_admin ? project_data.created_by : user.data;
+  const [inputted_phone_value, set_inputted_phone_value] = useState(phone);
   const answer_change_handler = (question) => (e) => {
     const value = resolve_input_element_value(e.target);
 
