@@ -63,7 +63,7 @@ const create_stripe_session = ({ project_data, package_data }) => async (
   const { user } = getState();
   const appUrlBase =
     process.env.NODE_ENV === "production" ? PUBLIC_URL : DEV_URL;
-  const success_url = `${appUrlBase}/stripe_callback/more_consultations/success?project_objectId=${project_data.objectId}&=true`;
+  const success_url = `${appUrlBase}/stripe_callback/more_consultations/success?project_objectId=${project_data.objectId}&package_objectId=${package_data.objectId}`;
   const cancel_url = `${appUrlBase}/stripe_callback/more_consultations/cancelled?project_objectId=${project_data.objectId}&package_objectId=${package_data.objectId}`;
   const price_id = package_data.stripe_price_id;
   const customer_email = user.data.email;

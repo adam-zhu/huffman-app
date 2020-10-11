@@ -311,10 +311,10 @@ const listen_for_changes = () => async (
   const event_types = ["create", "update", "delete"];
   const handler = (event_type) => (data_type) => async (data) => {
     if (
-      event_type === "create" &&
       (data_type === "project" ||
         data_type === "consultation" ||
-        data_type === "package")
+        data_type === "package") &&
+      event_type === "create"
     ) {
       await dispatch(stop_listening_for_changes());
       await dispatch(get_data_and_listen_for_changes());

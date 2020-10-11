@@ -210,8 +210,12 @@ const ProjectConsultations = ({ project_data }) => {
 };
 
 const ConsultationRow = ({ consultation }) => {
+  const state = useSelector((state) => state);
+  const { is_admin } = state.user.data;
   const has_new_messages = (consultation.messages || []).find(
-    ({ user_viewed }) => !user_viewed
+    is_admin
+      ? ({ admin_viewed }) => !admin_viewed
+      : ({ user_viewed }) => !user_viewed
   );
 
   return (
