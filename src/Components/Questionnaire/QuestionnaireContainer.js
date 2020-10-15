@@ -46,7 +46,7 @@ const QuestionnaireContainer = () => {
           isOpen={true}
           header="Your project details were successfully saved!"
           message="Answer the questions below to help us get to know your needs better."
-          duration={4000}
+          duration={3000}
           position="top"
           buttons={[
             {
@@ -56,13 +56,13 @@ const QuestionnaireContainer = () => {
           ]}
         />
       )}
-      {is_save_success && (
+      {is_save_success && !is_new_project && (
         <IonToast
           className="questionnaire-toast"
           isOpen={true}
           header="Answers successfully saved!"
           message="Your answers were successfully saved."
-          duration={2000}
+          duration={1000}
           position="top"
           buttons={[
             {

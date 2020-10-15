@@ -34,6 +34,8 @@ export const MESSAGES_GET_REQUEST_END = "projects/MESSAGES_GET_REQUEST_END";
 export const LIVE_QUERIES_SUBSCRIBED = "projects/LIVE_QUERIES_SUBSCRIBED";
 export const LIVE_QUERIES_UNSUBSCRIBED = "projects/LIVE_QUERIES_UNSUBSCRIBED";
 export const LIVE_QUERIES_DATA_UPDATED = "projects/LIVE_QUERIES_DATA_UPDATED";
+export const MARK_PROJECT_PAID = "projects/MARK_PROJECT_PAID";
+export const MARK_PACKAGE_PAID = "projects/MARK_PACKAGE_PAID";
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -167,6 +169,29 @@ export default (state = initialState, action) => {
           projects_data: state.data,
           ...action.payload,
         }),
+      };
+
+    case MARK_PROJECT_PAID:
+      return {
+        ...state,
+        data: state.data.map((p) =>
+          p.objectId === action.payload ? { ...p, paid: true } : p
+        ),
+      };
+
+    case MARK_PACKAGE_PAID:
+      return {
+        ...state,
+        data: state.data.map((p) =>
+          p.packages.find((_p) => _p.objectId === action.payload) !== undefined
+            ? {
+                ...p,
+                packages: p.packages.map((_p) =>
+                  _p.objectId === action.payload ? { ..._p, paid: true } : _p
+                ),
+              }
+            : p
+        ),
       };
 
     default:

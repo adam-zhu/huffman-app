@@ -89,7 +89,9 @@ const RegularProjectsList = () => {
         {loading || !data ? (
           <IonSkeletonText animated />
         ) : (
-          data.map((p) => <ProjectPreviewCard project={p} key={p.objectId} />)
+          data
+            .filter(({ paid }) => paid === true)
+            .map((p) => <ProjectPreviewCard project={p} key={p.objectId} />)
         )}
       </div>
     </div>

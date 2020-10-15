@@ -7,6 +7,7 @@ import {
   MARK_PACKAGE_PAID_REQUEST_START,
   MARK_PACKAGE_PAID_REQUEST_END,
 } from "./reducer";
+import { MARK_PROJECT_PAID, MARK_PACKAGE_PAID } from "../projects/reducer";
 import { add_app_error } from "Store/errors/thinks";
 import { get_data_and_listen_for_changes } from "Store/projects/thinks";
 import { PUBLIC_URL, DEV_URL } from "Constants";
@@ -219,6 +220,11 @@ export const mark_package_paid = (package_objectId) => async (
       payload: package_objectId,
     });
 
+    dispatch({
+      type: MARK_PACKAGE_PAID,
+      payload: package_objectId,
+    });
+
     return { is_success: true };
   } catch (e) {
     dispatch(add_app_error(e.message));
@@ -267,6 +273,11 @@ export const mark_project_paid = (project_objectId) => async (
 
     dispatch({
       type: "new_project/MARK_PROJECT_PAID_END",
+      payload: project_objectId,
+    });
+
+    dispatch({
+      type: MARK_PROJECT_PAID,
       payload: project_objectId,
     });
 
