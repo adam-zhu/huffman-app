@@ -1,0 +1,196 @@
+.add-details-form-container {
+  form.add-details {
+    h1,
+    h2 {
+      font-size: 2.25rem;
+      padding: 0 1rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      color: var(--alt-text-color);
+    }
+
+    ion-input,
+    ion-textarea {
+      border-bottom: 1px solid lightgray;
+      font-size: 0.825rem;
+
+      &.has-focus {
+        border-color: var(--primary-theme-color);
+      }
+    }
+
+    .field {
+      width: calc(100% - 1rem);
+    }
+
+    .measurements {
+      .item {
+        width: 33.33%;
+        display: inline-block;
+        position: relative;
+
+        input {
+          padding-right: 2.5rem;
+        }
+
+        .units {
+          font-size: 0.666em;
+          font-weight: 600;
+          position: absolute;
+          bottom: 0.5rem;
+          right: 1.75rem;
+          color: var(--alt-text-color);
+        }
+      }
+    }
+
+    .images-title-item {
+      --ion-background-color: var(--alt-background-color);
+
+      h2 {
+        padding: 0.5rem 0 0 0;
+        margin-bottom: 0;
+      }
+    }
+
+    .images-item {
+      --ion-background-color: var(--alt-background-color);
+
+      .inner {
+        width: 100%;
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: scroll;
+
+        .thumb-item {
+          border-radius: 0.625rem;
+          margin-right: 1rem;
+          flex: none;
+          width: 5rem;
+          height: 5rem;
+          --size: 5rem;
+        }
+
+        .add-button {
+          position: relative;
+          background: var(--ion-color-tertiary);
+
+          i {
+            color: var(--ion-color-primary);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: 600;
+            font-size: 2rem;
+          }
+        }
+
+        .blank-photo-slot {
+          background: white;
+        }
+      }
+    }
+
+    .tooltip-trigger {
+      color: var(--ion-color-primary);
+      font-weight: 600;
+      font-size: 0.825rem;
+
+      .icon {
+        background: white;
+        position: relative;
+        width: 1.25rem;
+        height: 1.25rem;
+        margin-right: 0.25rem;
+        display: inline-block;
+        vertical-align: bottom;
+        border-radius: 0.625rem;
+
+        ion-icon {
+          position: absolute;
+          top: 47.5%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+      }
+    }
+
+    .spacer-item {
+      height: 1.5rem;
+    }
+
+    .background {
+      --ion-background-color: var(--alt-background-color);
+    }
+
+    .select-package {
+      h2 {
+        padding: 1rem 0 1.5rem 0;
+        color: var(--ion-color-primary);
+      }
+
+      --detail-icon-color: #f20d0d;
+    }
+  }
+
+  .tooltip-drawer {
+    h3 {
+      padding: 0 1rem;
+    }
+
+    .tips {
+      width: 100%;
+      overflow-x: scroll;
+      padding-left: 1rem;
+
+      .scroll-container {
+        display: flex;
+        flex-wrap: nowrap;
+      }
+
+      .tip {
+        width: 15rem;
+        flex: none;
+        font-size: 0.825rem;
+        margin-right: 1rem;
+        background: var(--ion-color-tertiary);
+        color: var(--ion-color-primary);
+        border-radius: 0.625rem;
+        padding: 1rem;
+
+        .pic {
+          width: 4rem;
+          height: 4rem;
+          border-radius: 0.625rem;
+          background: var(--ion-color-primary);
+          position: relative;
+
+          ion-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            --size: 2rem;
+          }
+        }
+
+        &.alt {
+          background: var(--alt-background-color);
+          color: var(--alt-text-color);
+
+          .pic {
+            background: var(--alt-text-color);
+          }
+        }
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+}

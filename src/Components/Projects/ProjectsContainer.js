@@ -133,16 +133,20 @@ const AdminProjectCard = ({ project }) => {
 
 const ProjectPreviewCard = ({ project }) => {
   const project_images = project.project_images || [];
+  const has_details =
+    project_images.length > 0 &&
+    project.room_width > 0 &&
+    project.room_height > 0 &&
+    project.room_length > 0;
   const has_new_messages = (project.consultations || [])
     .flatMap(({ messages }) => messages || [])
     .find(({ user_viewed }) => !user_viewed);
+  const href = has_details
+    ? `/projects/${project.objectId}`
+    : `/add_details/${project.objectId}`;
 
   return (
-    <IonCard
-      type="button"
-      routerLink={`/projects/${project.objectId}`}
-      className="project-preview-card"
-    >
+    <IonCard type="button" routerLink={href} className="project-preview-card">
       <div className="inner">
         {has_new_messages && (
           <div className="new">

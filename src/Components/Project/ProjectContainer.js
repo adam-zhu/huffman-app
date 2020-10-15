@@ -57,7 +57,7 @@ const Toasts = ({ project_data }) => {
 
   return (
     <>
-      {url_query_params.new_project && (
+      {url_query_params.is_new_project && (
         <IonToast
           className="new-project-toast"
           isOpen={true}

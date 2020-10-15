@@ -13,13 +13,14 @@ const NewProjectSuccessContainer = () => {
   const location = useLocation();
   const { project_objectId } = qs.parse(location.search);
   const history = useHistory();
-  const project_url = `/questionnaire/${project_objectId}?new_project=true`;
+  const redirect_url = `/add_details/${project_objectId}?is_new_project=true`;
 
   useEffect(() => {
     dispatch(mark_project_paid(project_objectId)).then((result) => {
       set_is_success(result.is_success);
+
       if (result.is_success) {
-        history.replace(project_url);
+        history.replace(redirect_url);
       }
     });
   }, []);

@@ -1,0 +1,25 @@
+#page-container.add-details {
+  padding: 0;
+
+  .images-uploaded {
+    .images {
+      display: flex;
+
+      > * {
+        margin-right: 0.5rem;
+      }
+    }
+
+    .images-button {
+      margin-top: 0.5rem;
+    }
+  }
+
+  .images-button {
+    width: calc(100% - 2px);
+  }
+
+  .submit-button {
+    margin-top: 2rem;
+  }
+}

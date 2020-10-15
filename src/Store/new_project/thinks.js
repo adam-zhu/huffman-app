@@ -26,9 +26,9 @@ export const create_new_project_and_check_out = ({
 
     NewProjectObject.set("name", new_project.name);
     NewProjectObject.set("description", new_project.description);
-    NewProjectObject.set("room_width", new_project.room_width);
-    NewProjectObject.set("room_length", new_project.room_length);
-    NewProjectObject.set("room_height", new_project.room_height);
+    NewProjectObject.set("room_width", 0);
+    NewProjectObject.set("room_length", 0);
+    NewProjectObject.set("room_height", 0);
     NewProjectObject.set("created_by", Parse.User.current());
     NewProjectObject.set("paid", false);
 
@@ -38,33 +38,17 @@ export const create_new_project_and_check_out = ({
 
       return new_project_data;
     } catch (e) {
-      dispatch({
-        type: NEW_PROJECT_CREATE_REQUEST_END,
-      });
       dispatch(add_app_error(e.message));
     }
   };
-  const createImagesAndPackage = async (new_project_data) => {
-    const [project_images_error, packages_error] = await Promise.all([
-      dispatch(create_project_images({ new_project_data })),
-      dispatch(create_package({ new_project_data, selected_package })),
-    ]);
-    const is_success = project_images_error === null && packages_error === null;
+  const createPackage = async (new_project_data) => {
+    const packages_error = await dispatch(
+      create_package({ new_project_data, selected_package })
+    );
+    const is_success = packages_error === null;
 
-    dispatch({
-      type: NEW_PROJECT_CREATE_REQUEST_END,
-    });
-
-    if (!is_success) {
-      if (project_images_error) {
-        dispatch(add_app_error(project_images_error.message));
-      }
-
-      if (packages_error) {
-        dispatch(add_app_error(packages_error.message));
-      }
-
-      dispatch(delete_project(new_project_data.objectId));
+    if (packages_error) {
+      dispatch(add_app_error(packages_error.message));
     }
 
     return is_success;
@@ -75,52 +59,21 @@ export const create_new_project_and_check_out = ({
   });
 
   const new_project_data = await createProject();
-  const project_materials_creation_success = await createImagesAndPackage(
-    new_project_data
-  );
+  const package_success = await createPackage(new_project_data);
 
   dispatch({
     type: NEW_PROJECT_CREATE_REQUEST_END,
   });
 
-  if (project_materials_creation_success) {
+  if (package_success) {
     dispatch(
       redirect_to_stripe_checkout({
         new_project_data,
         selected_package,
       })
     );
-  }
-};
-
-const create_project_images = ({ new_project_data }) => async (
-  dispatch,
-  getState,
-  { Parse, StripePromise }
-) => {
-  const { new_project } = getState();
-  const ProjectImageObjects = new_project.project_images.map((p) => {
-    const { base64, filepath } = p;
-    const ProjectImage = Parse.Object.extend("project_image");
-    const ProjectImageObject = new ProjectImage();
-
-    ProjectImageObject.set(
-      "project",
-      Parse.Object.extend("project").createWithoutData(
-        new_project_data.objectId
-      )
-    );
-    ProjectImageObject.set("image", new Parse.File(filepath, { base64 }));
-
-    return ProjectImageObject;
-  });
-
-  try {
-    await Promise.all(ProjectImageObjects.map((o) => o.save()));
-
-    return null;
-  } catch (e) {
-    return e;
+  } else {
+    dispatch(delete_project(new_project_data.objectId));
   }
 };
 
@@ -162,30 +115,20 @@ const delete_project = (project_objectId) => async (
   { Parse, StripePromise }
 ) => {
   const project_query = new Parse.Query("project");
-  const project_images_query = new Parse.Query("project_image");
   const packages_query = new Parse.Query("package");
 
-  project_images_query.equalTo(
-    "project",
-    Parse.Object.extend("project").createWithoutData(project_objectId)
-  );
   packages_query.equalTo(
     "project",
     Parse.Object.extend("project").createWithoutData(project_objectId)
   );
 
   try {
-    const [project, project_images, packages] = await Promise.all([
+    const [project, packages] = await Promise.all([
       project_query.get(project_objectId),
-      project_images_query.find(),
       packages_query.find(),
     ]);
 
-    await Promise.all([
-      project.destroy(),
-      ...project_images.map((project_image) => project_image.destroy()),
-      ...packages.map((p) => p.destroy()),
-    ]);
+    await Promise.all([project.destroy(), ...packages.map((p) => p.destroy())]);
 
     return { is_success: true };
   } catch (e) {

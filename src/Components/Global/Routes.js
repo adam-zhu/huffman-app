@@ -5,6 +5,7 @@ import { IonReactRouter } from "@ionic/react-router";
 import HomeContainer from "Components/Home/HomeContainer";
 import ProjectsContainer from "Components/Projects/ProjectsContainer";
 import NewProjectContainer from "Components/NewProject/NewProjectContainer";
+import AddDetailsContainer from "Components/AddDetails/AddDetailsContainer";
 import QuestionnaireContainer from "Components/Questionnaire/QuestionnaireContainer";
 import ProjectContainer from "Components/Project/ProjectContainer";
 import ConsultationContainer from "Components/Consultation/ConsultationContainer";
@@ -25,13 +26,18 @@ const Routes = () => {
         <Route exact={true} path="/packages" component={PackagesContainer} />
         <Route
           exact={true}
-          path="/projects/:project_objectId"
-          component={ProjectContainer}
+          path="/add_details/:project_objectId"
+          component={AddDetailsContainer}
         />
         <Route
           exact={true}
           path="/questionnaire/:project_objectId/"
           component={QuestionnaireContainer}
+        />
+        <Route
+          exact={true}
+          path="/projects/:project_objectId"
+          component={ProjectContainer}
         />
         <Route
           exact={true}

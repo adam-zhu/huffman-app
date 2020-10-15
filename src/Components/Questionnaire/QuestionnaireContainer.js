@@ -29,8 +29,7 @@ const QuestionnaireContainer = () => {
   const match = useRouteMatch();
   const location = useLocation();
   const dispatch = useDispatch();
-  const { new_project, saved } = qs.parse(location.search);
-  const is_new_project = new_project;
+  const { is_new_project, saved } = qs.parse(location.search);
   const is_save_success = saved;
 
   useEffect(() => {
@@ -45,7 +44,7 @@ const QuestionnaireContainer = () => {
         <IonToast
           className="questionnaire-toast"
           isOpen={true}
-          header="Your project was successfully created!"
+          header="Your project details were successfully saved!"
           message="Answer the questions below to help us get to know your needs better."
           duration={4000}
           position="top"
@@ -119,7 +118,7 @@ const QuestionnaireForm = ({ is_new_project }) => {
     ]);
 
     if (is_new_project) {
-      history.push(`/projects/${project_objectId}?new_project=true`);
+      history.push(`/projects/${project_objectId}?is_new_project=true`);
     }
   };
 
