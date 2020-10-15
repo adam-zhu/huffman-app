@@ -66,6 +66,8 @@ const NewProjectButton = () => {
 
 const AdminProjectsList = () => {
   const { data, loading } = useSelector((state) => state.projects);
+  const isPaid = (p) =>
+    p.paid && (p.packages || []).find((_p) => _p.paid === true) !== undefined;
 
   return (
     <div className="admin-projects-container">
@@ -73,7 +75,9 @@ const AdminProjectsList = () => {
       {loading || !data ? (
         <IonSkeletonText animated />
       ) : (
-        data.map((p) => <AdminProjectCard project={p} key={p.objectId} />)
+        data
+          .filter(isPaid)
+          .map((p) => <AdminProjectCard project={p} key={p.objectId} />)
       )}
     </div>
   );
@@ -81,6 +85,8 @@ const AdminProjectsList = () => {
 
 const RegularProjectsList = () => {
   const { data, loading } = useSelector((state) => state.projects);
+  const isPaid = (p) =>
+    p.paid && (p.packages || []).find((_p) => _p.paid === true) !== undefined;
 
   return (
     <div className="regular-projects-container">
@@ -90,7 +96,7 @@ const RegularProjectsList = () => {
           <IonSkeletonText animated />
         ) : (
           data
-            .filter(({ paid }) => paid === true)
+            .filter(isPaid)
             .map((p) => <ProjectPreviewCard project={p} key={p.objectId} />)
         )}
       </div>

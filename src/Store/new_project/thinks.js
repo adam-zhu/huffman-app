@@ -31,7 +31,7 @@ export const create_new_project_and_check_out = ({
     NewProjectObject.set("room_length", 0);
     NewProjectObject.set("room_height", 0);
     NewProjectObject.set("created_by", Parse.User.current());
-    NewProjectObject.set("paid", false);
+    NewProjectObject.set("paid", true);
 
     try {
       const result = await NewProjectObject.save();
@@ -100,6 +100,7 @@ const create_package = ({ new_project_data, selected_package }) => async (
   );
   NewPackageObject.set("price_cents", selected_package.price_cents);
   NewPackageObject.set("image_url", selected_package.image.url);
+  NewPackageObject.set("paid", false);
 
   try {
     await NewPackageObject.save();

@@ -45,6 +45,7 @@ export const get_data_and_listen_for_changes = () => async (
 
   projects_query.include("created_by");
   projects_query.descending("createdAt");
+  projects_query.equalTo("paid", true);
   projects_query.limit(99999999999);
 
   try {
