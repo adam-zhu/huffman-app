@@ -2,6 +2,7 @@ import {
   FIRST_NAME_INPUT_VALUE_CHANGE,
   LAST_NAME_INPUT_VALUE_CHANGE,
   EMAIL_INPUT_VALUE_CHANGE,
+  PHONE_INPUT_VALUE_CHANGE,
   PASSWORD_INPUT_VALUE_CHANGE,
   USER_REGISTRATION_REQUEST_START,
   USER_REGISTRATION_REQUEST_END,
@@ -67,6 +68,12 @@ export const set_input_value = (type) => (payload) => {
         payload,
       };
 
+    case "phone":
+      return {
+        type: PHONE_INPUT_VALUE_CHANGE,
+        payload,
+      };
+
     case "password":
       return {
         type: PASSWORD_INPUT_VALUE_CHANGE,
@@ -87,6 +94,7 @@ export const register_user = () => async (
     first_name_input_value,
     last_name_input_value,
     email_input_value,
+    phone_input_value,
     password_input_value,
     user,
   } = getState().user;
@@ -102,6 +110,7 @@ export const register_user = () => async (
     new_user.set("last_name", last_name_input_value);
     new_user.set("username", email_input_value);
     new_user.set("email", email_input_value);
+    new_user.set("phone", phone_input_value);
     new_user.set("password", password_input_value);
     new_user.set("has_active_connection", true);
 

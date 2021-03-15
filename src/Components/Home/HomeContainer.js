@@ -64,6 +64,7 @@ const Form = () => {
     first_name_input_value,
     last_name_input_value,
     email_input_value,
+    phone_input_value,
     password_input_value,
     is_registration_request_busy,
     is_signin_request_busy,
@@ -84,6 +85,13 @@ const Form = () => {
 
     dispatch(set_input_value("email")(trimmed));
   };
+
+  const phone_input_change_handler = (e) => {
+    const trimmed = e.detail.value.trim();
+
+    dispatch(set_input_value("phone")(trimmed));
+  };
+
   const password_input_change_handler = (e) => {
     const trimmed = e.detail.value.trim();
 
@@ -95,6 +103,8 @@ const Form = () => {
     dispatch(mode === "registration" ? register_user() : log_user_in());
   };
   const password_regex = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$";
+  const phone_regex = "^[+]?[(]?[0-9]{3}[)]?[-s.]?[0-9]{3}[-s.]?[0-9]{4,6}$";
+
   const autofocus_ref = useRef();
 
   useLayoutEffect(() => {
@@ -142,9 +152,12 @@ const Form = () => {
           last_name_input_change_handler={last_name_input_change_handler}
           email_input_value={email_input_value}
           email_input_change_handler={email_input_change_handler}
+          phone_input_value={phone_input_value}
+          phone_input_change_handler={phone_input_change_handler}
           password_input_value={password_input_value}
           password_input_change_handler={password_input_change_handler}
           password_regex={password_regex}
+          phone_regex={phone_regex}
           submit_handler={submit_handler}
           is_form_busy={is_registration_request_busy}
           toggle_mode={toggle_mode}
@@ -254,9 +267,12 @@ const RegistrationForm = ({
   last_name_input_change_handler,
   email_input_value,
   email_input_change_handler,
+  phone_input_value,
+  phone_input_change_handler,
   password_input_value,
   password_input_change_handler,
   password_regex,
+  phone_regex,
   submit_handler,
   is_form_busy,
   toggle_mode,
@@ -312,6 +328,22 @@ const RegistrationForm = ({
               type="email"
               value={email_input_value}
               onIonChange={email_input_change_handler}
+              disabled={is_form_busy}
+              required
+            />
+          </IonItem>
+          <br />
+          <IonItem>
+            <IonLabel position="floating">
+              Phone Number<IonText color="primary">*</IonText>
+            </IonLabel>
+            <IonInput
+              cssClass="field"
+              placeholder="phone"
+              type="tel"
+              pattern={phone_regex}
+              value={phone_input_value}
+              onIonChange={phone_input_change_handler}
               disabled={is_form_busy}
               required
             />

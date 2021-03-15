@@ -125,7 +125,7 @@ const send_notification = ({ user, message }) => async (
   const user_query = new Parse.Query("User");
   const user_object = await user_query.get(user.objectId);
 
-  if (user_object.get("has_active_connection") === false && user.phone) {
+  if (user.phone) {
     const message_data = {
       to: user.phone,
       from: "+12512765994",
