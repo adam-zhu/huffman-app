@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouteMatch, useHistory, useLocation } from "react-router-dom";
 import qs from "query-string";
@@ -14,6 +14,9 @@ import {
   IonItem,
   IonToast,
   IonIcon,
+  IonModal,
+  IonLabel,
+  IonInput,
 } from "@ionic/react";
 import { ellipse } from "ionicons/icons";
 import { formatRelative } from "date-fns";
@@ -27,9 +30,25 @@ import AllConsultationsUsed from "Components/Global/AllConsultationsUsed";
 
 const ProjectContainer = () => {
   const state = useSelector((state) => state);
-  const { projects } = state;
+
+  const [modalVisibility, setModalVisibility] = useState(false);
+  const [consultationName, setConsultationName] = useState(null);
+
+  const dispatch = useDispatch();
   const match = useRouteMatch();
+  const history = useHistory();
+
+  const { projects } = state;
   const project_data = select_project_data({ state, match });
+
+  const new_consultation_handler = () =>
+    dispatch(
+      begin_new_consultation({
+        history,
+        project_objectId: match.params.project_objectId,
+        consultation_name: consultationName,
+      })
+    );
 
   return (
     <PageContainer id="project" pageContainerClassName="project">
@@ -39,8 +58,52 @@ const ProjectContainer = () => {
         <>
           <Toasts project_data={project_data} />
           <ProjectDetails project_data={project_data} />
-          <ConsultationsCountAndCTA project_data={project_data} />
+          <ConsultationsCountAndCTA
+            project_data={project_data}
+            newConsultationOnClick={() => setModalVisibility(true)}
+            consultationName={consultationName}
+          />
           <ProjectConsultations project_data={project_data} />
+
+          <IonModal
+            isOpen={modalVisibility}
+            cssClass="consultation-name-modal"
+            onDidDismiss={() => setModalVisibility(false)}
+          >
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                setModalVisibility(false);
+                setConsultationName(null);
+                new_consultation_handler();
+              }}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                height: "100%",
+              }}
+            >
+              <IonLabel style={{ padding: 10, fontSize: 25 }}>
+                New Consultation
+              </IonLabel>
+              <IonInput
+                placeholder="Enter consultation name"
+                type="text"
+                onIonChange={(e) => setConsultationName(e.detail.value)}
+                value={consultationName}
+                required
+              />
+              <div style={{ textAlign: "center" }}>
+                <IonButton type="submit">Create Consultation</IonButton>
+                <IonButton
+                  type="button"
+                  onClick={() => setModalVisibility(false)}
+                >
+                  Cancel
+                </IonButton>
+              </div>
+            </form>
+          </IonModal>
         </>
       )}
     </PageContainer>
@@ -95,19 +158,13 @@ const Toasts = ({ project_data }) => {
   );
 };
 
-const ConsultationsCountAndCTA = ({ project_data }) => {
+const ConsultationsCountAndCTA = ({
+  project_data,
+  newConsultationOnClick,
+  consultationName,
+}) => {
   const state = useSelector((state) => state);
   const { consultation_creation_busy } = state.project;
-  const dispatch = useDispatch();
-  const match = useRouteMatch();
-  const history = useHistory();
-  const new_consultation_handler = () =>
-    dispatch(
-      begin_new_consultation({
-        history,
-        project_objectId: match.params.project_objectId,
-      })
-    );
 
   if (project_data === undefined) {
     return <IonSkeletonText animated />;
@@ -148,7 +205,7 @@ const ConsultationsCountAndCTA = ({ project_data }) => {
             className="new-consultation"
             size="small"
             fill="outline"
-            onClick={new_consultation_handler}
+            onClick={newConsultationOnClick}
             disabled={
               consultation_creation_busy ||
               project_data.consultations.length >= included_consultations_count
@@ -231,20 +288,30 @@ const ConsultationRow = ({ consultation }) => {
       )}
       {consultation.messages && consultation.messages.length ? (
         <IonText className={has_new_messages ? "new" : "not-new"}>
-          <IonText color="secondary">last message:</IonText>
-          <strong className="time">
-            {formatRelative(
-              new Date(consultation.last_active_date),
-              new Date()
-            )}
-          </strong>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <h5>{consultation.name}</h5>
+            <div>
+              <IonText color="secondary">last message:</IonText>
+              <strong className="time">
+                {formatRelative(
+                  new Date(consultation.last_active_date),
+                  new Date()
+                )}
+              </strong>
+            </div>
+          </div>
         </IonText>
       ) : (
         <IonText className={has_new_messages ? "new" : "not-new"}>
-          <IonText color="secondary">opened:</IonText>
-          <strong className="time">
-            {formatRelative(new Date(consultation.createdAt), new Date())}
-          </strong>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <h5>{consultation.name}</h5>
+            <div>
+              <IonText color="secondary">opened:</IonText>
+              <strong className="time">
+                {formatRelative(new Date(consultation.createdAt), new Date())}
+              </strong>
+            </div>
+          </div>
         </IonText>
       )}
     </IonItem>

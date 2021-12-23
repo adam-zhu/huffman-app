@@ -12,7 +12,7 @@ import "Styles/Global/ProjectDetails.scss";
 import { inches_to_feet } from "Utils";
 import HorizontalScrollThumbnailGallery from "Components/Global/HorizontalScrollThumbnailGallery";
 
-const ProjectDetails = ({ project_data, hide_title }) => {
+const ProjectDetails = ({ project_data, hide_title, consultation_name }) => {
   if (project_data === undefined) {
     return <IonSkeletonText animated />;
   }
@@ -45,6 +45,7 @@ const ProjectDetails = ({ project_data, hide_title }) => {
         )}
         <IonRow>
           <IonText>
+            <h1>{consultation_name}</h1>
             <p className="description">{description}</p>
           </IonText>
         </IonRow>

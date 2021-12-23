@@ -25,7 +25,11 @@ const ConsultationContainer = () => {
         ) : (
           <>
             <div className="project-meta">
-              <ProjectDetails project_data={project_data} hide_title />
+              <ProjectDetails
+                project_data={project_data}
+                hide_title
+                consultation_name={consultation_data.name}
+              />
             </div>
             <ConsultationMessages />
           </>

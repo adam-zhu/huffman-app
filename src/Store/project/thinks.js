@@ -8,14 +8,15 @@ import {
   stop_listening_for_changes,
 } from "Store/projects/thinks";
 
-export const begin_new_consultation = ({ history, project_objectId }) => async (
-  dispatch,
-  getState,
-  { Parse, StripePromise }
-) => {
+export const begin_new_consultation = ({
+  history,
+  project_objectId,
+  consultation_name,
+}) => async (dispatch, getState, { Parse, StripePromise }) => {
   const Consultation = Parse.Object.extend("consultation");
   const NewConsultation = new Consultation();
 
+  NewConsultation.set("name", consultation_name);
   NewConsultation.set("is_open", true);
   NewConsultation.set(
     "project",
