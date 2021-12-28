@@ -28,7 +28,7 @@ const ConsultationContainer = () => {
               <ProjectDetails
                 project_data={project_data}
                 hide_title
-                consultation_name={consultation_data.name}
+                consultation_data={consultation_data}
               />
             </div>
             <ConsultationMessages />

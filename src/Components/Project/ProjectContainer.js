@@ -61,7 +61,6 @@ const ProjectContainer = () => {
           <ConsultationsCountAndCTA
             project_data={project_data}
             newConsultationOnClick={() => setModalVisibility(true)}
-            consultationName={consultationName}
           />
           <ProjectConsultations project_data={project_data} />
 
@@ -158,11 +157,7 @@ const Toasts = ({ project_data }) => {
   );
 };
 
-const ConsultationsCountAndCTA = ({
-  project_data,
-  newConsultationOnClick,
-  consultationName,
-}) => {
+const ConsultationsCountAndCTA = ({ project_data, newConsultationOnClick }) => {
   const state = useSelector((state) => state);
   const { consultation_creation_busy } = state.project;
 
