@@ -96,10 +96,23 @@ export const send_message = ({
       );
     }
 
+    // if admin sends sms to client
+    // else send sms to admin
     if (user.data.is_admin) {
+      console.log("sending sms to client");
+
       dispatch(
         send_notification({
-          user: project_data.created_by,
+          to: project_data.created_by.phone,
+          message: `You have a new message on Let's Decorate: https://letsdecorateapp.com/${project_objectId}/${consultation_objectId}`,
+        })
+      );
+    } else {
+      console.log("sending sms to admin");
+
+      dispatch(
+        send_notification({
+          to: "", // Place Lynda's phone number here
           message: `You have a new message on Let's Decorate: https://letsdecorateapp.com/${project_objectId}/${consultation_objectId}`,
         })
       );
@@ -117,17 +130,14 @@ export const send_message = ({
   }
 };
 
-const send_notification = ({ user, message }) => async (
+const send_notification = ({ to, message }) => async (
   dispatch,
   getState,
   { Parse }
 ) => {
-  const user_query = new Parse.Query("User");
-  const user_object = await user_query.get(user.objectId);
-
-  if (user.phone) {
+  if (to) {
     const message_data = {
-      to: user.phone,
+      to: to,
       from: "+12512765994",
       body: message,
     };
