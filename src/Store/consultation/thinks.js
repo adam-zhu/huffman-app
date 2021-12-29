@@ -96,11 +96,9 @@ export const send_message = ({
       );
     }
 
-    // if admin sends sms to client
+    // if admin send sms to client
     // else send sms to admin
     if (user.data.is_admin) {
-      console.log("sending sms to client");
-
       dispatch(
         send_notification({
           to: project_data.created_by.phone,
@@ -108,11 +106,9 @@ export const send_message = ({
         })
       );
     } else {
-      console.log("sending sms to admin");
-
       dispatch(
         send_notification({
-          to: "", // Place Lynda's phone number here
+          to: "+13016137843", // Place Lynda's phone number here
           message: `You have a new message on Let's Decorate: https://letsdecorateapp.com/${project_objectId}/${consultation_objectId}`,
         })
       );
