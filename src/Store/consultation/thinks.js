@@ -108,7 +108,7 @@ export const send_message = ({
     } else {
       dispatch(
         send_notification({
-          to: "+13016137843", // Place Lynda's phone number here
+          to: "+13184028190",
           message: `You have a new message on Let's Decorate: https://letsdecorateapp.com/${project_objectId}/${consultation_objectId}`,
         })
       );
