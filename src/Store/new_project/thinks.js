@@ -11,6 +11,7 @@ import { MARK_PROJECT_PAID, MARK_PACKAGE_PAID } from "../projects/reducer";
 import { add_app_error } from "Store/errors/thinks";
 import { get_data_and_listen_for_changes } from "Store/projects/thinks";
 import { PUBLIC_URL, DEV_URL } from "Constants";
+import Logger from "../../Services/Logger";
 
 export const set_form_field_value = (payload) => ({
   type: FORM_STATE_CHANGED,
@@ -20,6 +21,7 @@ export const set_form_field_value = (payload) => ({
 export const create_new_project_and_check_out = ({
   selected_package,
 }) => async (dispatch, getState, { Parse, StripePromise }) => {
+  // Create project
   const createProject = async () => {
     const { new_project } = getState();
     const Project = Parse.Object.extend("project");
@@ -42,6 +44,8 @@ export const create_new_project_and_check_out = ({
       dispatch(add_app_error(e.message));
     }
   };
+
+  // Create package
   const createPackage = async (new_project_data) => {
     const packages_error = await dispatch(
       create_package({ new_project_data, selected_package })
@@ -66,6 +70,8 @@ export const create_new_project_and_check_out = ({
     type: NEW_PROJECT_CREATE_REQUEST_END,
   });
 
+  // if package was successfully created dispatch redirect_to_stripe_checkout action
+  // else delete the project
   if (package_success) {
     dispatch(
       redirect_to_stripe_checkout({
@@ -78,6 +84,7 @@ export const create_new_project_and_check_out = ({
   }
 };
 
+// Helper function that creates package in Parse
 const create_package = ({ new_project_data, selected_package }) => async (
   dispatch,
   getState,
@@ -166,7 +173,7 @@ const redirect_to_stripe_checkout = ({
   selected_package,
 }) => async (dispatch, getState, { Parse, StripePromise }) => {
   const [Stripe, sessionId] = await Promise.all([
-    StripePromise,
+    StripePromise, // loading in Stripe object, refer to Store/index.js
     dispatch(create_stripe_session({ new_project_data, selected_package })),
   ]);
   const { error } = await Stripe.redirectToCheckout({
@@ -197,7 +204,7 @@ export const new_project_payment_cancelled = ({
   }
 };
 
-export const mark_package_paid = (package_objectId) => async (
+export const mark_package_paid = (package_objectId, attempt = 1) => async (
   dispatch,
   getState,
   { Parse, StripePromise }
@@ -210,23 +217,42 @@ export const mark_package_paid = (package_objectId) => async (
   });
 
   try {
-    const package_object = await package_query.get(package_objectId);
+    if (attempt > 5) {
+      dispatch({
+        type: MARK_PACKAGE_PAID_REQUEST_END,
+        payload: package_objectId,
+      });
+      throw {
+        name: "Package Payment Error",
+        message: `Failed to update package ${package_objectId} to paid`,
+      };
+    }
 
+    // Issue had to be here
+    const package_object = await package_query.get(package_objectId);
     package_object.set("paid", true);
 
     await package_object.save();
 
-    dispatch({
-      type: MARK_PACKAGE_PAID_REQUEST_END,
-      payload: package_objectId,
-    });
+    // Check that package was updated to paid, If not retry 5 times
+    const updated_package_object = await package_query.get(package_objectId);
+    if (updated_package_object.get("paid") !== true) {
+      await dispatch(mark_package_paid(package_objectId, attempt + 1));
+    } else {
+      dispatch({
+        type: MARK_PACKAGE_PAID_REQUEST_END,
+        payload: package_objectId,
+      });
 
-    dispatch({
-      type: MARK_PACKAGE_PAID,
-      payload: package_objectId,
-    });
+      dispatch({
+        type: MARK_PACKAGE_PAID,
+        payload: package_objectId,
+      });
 
-    return { is_success: true };
+      Logger.log("Package updated to paid!", { package: package_objectId });
+
+      return { is_success: true };
+    }
   } catch (e) {
     dispatch(add_app_error(e.message));
 
@@ -235,6 +261,7 @@ export const mark_package_paid = (package_objectId) => async (
       payload: package_objectId,
     });
 
+    Logger.log(e.message, { package: package_objectId });
     return { is_success: false };
   }
 };
