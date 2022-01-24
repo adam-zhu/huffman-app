@@ -86,6 +86,7 @@ export const send_message = ({
 
   try {
     const new_message_data = await new_message.save();
+    const current_user = Parse.User.current();
 
     if (message_images.length > 0) {
       await dispatch(
@@ -102,14 +103,16 @@ export const send_message = ({
       dispatch(
         send_notification({
           to: project_data.created_by.phone,
-          message: `You have a new message on Let's Decorate: https://letsdecorateapp.com/${project_objectId}/${consultation_objectId}`,
+          message: `You have a new message on Let's Decorate from Lynda Huffman`,
         })
       );
     } else {
       dispatch(
         send_notification({
           to: "+13184028190",
-          message: `You have a new message on Let's Decorate: https://letsdecorateapp.com/${project_objectId}/${consultation_objectId}`,
+          message: `You have a new message on Let's Decorate from ${current_user.get(
+            "first_name"
+          )} ${current_user.get("last_name")}`,
         })
       );
     }
@@ -126,7 +129,7 @@ export const send_message = ({
   }
 };
 
-const send_notification = ({ to, message }) => async (
+const send_notification = ({ to, message }, attempt = 1) => async (
   dispatch,
   getState,
   { Parse }
@@ -140,19 +143,24 @@ const send_notification = ({ to, message }) => async (
 
     dispatch({ type: "consultation/NOTIFICATION_SEND", payload: message_data });
 
-    const notification_result = await Promise.race([
-      Parse.Cloud.run("send_sms_notification", message_data),
-      new Promise((resolve, reject) =>
-        setTimeout(() => resolve("timed out on client"), 5000)
-      ),
-    ]);
+    const notification_result = await Parse.Cloud.run(
+      "send_sms_notification",
+      message_data
+    );
+
+    console.log("notification result!");
+    console.log(notification_result);
+
+    if (notification_result.success !== true && attempt < 5) {
+      await dispatch(send_notification({ to, message }, attempt + 1));
+    }
 
     dispatch({
       type: "consultation/NOTIFICATION_RESULT",
       payload: notification_result,
     });
 
-    if (notification_result?.error_message) {
+    if (notification_result?.error_message && attempt >= 5) {
       dispatch(add_app_error(notification_result.error_message));
     }
   }

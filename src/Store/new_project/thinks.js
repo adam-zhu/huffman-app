@@ -232,6 +232,10 @@ export const mark_package_paid = (package_objectId, attempt = 1) => async (
     const package_object = await package_query.get(package_objectId);
     package_object.set("paid", true);
 
+    Logger.log(`Attempting to update package to paid (attempt ${attempt})`, {
+      package: package_objectId,
+    });
+
     await package_object.save();
 
     // Check that package was updated to paid, If not retry 5 times
