@@ -9,6 +9,7 @@ import {
   MESSAGE_VIEWED_REQUEST_END,
 } from "./reducer";
 import { add_app_error } from "Store/errors/thinks";
+import Logger from "../../Services/Logger";
 
 export const enter_message = (payload) => ({
   type: MESSAGE_ENTERED,
@@ -143,16 +144,28 @@ const send_notification = ({ to, message }, attempt = 1) => async (
 
     dispatch({ type: "consultation/NOTIFICATION_SEND", payload: message_data });
 
+    Logger.log(`Attempting to send sms message (attempt ${attempt})`, {
+      recipient: to,
+    });
+
     const notification_result = await Parse.Cloud.run(
       "send_sms_notification",
       message_data
     );
+
+    Logger.log(`SMS notification result (attempt ${attempt})`, {
+      result: notification_result,
+    });
 
     console.log("notification result!");
     console.log(notification_result);
 
     if (notification_result.success !== true && attempt < 5) {
       await dispatch(send_notification({ to, message }, attempt + 1));
+    } else {
+      Logger.log(`Successfully sent sms message (attempt ${attempt})`, {
+        recipient: to,
+      });
     }
 
     dispatch({
@@ -161,6 +174,9 @@ const send_notification = ({ to, message }, attempt = 1) => async (
     });
 
     if (notification_result?.error_message && attempt >= 5) {
+      Logger.log(`Error sending sms message (attempt ${attempt})`, {
+        error: notification_result.error_message,
+      });
       dispatch(add_app_error(notification_result.error_message));
     }
   }
