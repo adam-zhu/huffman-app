@@ -5,6 +5,7 @@ import {
   RESET_REDUCER_STATE,
 } from "./reducer";
 import { add_app_error } from "Store/errors/thinks";
+import Logger from "Services/Logger";
 
 export const set_form_field_value = (payload) => ({
   type: FORM_STATE_CHANGED,
@@ -22,6 +23,7 @@ export const save_details = (project_objectId) => async (
     dispatch(save_measurements(project_objectId)),
     dispatch(create_project_images(project_objectId)),
   ]);
+
   const nonNullErrors = errors.filter((e) => e !== null);
 
   dispatch({ type: DETAILS_SAVE_REQUEST_END, payload: project_objectId });
@@ -29,6 +31,7 @@ export const save_details = (project_objectId) => async (
   nonNullErrors.forEach((e) => dispatch(add_app_error(e.message)));
 
   if (nonNullErrors.length === 0) {
+    Logger.log(`Successfully saved images!`, { project: project_objectId });
     dispatch({ type: RESET_REDUCER_STATE });
   }
 };
@@ -56,7 +59,7 @@ const save_measurements = (project_objectId) => async (
   }
 };
 
-const create_project_images = (project_objectId) => async (
+const create_project_images = (project_objectId, attempt = 1) => async (
   dispatch,
   getState,
   { Parse, StripePromise }
@@ -77,10 +80,22 @@ const create_project_images = (project_objectId) => async (
   });
 
   try {
+    console.log(`Attempting to save images (attempt ${attempt})`);
+    Logger.log(`Attempting to save images (attempt ${attempt})`, {
+      project: project_objectId,
+    });
+
     await Promise.all(ProjectImageObjects.map((o) => o.save()));
 
     return null;
   } catch (e) {
+    if (attempt < 5) {
+      await dispatch(create_project_images(project_objectId, attempt + 1));
+    }
+
+    Logger.log(`Error to saving images (attempt ${attempt})`, {
+      project: project_objectId,
+    });
     return e;
   }
 };
